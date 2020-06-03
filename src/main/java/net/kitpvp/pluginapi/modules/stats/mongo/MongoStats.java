@@ -108,15 +108,15 @@ public class MongoStats implements Stats {
         });
     }
 
-    public <K, V extends Number> long calculateRanking(MongoStatsReader statsReader, StatsKey<K, V> statsKey, K k) {
+    public <K, V extends Number> long calculateRanking(StatsReader statsReader, StatsKey<K, V> statsKey, K k) {
         return Ranking.calculateRanking(this, statsReader, statsKey, k);
     }
 
-    public <K, V extends Number> long calculateRanking(MongoStatsReader statsReader, SeasonKey<K, V> statsKey, K k, int season) {
+    public <K, V extends Number> long calculateRanking(StatsReader statsReader, SeasonKey<K, V> statsKey, K k, int season) {
         return Ranking.calculateRanking(this, statsReader, statsKey, k, season);
     }
 
-    public <V extends Number> long calculateRanking(MongoStatsReader statsReader, SSeasonKey<V> statsKey, int season) {
+    public <V extends Number> long calculateRanking(StatsReader statsReader, SSeasonKey<V> statsKey, int season) {
         return Ranking.calculateRanking(this, statsReader, statsKey, season);
     }
 
