@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 public interface Batch<T extends Stats> {
 
+    Consumer<Void> EMPTY = (ignored) -> {};
+
     BatchAction getDefaultAction();
 
     T execute(boolean checkMain);
@@ -27,6 +29,10 @@ public interface Batch<T extends Stats> {
 
     default T execute() {
         return this.execute(true);
+    }
+
+    default void executeAsync() {
+        this.executeAsync(EMPTY);
     }
 
     default <K, V> Batch<T> append(StatsKey<K, V> statsKey, K k, V v) {
