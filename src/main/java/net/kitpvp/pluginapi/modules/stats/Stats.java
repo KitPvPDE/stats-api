@@ -1,5 +1,6 @@
 package net.kitpvp.pluginapi.modules.stats;
 
+import net.kitpvp.mongodbapi.async.Executors;
 import net.kitpvp.pluginapi.modules.stats.mongo.batch.Batch;
 import net.kitpvp.pluginapi.modules.stats.mongo.batch.BatchAction;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.SStatsKey;
@@ -12,6 +13,7 @@ import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.stat.StatKeys;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -20,7 +22,7 @@ public interface Stats {
 
     int SEASON = 3;
 
-    void load(Consumer<StatsReader> callback);
+    void load(Consumer<StatsReader> callback, Executor executor);
 
     StatsReader syncLoad();
 
@@ -30,6 +32,10 @@ public interface Stats {
 
     default boolean isLoaded() {
         return true;
+    }
+
+    default void load(Consumer<StatsReader> callback) {
+        this.load(callback, Executors.DIRECT);
     }
 
     default <K, V> Batch<? extends Stats> startBatch(BatchAction action, StatsKey<K, V> statsKey, K k, V v) {
