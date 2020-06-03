@@ -4,21 +4,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <artifactId>plugin-super</artifactId>
-        <groupId>net.kitpvp.network</groupId>
-        <version>1.0</version>
-    </parent>
-
     <groupId>net.kitpvp</groupId>
     <artifactId>stats-api</artifactId>
     <version>3.0.0-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <id>kit-public</id>
+            <url>https://repo.fleance.de</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
             <groupId>net.kitpvp.mongodb</groupId>
             <artifactId>mongodb-common</artifactId>
-            <version>2.0</version>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -28,6 +35,7 @@
     </properties>
 
     <build>
+        <defaultGoal>clean install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
