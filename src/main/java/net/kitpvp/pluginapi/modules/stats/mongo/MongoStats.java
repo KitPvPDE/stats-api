@@ -16,6 +16,7 @@ import net.kitpvp.pluginapi.modules.stats.ranking.Ranking;
 import org.bson.Document;
 
 import java.util.UUID;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public class MongoStats implements Stats {
@@ -49,11 +50,17 @@ public class MongoStats implements Stats {
         return this.lastLoaded != null;
     }
 
-    public void load(Consumer<StatsReader> callback) {
+    public void load(Consumer<StatsReader> callback, Executor executor) {
         Async.run(new Runnable() {
             @Override
             public void run() {
-                callback.accept(syncLoad());
+                StatsReader statsReader = MongoStats.this.syncLoad();
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.accept(statsReader);
+                    }
+                });
             }
         });
     }
@@ -65,7 +72,7 @@ public class MongoStats implements Stats {
             document = new Document();
 
         MongoStatsReader statsReader = new MongoStatsReader(document);
-        if(this.whenLoaded != null) {
+        if(this.whenLoaded != null){
             this.lastLoaded = statsReader;
             this.whenLoaded.accept(statsReader);
         }

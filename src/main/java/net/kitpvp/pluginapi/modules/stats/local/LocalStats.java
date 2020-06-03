@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -30,7 +31,7 @@ public class LocalStats implements Stats {
         return new LocalBatch(this, action);
     }
 
-    public void load(Consumer<StatsReader> callback) {
+    public void load(Consumer<StatsReader> callback, Executor executor) {
         throw new UnsupportedOperationException("Attempted to load local stats asynchronously");
     }
 

@@ -9,6 +9,7 @@ import net.kitpvp.pluginapi.modules.stats.mongo.batch.PlayerBatch;
 import net.kitpvp.pluginapi.modules.stats.player.PlayerStatsReader;
 
 import java.util.UUID;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
@@ -28,8 +29,14 @@ public class PlayerStats implements Stats {
     }
 
     @Override
-    public void load(Consumer<StatsReader> callback) {
-        callback.accept(this.syncLoad());
+    public void load(Consumer<StatsReader> callback, Executor executor) {
+        StatsReader statsReader = this.syncLoad();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.accept(statsReader);
+            }
+        });
     }
 
     @Override
