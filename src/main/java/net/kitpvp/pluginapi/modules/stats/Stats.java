@@ -156,4 +156,6 @@ public interface Stats {
             StatKeys.newStatsKey("misc.discord.id", -1L);
     SStatsKey<String> DISCORD_NAME =
             StatKeys.newStatsKey("misc.discord.rank", "");
+    SStatsKey<String> DISCORD_CODE =
+            StatKeys.newStatsKey("misc.discord.code", "");
 }
