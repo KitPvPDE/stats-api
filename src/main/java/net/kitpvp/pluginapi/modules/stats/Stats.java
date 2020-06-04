@@ -152,10 +152,13 @@ public interface Stats {
             StatKeys.newStatsKey("misc.useless.afk", 0L);
     SStatsKey<Long> JOIN_TIME =
             StatKeys.newStatsKey("misc.useless.joined", -1L);
+
+    // DISCORD
     SStatsKey<Long> DISCORD_ID =
-            StatKeys.newStatsKey("misc.discord.id", -1L);
-    SStatsKey<String> DISCORD_NAME =
-            StatKeys.newStatsKey("misc.discord.rank", "");
+            StatKeys.newStatsKey("discord.id", -1L);
     SStatsKey<String> DISCORD_CODE =
-            StatKeys.newStatsKey("misc.discord.code", "");
+            StatKeys.newStatsKey("discord.code", "");
+    StatsKey<String, String> DISCORD_PLATFORMS =
+            StatKeys.newStatsKey("discord.platforms.", Function.identity(), null, "");
+
 }
