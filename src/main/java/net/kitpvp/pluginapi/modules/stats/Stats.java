@@ -152,4 +152,8 @@ public interface Stats {
             StatKeys.newStatsKey("misc.useless.afk", 0L);
     SStatsKey<Long> JOIN_TIME =
             StatKeys.newStatsKey("misc.useless.joined", -1L);
+    SStatsKey<Long> DISCORD_ID =
+            StatKeys.newStatsKey("misc.discord.id", -1L);
+    SStatsKey<String> DISCORD_NAME =
+            StatKeys.newStatsKey("misc.discord.rank", "");
 }
