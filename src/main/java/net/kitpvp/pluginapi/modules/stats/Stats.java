@@ -57,7 +57,15 @@ public interface Stats {
     }
 
     default <K, V> void executeBatchAsync(BatchAction action, StatsKey<K, V> statsKey, K k, V v, Consumer<Void> callback) {
-        this.startBatch(action).append(statsKey, k, v).executeAsync(callback);
+        this.startBatch(action).append(statsKey, k, v).executeAsync(callback, Executors.DIRECT);
+    }
+
+    default <K, V> void executeBatchAsync(BatchAction action, StatsKey<K, V> statsKey, K k, V v, Consumer<Void> callback, Executor executor) {
+        this.startBatch(action).append(statsKey, k, v).executeAsync(callback, executor);
+    }
+
+    default <K, V> void executeBatchAsync(BatchAction action, StatsKey<K, V> statsKey, K k, V v) {
+        this.startBatch(action).append(statsKey, k, v).executeAsync(Batch.EMPTY);
     }
 
     SStatsKey<String> MONGO_ID =

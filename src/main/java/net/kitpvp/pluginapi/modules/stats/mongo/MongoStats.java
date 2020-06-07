@@ -97,13 +97,13 @@ public class MongoStats implements Stats {
         this.statsCollection.getCollection().updateOne(new Document("_id", getPlayerId().toString()), document, new UpdateOptions().upsert(true));
     }
 
-    public void executeAsync(Document document, Consumer<Void> callback) {
+    public void executeAsync(Document document, Consumer<Void> callback, Executor executor) {
         Async.run(new Runnable() {
             @Override
             public void run() {
                 MongoStats.this.execute(document, false);
 
-                callback.accept(null);
+                executor.execute(() -> callback.accept(null));
             }
         });
     }

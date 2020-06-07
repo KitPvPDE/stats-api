@@ -9,6 +9,7 @@ import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.special.NumberKey;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
@@ -107,8 +108,8 @@ public class LocalBatch implements Batch<LocalStats> {
     }
 
     @Override
-    public void executeAsync(Consumer<Void> callback) {
-        callback.accept(null);
+    public void executeAsync(Consumer<Void> callback, Executor executor) {
+        executor.execute(() -> callback.accept(null));
     }
 
     @Override

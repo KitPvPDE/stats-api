@@ -6,6 +6,7 @@ import net.kitpvp.pluginapi.modules.stats.mongo.MongoStats;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.StatsKey;
 import org.bson.Document;
 
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
@@ -44,7 +45,7 @@ public class MongoBatch implements Batch<MongoStats> {
         return this.stats;
     }
 
-    public void executeAsync(Consumer<Void> callback) {
+    public void executeAsync(Consumer<Void> callback, Executor executor) {
         Document result = new Document();
 
         if(this.set.size() > 0)
@@ -59,7 +60,7 @@ public class MongoBatch implements Batch<MongoStats> {
         if(this.pull.size() > 0)
             result.append("$pull", this.pull);
 
-        this.stats.executeAsync(result, callback);
+        this.stats.executeAsync(result, callback, executor);
     }
 
     @Override

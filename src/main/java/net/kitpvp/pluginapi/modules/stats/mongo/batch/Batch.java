@@ -1,5 +1,6 @@
 package net.kitpvp.pluginapi.modules.stats.mongo.batch;
 
+import net.kitpvp.mongodbapi.async.Executors;
 import net.kitpvp.pluginapi.modules.stats.Stats;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.SStatsKey;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.StatsKey;
@@ -8,6 +9,7 @@ import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.season.SeasonKey;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -21,7 +23,7 @@ public interface Batch<T extends Stats> {
 
     T execute(boolean checkMain);
 
-    void executeAsync(Consumer<Void> callback);
+    void executeAsync(Consumer<Void> callback, Executor executor);
 
     <K, V> Batch<T> append(BatchAction action, StatsKey<K, V> statsKey, K k, V v);
 
@@ -32,7 +34,11 @@ public interface Batch<T extends Stats> {
     }
 
     default void executeAsync() {
-        this.executeAsync(EMPTY);
+        this.executeAsync(EMPTY, Executors.DIRECT);
+    }
+
+    default void executeAsync(Consumer<Void> callback) {
+        this.executeAsync(callback, Executors.DIRECT);
     }
 
     default <K, V> Batch<T> append(StatsKey<K, V> statsKey, K k, V v) {

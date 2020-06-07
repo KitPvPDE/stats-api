@@ -1,9 +1,11 @@
 package net.kitpvp.pluginapi.modules.stats.mongo.batch;
 
 import lombok.Getter;
+import net.kitpvp.mongodbapi.async.Executors;
 import net.kitpvp.pluginapi.modules.stats.PlayerStats;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.StatsKey;
 
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public class PlayerBatch implements Batch<PlayerStats> {
@@ -35,10 +37,10 @@ public class PlayerBatch implements Batch<PlayerStats> {
     }
 
     @Override
-    public void executeAsync(Consumer<Void> callback) {
+    public void executeAsync(Consumer<Void> callback, Executor executor) {
         this.localBatch.executeAsync((ignored) -> {
-            this.mongoBatch.executeAsync(callback);
-        });
+            this.mongoBatch.executeAsync(callback, executor);
+        }, executor);
     }
 
     @Override
