@@ -5,7 +5,7 @@ import net.kitpvp.pluginapi.modules.stats.StatsReader;
 import org.bson.Document;
 
 @RequiredArgsConstructor
-public class MongoStatsReader implements StatsReader {
+class MongoStatsReader implements StatsReader {
 
     private final Document database;
 

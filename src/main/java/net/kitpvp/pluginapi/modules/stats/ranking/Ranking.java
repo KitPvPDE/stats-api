@@ -2,7 +2,6 @@ package net.kitpvp.pluginapi.modules.stats.ranking;
 
 import net.kitpvp.pluginapi.modules.stats.StatsReader;
 import net.kitpvp.pluginapi.modules.stats.mongo.MongoStats;
-import net.kitpvp.pluginapi.modules.stats.mongo.MongoStatsReader;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.SStatsKey;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.StatsKey;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.season.SSeasonKey;
