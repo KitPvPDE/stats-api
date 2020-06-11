@@ -2,6 +2,7 @@ package net.kitpvp.pluginapi.modules.stats.mongo;
 
 import com.mongodb.client.MongoIterable;
 import net.kitpvp.mongodbapi.MongoCollection;
+import net.kitpvp.pluginapi.modules.stats.Stats;
 import net.kitpvp.pluginapi.modules.stats.StatsReader;
 import net.kitpvp.pluginapi.modules.stats.mongo.find.Comparison;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.SStatsKey;
@@ -26,6 +27,10 @@ public class Mongo {
         return find(collection, statsKey, comparison, k, v).first();
     }
 
+    public static <V> MongoIterable<StatsReader> find(MongoCollection collection, SStatsKey<V> statsKey, Comparison comparison, V v) {
+        return find(collection, statsKey, comparison, null, v);
+    }
+
     public static <K, V> MongoIterable<StatsReader> find(MongoCollection collection, StatsKey<K, V> statsKey, Comparison comparison, K k, V v) {
         String key = statsKey.getKey(k);
 
@@ -36,4 +41,15 @@ public class Mongo {
         return collection.getCollection().find().map(MongoStatsReader::new);
     }
 
+    public static MongoQuery query(MongoCollection collection) {
+        return new MongoQuery(collection);
+    }
+
+    public static <V> MongoQuery query(MongoCollection collection, SStatsKey<V> statsKey, V v, Comparison comparison) {
+        return new MongoQuery(collection, statsKey, v, comparison);
+    }
+
+    public static <K, V> MongoQuery query(MongoCollection collection, StatsKey<K, V> statsKey, K k, V v, Comparison comparison) {
+        return new MongoQuery(collection, statsKey, k, v, comparison);
+    }
 }

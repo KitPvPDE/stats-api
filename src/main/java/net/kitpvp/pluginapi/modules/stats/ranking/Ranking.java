@@ -13,7 +13,7 @@ public class Ranking {
     public static <K, V extends Number> long calculateRanking(MongoStats stats, StatsReader statsReader, StatsKey<K, V> statsKey, K k) {
         String key = statsKey.getKey(k);
         long value = statsReader.getStatKey(statsKey, k).longValue();
-        long before = stats.getStatsCollection().getCollection().count(new Document(key, new Document("$gt", value)));
+        long before = stats.getStatsCollection().getCollection().countDocuments(new Document(key, new Document("$gt", value)));
 
         return before + 1;
     }
@@ -22,7 +22,7 @@ public class Ranking {
         StatsKey<K, V> statKey = statsKey.season(season);
         String key = statKey.getKey(k);
         long value = statsReader.getStatKey(statKey, k).longValue();
-        long before = stats.getStatsCollection().getCollection().count(new Document(key, new Document("$gt", value)));
+        long before = stats.getStatsCollection().getCollection().countDocuments(new Document(key, new Document("$gt", value)));
 
         return before + 1;
     }
@@ -31,7 +31,7 @@ public class Ranking {
         SStatsKey<V> statKey = statsKey.season(season);
         String key = statKey.getKey();
         long value = statsReader.getStatKey(statKey).longValue();
-        long before = stats.getStatsCollection().getCollection().count(new Document(key, new Document("$gt", value)));
+        long before = stats.getStatsCollection().getCollection().countDocuments(new Document(key, new Document("$gt", value)));
 
         return before + 1;
     }

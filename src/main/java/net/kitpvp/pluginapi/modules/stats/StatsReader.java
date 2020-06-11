@@ -34,7 +34,7 @@ public interface StatsReader {
     }
 
     default <V> V getStatKey(SStatsKey<V> statsKey) {
-        return this.getStatKey(statsKey, null);
+        return this.getStatKey(statsKey, (Void)null);
     }
 
     default <K, V, X> X getStatKey(StatsKey<K, V> statsKey, K k, Function<V, X> function) {
