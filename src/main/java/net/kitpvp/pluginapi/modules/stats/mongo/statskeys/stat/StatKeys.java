@@ -46,8 +46,16 @@ public class StatKeys {
         return new SStatKey<>(def, key, new AddFunction<>(addFunction, offset));
     }
 
-    public static <K, V, SK extends StatsKey<K, V>> SeasonKey<K, V> newSeasonKey(String pre, Function<K, String> toKey, String post, V def) {
+    public static <K, V> SeasonKey<K, V> newSeasonKey(String pre, Function<K, String> toKey, String post, V def) {
         return new SeasonStatKey<>(def, new ToKeyFunction<>(pre, post, toKey), null);
+    }
+
+    public static SSeasonKey<Long> newSeasonKey(String key, long def) {
+        return new SSeasonStatKey<>(def, key, null, Long::sum);
+    }
+
+    public static SSeasonKey<Integer> newSeasonKey(String key, int def) {
+        return new SSeasonStatKey<>(def, key, null, Integer::sum);
     }
 
     public static <V> SSeasonKey<V> newSeasonKey(String key, V def) {

@@ -3,7 +3,6 @@ package net.kitpvp.pluginapi.modules.stats.mongo.batch;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.StatsKey;
-import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.special.ListKey;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.special.NumberKey;
 import org.bson.Document;
 
