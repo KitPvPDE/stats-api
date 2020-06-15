@@ -60,6 +60,20 @@ public class WriteQuery {
         return this;
     }
 
+    public void execute() {
+        this.execute(false);
+    }
+
+    public void execute(boolean updateMany) {
+        if(this.update.isEmpty() || this.criteria.isEmpty())
+            throw new UnsupportedOperationException("Empty criteria and/or update document");
+
+        if(updateMany)
+            this.collection.getCollection().updateMany(this.criteria, this.update);
+        else
+            this.collection.getCollection().updateOne(this.criteria, this.update);
+    }
+
     private Document getOrCreate(WriteAction action) {
         String command = "$" + action.getCommand();
 
