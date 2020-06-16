@@ -39,4 +39,11 @@ class MongoStatsReader implements StatsReader {
             return find(path, sub, defaultValue);
         }
     }
+
+    @Override
+    public String toString() {
+        return "MongoStatsReader{" +
+                "database=" + database.toJson() +
+                '}';
+    }
 }

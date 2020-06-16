@@ -34,11 +34,11 @@ public class Mongo {
     public static <K, V> MongoIterable<StatsReader> find(MongoCollection collection, StatsKey<K, V> statsKey, Comparison comparison, K k, V v) {
         String key = statsKey.getKey(k);
 
-        Document document = new Document().append(key, new Document(comparison.getCommand(), v));
+        Document document = new Document().append(key, new Document("$" + comparison.getCommand(), v));
         if(document.isEmpty())
             throw new UnsupportedOperationException("Cannot iterate over all documents");
 
-        return collection.getCollection().find().map(MongoStatsReader::new);
+        return collection.getCollection().find(document).map(MongoStatsReader::new);
     }
 
     public static FindQuery find(MongoCollection collection) {
