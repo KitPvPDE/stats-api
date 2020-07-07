@@ -29,6 +29,8 @@ public interface Batch<T extends Stats> {
 
     int size();
 
+    void clear();
+
     default T execute() {
         return this.execute(true);
     }

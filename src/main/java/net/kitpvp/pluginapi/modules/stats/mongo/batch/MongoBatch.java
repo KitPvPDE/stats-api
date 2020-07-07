@@ -35,6 +35,13 @@ public class MongoBatch implements Batch<MongoStats> {
         return size;
     }
 
+    @Override
+    public void clear() {
+        for(Document document : this.actions) {
+            document.clear();
+        }
+    }
+
     public MongoStats execute() {
         return this.execute(true);
     }

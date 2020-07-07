@@ -30,6 +30,11 @@ public class PlayerBatch implements Batch<PlayerStats> {
     }
 
     @Override
+    public void clear() {
+        this.mongoBatch.clear();
+    }
+
+    @Override
     public PlayerStats execute(boolean checkMain) {
         this.localBatch.execute(checkMain);
         this.mongoBatch.execute(checkMain);

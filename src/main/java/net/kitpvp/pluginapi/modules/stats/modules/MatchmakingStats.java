@@ -7,9 +7,9 @@ import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.stat.StatKeys;
 public interface MatchmakingStats {
 
     SSeasonKey<Integer> ELO =
-            StatKeys.newSeasonKey("1vs1.elo.normal", 1000, 0, Integer::sum);
+            StatKeys.newSeasonKey("1vs1.elo.normal", 0, 1000);
     SSeasonKey<Integer> SUMO =
-            StatKeys.newSeasonKey("1vs1.elo.sumo", 1000, 0, Integer::sum);
+            StatKeys.newSeasonKey("1vs1.elo.sumo", 0, 1000);
     SStatsKey<String> SELECTED_KIT =
             StatKeys.newStatsKey("selectedKit", "");
 

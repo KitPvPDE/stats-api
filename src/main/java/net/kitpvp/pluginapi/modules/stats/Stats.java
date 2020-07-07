@@ -169,4 +169,7 @@ public interface Stats {
     StatsKey<String, String> DISCORD_PLATFORMS =
             StatKeys.newStatsKey("discord.platforms.", Function.identity(), null, "");
 
+    // WEBSITE
+    SStatsKey<String> API_KEY =
+            StatKeys.newStatsKey("misc.website.apiKey", "");
 }
