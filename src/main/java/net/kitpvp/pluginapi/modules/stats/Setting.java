@@ -16,6 +16,7 @@ public interface Setting {
     NormalSetting SCOREBOARD_TEAMS_STYLE = new NormalSetting("scoreboardTeams", "default", false, false); // sync
     TrueFalseSetting CLAN_ENABLED = new TrueFalseSetting("clanEnabled", "false", true, false); // sync
     TrueFalseSetting CLAN_CHAT_ENABLED = new TrueFalseSetting("clanChatEnabled", "false", true, true);
+    ToggleSetting CHAT_MODE = new ToggleSetting("chatStyle", "global", true, false, "global", "msg");
 
     TrueFalseSetting STRONG_SPECTATE_MODE = new TrueFalseSetting("strongSpectateMode", "true", true, false);
 

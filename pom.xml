@@ -6,7 +6,7 @@
 
     <groupId>net.kitpvp</groupId>
     <artifactId>stats-api</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>3.0.3-SNAPSHOT</version>
 
     <repositories>
         <repository>
