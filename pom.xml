@@ -11,7 +11,7 @@
     <repositories>
         <repository>
             <id>kit-public</id>
-            <url>https://repo.fleance.de</url>
+            <url>https://repo.kitpvp.de/public/</url>
         </repository>
     </repositories>
 
