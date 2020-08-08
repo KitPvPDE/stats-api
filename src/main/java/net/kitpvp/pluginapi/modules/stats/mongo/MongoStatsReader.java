@@ -10,6 +10,11 @@ class MongoStatsReader implements StatsReader {
     private final Document database;
 
     @Override
+    public Object getSource() {
+        return this.database;
+    }
+
+    @Override
     public <V> V find(String key, V def) {
         return this.getInternal(key, def);
     }

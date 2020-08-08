@@ -6,7 +6,7 @@
 
     <groupId>net.kitpvp</groupId>
     <artifactId>stats-api</artifactId>
-    <version>3.0.4-SNAPSHOT</version>
+    <version>3.0.7-SNAPSHOT</version>
 
     <repositories>
         <repository>
@@ -24,8 +24,8 @@
     <dependencies>
         <dependency>
             <groupId>net.kitpvp.mongodb</groupId>
-            <artifactId>mongodb-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>mongodb-api</artifactId>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>

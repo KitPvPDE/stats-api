@@ -160,6 +160,8 @@ public interface Stats {
             StatKeys.newStatsKey("misc.useless.afk", 0L);
     SStatsKey<Long> JOIN_TIME =
             StatKeys.newStatsKey("misc.useless.joined", -1L);
+    StatsKey<Integer, Integer> VOTING_SELECTION =
+            StatKeys.newStatsKey("misc.votings", (x) -> "" + x, null, -1);
 
     // DISCORD
     SStatsKey<Long> DISCORD_ID =

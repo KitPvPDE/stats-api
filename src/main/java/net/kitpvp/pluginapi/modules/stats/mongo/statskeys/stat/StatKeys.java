@@ -11,6 +11,7 @@ import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.special.stat.SNumKey;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 public class StatKeys {

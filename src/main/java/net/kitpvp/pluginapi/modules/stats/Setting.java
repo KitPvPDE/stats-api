@@ -12,6 +12,7 @@ public interface Setting {
     TrueFalseSetting MESSAGE_ENABLED = new TrueFalseSetting("messageEnabled", "true", true, true); // dont sync
     TrueFalseSetting TAG_ENABLED = new TrueFalseSetting("tagEnabled", "true", true, false); // sync
     TrueFalseSetting TITLE_ENABLED = new TrueFalseSetting("titleEnabled", "true", false, false); // sync
+    TrueFalseSetting TITLE_FORCED_OFF = new TrueFalseSetting("titleForcedOff", "false", false, true); // dont sync
     NormalSetting TITLE_SELECTED = new NormalSetting("titleSelected", "", false, false); // sync
     NormalSetting SCOREBOARD_TEAMS_STYLE = new NormalSetting("scoreboardTeams", "default", false, false); // sync
     TrueFalseSetting CLAN_ENABLED = new TrueFalseSetting("clanEnabled", "false", true, false); // sync
