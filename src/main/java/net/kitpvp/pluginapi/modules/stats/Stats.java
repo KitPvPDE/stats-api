@@ -162,6 +162,8 @@ public interface Stats {
             StatKeys.newStatsKey("misc.useless.joined", -1L);
     StatsKey<Integer, Integer> VOTING_SELECTION =
             StatKeys.newStatsKey("misc.votings", (x) -> "" + x, null, -1);
+    SStatsKey<String> EQUIPPED_HEAD =
+            StatKeys.newStatsKey("misc.heads.equipped", (String) null);
 
     // DISCORD
     SStatsKey<Long> DISCORD_ID =
