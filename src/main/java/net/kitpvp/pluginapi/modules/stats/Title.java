@@ -12,8 +12,10 @@ public enum Title {
     MEETUP_CHAMPION("meetup_champion", "Meetup §a§lCHAMPION", "§6§lMEETUP", "Is the most recent meetup event winner", 110),
     SEASON_2_CHAMPION_MATCHMAKING("season2_champion_matchmaking", "1vs1 §5§lCHAMPION", "§5§l1vs1", "Finished Top 3 at 1vs1", 283),
     SEASON_2_CHAMPION_KITPVP("season2_champion_kitpvp", "KitPvP §5§lCHAMPION", "§5§lKITPVP", "Finished Top 3 at one of the kitpvp warps", 54),
-    MANAGEMENT("management", "§4§lMANAGEMENT", "", "Is either fleance or PatrickGHG", 152)
-    ;
+    MANAGEMENT("management", "§4§lMANAGEMENT", "", "Is either fleance or PatrickGHG", 152),
+    SEASON_3_CHAMPION_MATCHMAKING("season3_champion_matchmaking", "1vs1 §c§lCHAMPION", "§c§l1vs1", "Finished Top 3 at 1vs1", 283),
+    SEASON_3_CHAMPION_KITPVP("season3_champion_kitpvp", "KitPvP §c§lCHAMPION", "§c§lKITPVP", "Finished Top 3 at one of the kitpvp warps", 54),
+            ;
 
     @Getter
     private final String name, display, shortDisplay, description;

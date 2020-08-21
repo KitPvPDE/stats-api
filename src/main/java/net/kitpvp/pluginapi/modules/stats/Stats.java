@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 public interface Stats {
 
-    int SEASON = 3;
+    int SEASON = 4;
 
     void load(Consumer<StatsReader> callback, Executor executor);
 
