@@ -44,6 +44,10 @@ public class StatKeys {
         return new SNumKey<>(new SStatKey<>(def, key, null), Integer::sum);
     }
 
+    public static SStatsKey<Double> newStatsKey(String key, double def) {
+        return new SNumKey<>(new SStatKey<>(def, key, null), Double::sum);
+    }
+
     public static <V> SStatsKey<V> newStatsKey(String key, Supplier<V> toDefault) {
         return new SStatKey<V>(toDefault, key, null);
     }
