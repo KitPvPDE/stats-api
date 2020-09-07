@@ -29,12 +29,12 @@ public enum BatchAction {
             case INC:
                 V current = statsReader.rawStatKey(statsKey, k);
                 if(!(statsKey instanceof NumberKey)) {
-                    throw new UnsupportedOperationException("Cannot " + this + " this stats key " + statsKey + " (Key: " + k + " Current: " + current + " New: " + v);
+                    new UnsupportedOperationException("Cannot " + this + " this stats key " + statsKey + " (Key: " + k + " Current: " + current + " New: " + v).printStackTrace();
+                    return;
                 }
 
                 NumberKey<K, V> numberKey = (NumberKey<K, V>) statsKey;
                 V updated = numberKey.inc(current, v);
-                System.out.println("Updating " + current + " and " + v + " to " + updated);
                 statsKey.append(statsReader.getDatabase(), k, updated);
                 break;
             case SET:
@@ -43,11 +43,13 @@ public enum BatchAction {
             case PULL:
             case PUSH:
                 if(!(v instanceof Collection)) {
-                    throw new UnsupportedOperationException("Cannot " + this + " this stats key " + statsKey + " (Key: " + k + " Current: " + statsReader.getStatKey(statsKey, k) + " New: " + v);
+                    new UnsupportedOperationException("Cannot " + this + " this stats key " + statsKey + " (Key: " + k + " Current: " + statsReader.getStatKey(statsKey, k) + " New: " + v).printStackTrace();
+                    return;
                 }
                 V currentObject = statsReader.getStatKey(statsKey, k);
                 if(!(currentObject instanceof Collection) && !(currentObject instanceof Document)) {
-                    throw new UnsupportedOperationException("Cannot " + this + " this stats key " + statsKey + " (Old is " + currentObject + ", " + (currentObject != null ? currentObject.getClass() : "") + ")");
+                    new UnsupportedOperationException("Cannot " + this + " this stats key " + statsKey + " (Old is " + currentObject + ", " + (currentObject != null ? currentObject.getClass() : "") + ")").printStackTrace();
+                    return;
                 }
 
 

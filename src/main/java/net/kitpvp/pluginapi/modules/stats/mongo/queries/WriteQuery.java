@@ -1,5 +1,6 @@
 package net.kitpvp.pluginapi.modules.stats.mongo.queries;
 
+import com.mongodb.client.model.UpdateOptions;
 import net.kitpvp.mongodbapi.MongoCollection;
 import net.kitpvp.pluginapi.modules.stats.mongo.find.Comparison;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.SStatsKey;
@@ -69,9 +70,9 @@ public class WriteQuery {
             throw new UnsupportedOperationException("Empty criteria and/or update document");
 
         if(updateMany)
-            this.collection.getCollection().updateMany(this.criteria, this.update);
+            this.collection.getCollection().updateMany(this.criteria, this.update, new UpdateOptions().upsert(true));
         else
-            this.collection.getCollection().updateOne(this.criteria, this.update);
+            this.collection.getCollection().updateOne(this.criteria, this.update, new UpdateOptions().upsert(true));
     }
 
     private Document getOrCreate(WriteAction action) {

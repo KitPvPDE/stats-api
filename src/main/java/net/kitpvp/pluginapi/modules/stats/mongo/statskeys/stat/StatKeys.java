@@ -7,9 +7,11 @@ import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.season.SSeasonKey;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.season.SeasonKey;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.special.NumberKey;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.special.stat.NumKey;
+import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.special.stat.SNumKey;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 public class StatKeys {
@@ -34,6 +36,18 @@ public class StatKeys {
         return new SStatKey<>(def, key, null);
     }
 
+    public static SStatsKey<Long> newStatsKey(String key, long def) {
+        return new SNumKey<>(new SStatKey<>(def, key, null), Long::sum);
+    }
+
+    public static SStatsKey<Integer> newStatsKey(String key, int def) {
+        return new SNumKey<>(new SStatKey<>(def, key, null), Integer::sum);
+    }
+
+    public static SStatsKey<Double> newStatsKey(String key, double def) {
+        return new SNumKey<>(new SStatKey<>(def, key, null), Double::sum);
+    }
+
     public static <V> SStatsKey<V> newStatsKey(String key, Supplier<V> toDefault) {
         return new SStatKey<V>(toDefault, key, null);
     }
@@ -44,6 +58,18 @@ public class StatKeys {
 
     public static <V extends Number> SStatsKey<V> newStatsKey(String key, V offset, V def, BiFunction<V, V, V> addFunction) {
         return new SStatKey<>(def, key, new AddFunction<>(addFunction, offset));
+    }
+
+    public static <K> SeasonKey<K, Long> newSeasonKey(String pre, Function<K, String> toKey, String post, long def) {
+        return new SeasonStatKey<K, Long>(def, new ToKeyFunction<>(pre, post, toKey), null, Long::sum);
+    }
+
+    public static <K> SeasonKey<K, Integer> newSeasonKey(String pre, Function<K, String> toKey, String post, int def) {
+        return new SeasonStatKey<>(def, new ToKeyFunction<>(pre, post, toKey), null, Integer::sum);
+    }
+
+    public static <K> SeasonKey<K, Integer> newSeasonKey(String pre, Function<K, String> toKey, String post, int def, int offset) {
+        return new SeasonStatKey<>(def, new ToKeyFunction<>(pre, post, toKey), new AddFunction<>(Integer::sum, offset), Integer::sum);
     }
 
     public static <K, V> SeasonKey<K, V> newSeasonKey(String pre, Function<K, String> toKey, String post, V def) {
@@ -72,6 +98,14 @@ public class StatKeys {
 
     public static <V extends Number> SSeasonKey<V> newSeasonKey(String key, V offset, V def, BiFunction<V, V, V> addFunction) {
         return new SSeasonStatKey<>(def, key, new AddFunction<>(addFunction, offset));
+    }
+
+    public static SSeasonKey<Integer> newSeasonKey(String key, int def, int offset) {
+        return new SSeasonStatKey<>(def, key, new AddFunction<>(Integer::sum, offset), Integer::sum);
+    }
+
+    public static SSeasonKey<Long> newSeasonKey(String key, long def, long offset) {
+        return new SSeasonStatKey<Long>(def, key, new AddFunction<>(Long::sum, offset), Long::sum);
     }
 
     @RequiredArgsConstructor

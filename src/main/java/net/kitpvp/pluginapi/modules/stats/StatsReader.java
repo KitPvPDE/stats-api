@@ -16,6 +16,8 @@ public interface StatsReader {
 
     <V> V find(String key, V def);
 
+    Object getSource();
+
     default <K, V> boolean containsKey(StatsKey<K, V> statsKey, K k) {
         return this.find(statsKey.getKey(k), null) != null;
     }

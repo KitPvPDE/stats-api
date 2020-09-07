@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.kitpvp.mongodbapi.MongoCollection;
 import net.kitpvp.mongodbapi.async.Async;
 import net.kitpvp.mongodbapi.async.Sync;
+import net.kitpvp.mongodbapi.log.Log;
 import net.kitpvp.pluginapi.modules.stats.Stats;
 import net.kitpvp.pluginapi.modules.stats.StatsReader;
 import net.kitpvp.pluginapi.modules.stats.mongo.batch.BatchAction;
@@ -94,6 +95,7 @@ public class MongoStats implements Stats {
         if(document == null || document.isEmpty())
             return;
 
+        Log.debug("Executing update for {0} -> {1}", getPlayerId(), document);
         this.statsCollection.getCollection().updateOne(new Document("_id", getPlayerId().toString()), document, new UpdateOptions().upsert(true));
     }
 

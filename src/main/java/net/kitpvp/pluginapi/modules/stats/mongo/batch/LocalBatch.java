@@ -50,6 +50,11 @@ public class LocalBatch implements Batch<LocalStats> {
         return this;
     }
 
+    @Override
+    public void clear() {
+        //
+    }
+
     /*
     public <K> Batch<LocalStats> append(BatchAction action, StatsKey<K, Long> statsKey, K k, Long v) {
         switch(action){

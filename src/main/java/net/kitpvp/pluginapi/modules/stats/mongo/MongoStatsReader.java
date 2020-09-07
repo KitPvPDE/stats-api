@@ -10,6 +10,11 @@ class MongoStatsReader implements StatsReader {
     private final Document database;
 
     @Override
+    public Object getSource() {
+        return this.database;
+    }
+
+    @Override
     public <V> V find(String key, V def) {
         return this.getInternal(key, def);
     }
@@ -38,5 +43,12 @@ class MongoStatsReader implements StatsReader {
 
             return find(path, sub, defaultValue);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "MongoStatsReader{" +
+                "database=" + database.toJson() +
+                '}';
     }
 }

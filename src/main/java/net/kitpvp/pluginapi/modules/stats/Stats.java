@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 public interface Stats {
 
-    int SEASON = 3;
+    int SEASON = 4;
 
     void load(Consumer<StatsReader> callback, Executor executor);
 
@@ -160,6 +160,10 @@ public interface Stats {
             StatKeys.newStatsKey("misc.useless.afk", 0L);
     SStatsKey<Long> JOIN_TIME =
             StatKeys.newStatsKey("misc.useless.joined", -1L);
+    StatsKey<Integer, Integer> VOTING_SELECTION =
+            StatKeys.newStatsKey("misc.votings", (x) -> "" + x, null, -1);
+    SStatsKey<String> EQUIPPED_HEAD =
+            StatKeys.newStatsKey("misc.heads.equipped", (String) null);
 
     // DISCORD
     SStatsKey<Long> DISCORD_ID =
@@ -169,4 +173,7 @@ public interface Stats {
     StatsKey<String, String> DISCORD_PLATFORMS =
             StatKeys.newStatsKey("discord.platforms.", Function.identity(), null, "");
 
+    // WEBSITE
+    SStatsKey<String> API_KEY =
+            StatKeys.newStatsKey("misc.website.apiKey", "");
 }

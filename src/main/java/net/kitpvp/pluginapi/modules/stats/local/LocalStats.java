@@ -78,6 +78,11 @@ public class LocalStats implements Stats {
         public <V> V find(String key, V def) {
             return this.stats.getInternal(key, def);
         }
+
+        @Override
+        public Object getSource() {
+            return this.stats;
+        }
     }
 
     private <T> T getInternal(String key, T defaultValue) {

@@ -11,9 +11,10 @@ public class Season {
     public static final Season
             SEASON_1 = new Season(0L, 1581850800000L, 1),
             SEASON_2 = new Season(1581850800000L, 1589752800000L, 2),
-            SEASON_3 = new Season(1589752800000L, -1L, 3);
+            SEASON_3 = new Season(1589752800000L, 1597528800000L, 3),
+            SEASON_4 = new Season(1597528800000L, 1605304800000L, 4);
 
-    public static final Season CURRENT = SEASON_2;
+    public static final Season CURRENT = SEASON_4;
 
     @Getter
     private final long start, end;

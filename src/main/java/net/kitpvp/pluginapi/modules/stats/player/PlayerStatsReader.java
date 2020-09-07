@@ -16,4 +16,9 @@ public class PlayerStatsReader implements StatsReader {
 
         return this.mongoStatsReader != null ? this.mongoStatsReader.find(key, def) : def;
     }
+
+    @Override
+    public Object getSource() {
+        return this.mongoStatsReader != null ? this.mongoStatsReader.getSource() : this.localStatsReader.getSource();
+    }
 }

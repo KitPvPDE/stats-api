@@ -4,12 +4,17 @@ import com.mongodb.client.MongoIterable;
 import net.kitpvp.mongodbapi.MongoCollection;
 import net.kitpvp.pluginapi.modules.stats.StatsReader;
 import net.kitpvp.pluginapi.modules.stats.mongo.find.Comparison;
+import net.kitpvp.pluginapi.modules.stats.mongo.queries.CountQuery;
 import net.kitpvp.pluginapi.modules.stats.mongo.queries.FindQuery;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.SStatsKey;
 import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.StatsKey;
 import org.bson.Document;
 
 public class Mongo {
+
+    public static CountQuery count(MongoCollection collection) {
+        return new CountQuery(collection);
+    }
 
     public static <V> StatsReader findOne(MongoCollection collection, SStatsKey<V> statsKey, V v) {
         return findOne(collection, statsKey, Comparison.EQUALS, v);
@@ -34,11 +39,11 @@ public class Mongo {
     public static <K, V> MongoIterable<StatsReader> find(MongoCollection collection, StatsKey<K, V> statsKey, Comparison comparison, K k, V v) {
         String key = statsKey.getKey(k);
 
-        Document document = new Document().append(key, new Document(comparison.getCommand(), v));
+        Document document = new Document().append(key, new Document("$" + comparison.getCommand(), v));
         if(document.isEmpty())
             throw new UnsupportedOperationException("Cannot iterate over all documents");
 
-        return collection.getCollection().find().map(MongoStatsReader::new);
+        return collection.getCollection().find(document).map(MongoStatsReader::new);
     }
 
     public static FindQuery find(MongoCollection collection) {
