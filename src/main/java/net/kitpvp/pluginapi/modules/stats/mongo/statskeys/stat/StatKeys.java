@@ -48,6 +48,10 @@ public class StatKeys {
         return new SNumKey<>(new SStatKey<>(def, key, null), Double::sum);
     }
 
+    public static <K> StatsKey<K, Double> newStatsKey(String pre, Function<K, String> toKey, String post, double def) {
+        return new NumKey<>(new StatKey<>(def, new ToKeyFunction<>(pre, post, toKey), null), Double::sum);
+    }
+
     public static <V> SStatsKey<V> newStatsKey(String key, Supplier<V> toDefault) {
         return new SStatKey<V>(toDefault, key, null);
     }
