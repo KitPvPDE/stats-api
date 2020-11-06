@@ -1,9 +1,9 @@
 package net.kitpvp.api.stats;
 
-import net.kitpvp.api.stats.keys.SSeasonKey;
-import net.kitpvp.api.stats.keys.SStatsKey;
-import net.kitpvp.api.stats.keys.SeasonKey;
-import net.kitpvp.api.stats.keys.StatsKey;
+import net.kitpvp.stats.keys.SSeasonKey;
+import net.kitpvp.stats.keys.SStatsKey;
+import net.kitpvp.stats.keys.SeasonKey;
+import net.kitpvp.stats.keys.StatsKey;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public interface StatsReader {
     }
 
     default <K, V> boolean containsKey(StatsKey<K, V> statsKey, K k) {
-        return this.find(statsKey.getKey(k), null) != null;
+        return this.find(statsKey.key(k), null) != null;
     }
 
     // <- get methods ->
@@ -31,7 +31,7 @@ public interface StatsReader {
     }
 
     default <K, V> V getStatKey(StatsKey<K, V> statsKey, K k) {
-        return statsKey.apply(this.find(statsKey.getKey(k), statsKey.getDefault()));
+        return statsKey.apply(this.find(statsKey.key(k), statsKey.def()));
     }
 
     default <V, U> U getStatKey(SStatsKey<V> statsKey, Function<V, U> function) {
@@ -55,9 +55,10 @@ public interface StatsReader {
     // <- raw get methods ->
 
     default <K, V> V getRaw(StatsKey<K, V> statsKey, K k) {
-        return this.find(statsKey.getKey(k), statsKey.getDefault());
+        return this.find(statsKey.key(k), statsKey.def());
     }
 
+    /*
     default <V> V rawStatKey(SStatsKey<V> statsKey) {
         return this.rawStatKey(statsKey, null);
     }
@@ -84,5 +85,5 @@ public interface StatsReader {
 
         Map<String, Object> map = this.find(key, new HashMap<>());
         return map.keySet();
-    }
+    }*/
 }

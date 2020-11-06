@@ -1,22 +1,6 @@
 package net.kitpvp.api.stats;
 
-import net.kitpvp.mongodbapi.async.Async;
-import net.kitpvp.mongodbapi.async.Executors;
-import net.kitpvp.pluginapi.modules.stats.Setting;
-import net.kitpvp.pluginapi.modules.stats.mongo.batch.Batch;
-import net.kitpvp.pluginapi.modules.stats.mongo.batch.BatchAction;
-import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.SStatsKey;
-import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.StatsKey;
-import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.season.SSeasonKey;
-import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.season.SeasonKey;
-import net.kitpvp.pluginapi.modules.stats.mongo.statskeys.stat.StatKeys;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executor;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public interface Stats {
 
@@ -34,6 +18,7 @@ public interface Stats {
      */
     StatsReader load();
 
+    /*
     default void load(Consumer<StatsReader> callback) {
         this.load(callback, Executors.DIRECT);
     }
@@ -183,5 +168,5 @@ public interface Stats {
             StatKeys.newStatsKey("discord.code", "");
     StatsKey<String, String> DISCORD_PLATFORMS =
             StatKeys.newStatsKey("discord.platforms.", Function.identity(), null, "");
-
+*/
 }

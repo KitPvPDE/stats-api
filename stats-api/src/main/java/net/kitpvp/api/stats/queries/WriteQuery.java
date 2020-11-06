@@ -1,7 +1,7 @@
 package net.kitpvp.api.stats.queries;
 
-import net.kitpvp.api.stats.keys.SStatsKey;
-import net.kitpvp.api.stats.keys.StatsKey;
+import net.kitpvp.stats.keys.SStatsKey;
+import net.kitpvp.stats.keys.StatsKey;
 
 public interface WriteQuery {
 

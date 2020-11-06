@@ -17,5 +17,11 @@
             <artifactId>stats-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>${mongodb.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
