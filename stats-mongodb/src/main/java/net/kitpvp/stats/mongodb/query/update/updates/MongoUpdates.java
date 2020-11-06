@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class MongoUpdates {
+public interface MongoUpdates {
 
     static <K, V> MongoUpdate set(AppendableKey<K, V> statsKey, K k, V v) {
         return new MongoUpdateImpl<>(statsKey, k, v, Operator.SET);

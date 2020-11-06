@@ -1,10 +1,7 @@
 package net.kitpvp.stats.reader;
 
+import net.kitpvp.stats.keys.inc.numbers.*;
 import net.kitpvp.stats.season.Season;
-import net.kitpvp.stats.keys.inc.numbers.IntSSeasonKey;
-import net.kitpvp.stats.keys.inc.numbers.IntSStatsKey;
-import net.kitpvp.stats.keys.inc.numbers.IntSeasonKey;
-import net.kitpvp.stats.keys.inc.numbers.IntStatsKey;
 
 public interface IntReader extends Reader {
 
@@ -13,7 +10,7 @@ public interface IntReader extends Reader {
     }
 
     default int getIntKey(IntSStatsKey statsKey) {
-        return getIntKey(statsKey, null);
+        return statsKey.applyInt(getStatKey(statsKey, null));
     }
 
     default <K> int getIntKey(IntSeasonKey<K> seasonKey, K key, int season) {
@@ -22,6 +19,14 @@ public interface IntReader extends Reader {
 
     default int getIntKey(IntSSeasonKey seasonKey, int season) {
         return getIntKey(seasonKey.season(season));
+    }
+
+    default <K> int getIntKey(IntStageKey<K> stageKey, K key, int season, int stage) {
+        return getIntKey(stageKey.stage(season, stage), key);
+    }
+
+    default int getIntKey(IntSStageKey stageKey, int season, int stage) {
+        return getIntKey(stageKey.stage(season, stage));
     }
 
     default <K> int getAlltimeIntKey(IntSeasonKey<K> seasonKey, K key) {
@@ -38,5 +43,13 @@ public interface IntReader extends Reader {
 
     default int getSeasonIntKey(IntSSeasonKey seasonKey) {
         return getIntKey(seasonKey, null, Season.getSeason());
+    }
+
+    default <K> int getStageIntKey(IntStageKey<K> stageKey, K key) {
+        return getIntKey(stageKey.stage(), key);
+    }
+
+    default int getStageIntKey(IntSStageKey stageKey) {
+        return getIntKey(stageKey.stage());
     }
 }
