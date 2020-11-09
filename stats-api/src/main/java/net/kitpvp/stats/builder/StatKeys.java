@@ -1,8 +1,8 @@
 package net.kitpvp.stats.builder;
 
 import net.kitpvp.stats.keys.SStatsKey;
-import net.kitpvp.stats.keys.inc.numbers.DoubleSStatsKey;
-import net.kitpvp.stats.keys.inc.numbers.LongSStatsKey;
+import net.kitpvp.stats.keys.numeric.DoubleSStatsKey;
+import net.kitpvp.stats.keys.numeric.LongSStatsKey;
 
 public class StatKeys {
 

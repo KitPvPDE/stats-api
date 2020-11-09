@@ -1,21 +1,22 @@
 package net.kitpvp.stats.builder.inc;
 
+import net.kitpvp.stats.builder.ComponentBuilder;
 import net.kitpvp.stats.builder.builders.KeyBuilder;
-import net.kitpvp.stats.builder.builders.NormalBuilder;
 import net.kitpvp.stats.keys.impl.inc.IncStatsKeyImpl;
-import net.kitpvp.stats.keys.inc.IncStatsKey;
+import net.kitpvp.stats.keys.IncStatsKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 
-public class IncBuilder<K, V> extends NormalBuilder<K, V> {
+public class IncBuilder<K, V> implements ComponentBuilder<IncStatsKey<K, V>> {
 
-    private BiFunction<V, V, V> sum;
+    protected final KeyBuilder<K> keyBuilder;
+    private BinaryOperator<V> sum;
     private V neutral, offset;
-    ;
 
-    public IncBuilder(KeyBuilder<K> keyBuilder, BiFunction<V, V, V> sum, V neutral) {
-        super(keyBuilder, null);
+    public IncBuilder(KeyBuilder<K> keyBuilder, BinaryOperator<V> sum, V neutral) {
+        this.keyBuilder = keyBuilder;
         this.sum = sum;
         this.neutral = this.offset = neutral;
     }

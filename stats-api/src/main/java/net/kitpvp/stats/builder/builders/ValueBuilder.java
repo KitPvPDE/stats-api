@@ -1,13 +1,14 @@
 package net.kitpvp.stats.builder.builders;
 
-import net.kitpvp.stats.builder.Builder;
+import net.kitpvp.stats.builder.ComponentBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public class ValueBuilder<V> implements Builder<Function<V, V>> {
+public class ValueBuilder<V> implements ComponentBuilder<Function<V, V>> {
 
     @Override
-    public Function<V, V> build() {
+    public @NotNull Function<V, V> build() {
         return null;
     }
 }

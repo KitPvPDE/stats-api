@@ -1,7 +1,6 @@
 package net.kitpvp.stats.reader;
 
-import net.kitpvp.stats.keys.inc.numbers.*;
-import net.kitpvp.stats.season.Season;
+import net.kitpvp.stats.keys.numeric.*;
 
 public interface LongReader extends Reader {
 

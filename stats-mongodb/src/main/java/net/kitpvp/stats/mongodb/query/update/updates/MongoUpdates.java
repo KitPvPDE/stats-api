@@ -26,6 +26,10 @@ public interface MongoUpdates {
         return new MongoUpdateImpl<>(statsKey, k, v, Operator.INC);
     }
 
+    static <K> MongoUpdate inc(AppendableIncKey<K, Integer> statsKey, K k, int v) {
+        return new MongoUpdateImpl<>(statsKey, k, v, Operator.INC);
+    }
+
     static <K, V> MongoUpdate dec(AppendableIncKey<K, V> statsKey, K k, V v) {
         return new MongoUpdateImpl<>(statsKey, k, v, Operator.DEC);
     }

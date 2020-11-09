@@ -14,8 +14,8 @@ public interface StageKey<K, V> extends SeasonKey<K, V>, AppendableKey<K, V> {
 
     @Override
     default void append(K key, V value, TriConsumer<StatsKey<K, V>, K, V> function) {
-        SeasonKey.super.append(key, value, function);
-
         this.stage().append(key, value, function);
+
+        SeasonKey.super.append(key, value, function);
     }
 }
