@@ -4,7 +4,7 @@ public interface Operator {
 
     String operator();
 
-    default String command() {
+    default String mongoCommand() {
         return "$" + this.operator();
     }
 

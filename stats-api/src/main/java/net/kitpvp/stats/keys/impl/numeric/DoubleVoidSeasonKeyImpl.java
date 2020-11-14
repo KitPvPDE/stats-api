@@ -5,16 +5,19 @@ import net.kitpvp.stats.keys.numeric.DoubleSSeasonKey;
 import net.kitpvp.stats.keys.numeric.DoubleSStatsKey;
 
 import java.util.function.DoubleBinaryOperator;
+import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
 
 public class DoubleVoidSeasonKeyImpl extends VoidSeasonKeyImpl<Double, DoubleSStatsKey> implements DoubleSSeasonKey {
 
     private final DoubleBinaryOperator sumFunction;
+    private final DoubleUnaryOperator inverse;
     private final double neutral, def, offset;
 
-    public DoubleVoidSeasonKeyImpl(Function<Void, String> keyFunction, DoubleBinaryOperator sumFunction, double neutral, double def, double offset) {
+    public DoubleVoidSeasonKeyImpl(Function<Void, String> keyFunction, DoubleBinaryOperator sumFunction, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
         super(keyFunction);
         this.sumFunction = sumFunction;
+        this.inverse = inverse;
         this.neutral = neutral;
         this.def = def;
         this.offset = offset;
@@ -22,6 +25,6 @@ public class DoubleVoidSeasonKeyImpl extends VoidSeasonKeyImpl<Double, DoubleSSt
 
     @Override
     protected DoubleSStatsKey createKey(int season) {
-        return new DoubleVoidStatsKeyImpl(this.createKeyFunction(season), this.sumFunction, this.neutral, this.def, this.offset);
+        return new DoubleVoidStatsKeyImpl(this.createKeyFunction(season), this.sumFunction, this.inverse, this.neutral, this.def, this.offset);
     }
 }

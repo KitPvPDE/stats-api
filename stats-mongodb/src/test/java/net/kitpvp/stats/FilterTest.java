@@ -1,6 +1,7 @@
 package net.kitpvp.stats;
 
 import net.kitpvp.stats.mongodb.query.filter.MongoFilter;
+import net.kitpvp.stats.mongodb.query.filter.filters.MongoFilters;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -13,7 +14,7 @@ public class FilterTest {
     @Test
     public void testUUID() {
         UUID uuid = UUID.randomUUID();
-        MongoFilter filter = MongoFilter.uuid(uuid);
+        MongoFilter filter = MongoFilters.uuid(uuid);
         assertThat(filter.filter().get("_id"), is(uuid.toString()));
     }
 
@@ -21,7 +22,7 @@ public class FilterTest {
     public void testUUIDWithField() {
         UUID uuid = UUID.randomUUID();
         String field = "test";
-        MongoFilter filter = MongoFilter.uuid(uuid, field);
+        MongoFilter filter = MongoFilters.uuid(uuid, field);
         assertThat(filter.filter().get(field), is(uuid.toString()));
     }
 

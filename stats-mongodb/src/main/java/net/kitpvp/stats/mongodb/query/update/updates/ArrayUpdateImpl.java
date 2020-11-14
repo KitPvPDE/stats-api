@@ -2,10 +2,8 @@ package net.kitpvp.stats.mongodb.query.update.updates;
 
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.keys.AppendableArrayKey;
-import net.kitpvp.stats.api.keys.AppendableKey;
-import net.kitpvp.stats.keys.array.ArrayStatsKey;
 import net.kitpvp.stats.mongodb.MongoStatsReader;
-import net.kitpvp.stats.mongodb.query.update.ArrayOperator;
+import net.kitpvp.stats.query.update.ArrayAction;
 import net.kitpvp.stats.mongodb.query.update.MongoUpdate;
 import org.bson.Document;
 
@@ -20,9 +18,9 @@ class ArrayUpdateImpl<K, X> implements MongoUpdate {
     private final AppendableArrayKey<K, X> statsKey;
     private final K k;
     private final List<X> v;
-    private final ArrayOperator operator;
+    private final ArrayAction operator;
 
-    public ArrayUpdateImpl(AppendableArrayKey<K, X> statsKey, K k, Supplier<List<X>> supplier, X[] xs, ArrayOperator operator) {
+    public ArrayUpdateImpl(AppendableArrayKey<K, X> statsKey, K k, Supplier<List<X>> supplier, X[] xs, ArrayAction operator) {
         this.statsKey = statsKey;
         this.k = k;
         this.v = Stream.of(xs).collect(Collectors.toCollection(supplier));

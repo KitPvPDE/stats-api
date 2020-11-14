@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public interface Writable<Source, T> {
     
-    WriteQuery<T> write(Database database);
+    WriteQuery<T> write(Source database);
     
 }

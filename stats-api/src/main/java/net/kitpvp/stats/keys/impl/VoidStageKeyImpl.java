@@ -77,7 +77,7 @@ public class VoidStageKeyImpl<V, S extends SStatsKey<V>> extends VoidSeasonKeyIm
 
         @Override
         public String apply(Void k) {
-            return ("seasons.season" + this.season + ".stage" + this.stage) + "." + this.seasonKey.keyFunction.apply(k);
+            return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.apply(k);
         }
     }
 }

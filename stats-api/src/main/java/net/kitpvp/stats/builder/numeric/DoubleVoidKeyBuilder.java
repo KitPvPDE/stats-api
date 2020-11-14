@@ -1,15 +1,15 @@
 package net.kitpvp.stats.builder.numeric;
 
-import net.kitpvp.stats.builder.StatsKeyBuilder;
-import net.kitpvp.stats.builder.builders.KeyBuilder;
-import net.kitpvp.stats.builder.builders.VoidKeyBuilder;
+import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.builder.keys.KeyBuilder;
+import net.kitpvp.stats.builder.keys.VoidKeyBuilder;
 import net.kitpvp.stats.keys.impl.numeric.*;
 import net.kitpvp.stats.keys.numeric.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleBinaryOperator;
-import java.util.function.IntBinaryOperator;
+import java.util.function.DoubleUnaryOperator;
 
 public class DoubleVoidKeyBuilder extends DoubleKeyBuilder<Void> implements StatsKeyBuilder<Void, Double> {
 
@@ -26,8 +26,13 @@ public class DoubleVoidKeyBuilder extends DoubleKeyBuilder<Void> implements Stat
         return this;
     }
 
-    public DoubleVoidKeyBuilder function(DoubleBinaryOperator operator) {
-        this.function = operator;
+    public DoubleVoidKeyBuilder addition(DoubleBinaryOperator addition) {
+        this.function = addition;
+        return this;
+    }
+
+    public DoubleVoidKeyBuilder inverse(DoubleUnaryOperator inverse) {
+        this.inverse = inverse;
         return this;
     }
 
@@ -48,16 +53,16 @@ public class DoubleVoidKeyBuilder extends DoubleKeyBuilder<Void> implements Stat
 
     @Override
     public @NotNull DoubleSStatsKey build() {
-        return new DoubleVoidStatsKeyImpl(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new DoubleVoidStatsKeyImpl(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull DoubleSSeasonKey season() {
-        return new DoubleVoidSeasonKeyImpl(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new DoubleVoidSeasonKeyImpl(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull DoubleSStageKey stage() {
-        return new DoubleVoidStageKeyImpl(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new DoubleVoidStageKeyImpl(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 }

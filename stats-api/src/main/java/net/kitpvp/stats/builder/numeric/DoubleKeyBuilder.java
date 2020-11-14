@@ -1,22 +1,25 @@
 package net.kitpvp.stats.builder.numeric;
 
-import net.kitpvp.stats.builder.StatsKeyBuilder;
-import net.kitpvp.stats.builder.builders.KeyBuilder;
+import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.builder.keys.KeyBuilder;
 import net.kitpvp.stats.keys.impl.numeric.DoubleSeasonKeyImpl;
 import net.kitpvp.stats.keys.impl.numeric.DoubleStageKeyImpl;
 import net.kitpvp.stats.keys.impl.numeric.DoubleStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.DoubleSeasonKey;
 import net.kitpvp.stats.keys.numeric.DoubleStageKey;
 import net.kitpvp.stats.keys.numeric.DoubleStatsKey;
+import net.kitpvp.stats.utils.Functions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleBinaryOperator;
+import java.util.function.DoubleUnaryOperator;
 
 public class DoubleKeyBuilder<K> implements StatsKeyBuilder<K, Double> {
 
     protected final KeyBuilder<K> keyBuilder;
-    protected DoubleBinaryOperator function = Double::sum;
+    protected DoubleBinaryOperator addition = Double::sum;
+    protected DoubleUnaryOperator inverse = Functions::inverse;
     protected double neutral = 0, def = 0, offset = 0;
 
     public DoubleKeyBuilder() {
@@ -28,8 +31,13 @@ public class DoubleKeyBuilder<K> implements StatsKeyBuilder<K, Double> {
         return this;
     }
 
-    public DoubleKeyBuilder<K> function(DoubleBinaryOperator operator) {
-        this.function = operator;
+    public DoubleKeyBuilder<K> addition(DoubleBinaryOperator addition) {
+        this.addition = addition;
+        return this;
+    }
+
+    public DoubleKeyBuilder<K> inverse(DoubleUnaryOperator function) {
+        this.inverse = function;
         return this;
     }
 
@@ -50,16 +58,16 @@ public class DoubleKeyBuilder<K> implements StatsKeyBuilder<K, Double> {
 
     @Override
     public @NotNull DoubleStatsKey<K> build() {
-        return new DoubleStatsKeyImpl<>(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new DoubleStatsKeyImpl<>(this.keyBuilder.build(), this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull DoubleSeasonKey<K> season() {
-        return new DoubleSeasonKeyImpl<>(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new DoubleSeasonKeyImpl<>(this.keyBuilder.build(), this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull DoubleStageKey<K> stage() {
-        return new DoubleStageKeyImpl<>(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new DoubleStageKeyImpl<>(this.keyBuilder.build(), this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
 }

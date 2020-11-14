@@ -1,8 +1,9 @@
 package net.kitpvp.stats.keys.numeric;
 
 import net.kitpvp.stats.keys.IncSSeasonKey;
+import net.kitpvp.stats.keys.SStageKey;
 
-public interface DoubleSStageKey extends DoubleStageKey<Void>, IncSSeasonKey<Double> {
+public interface DoubleSStageKey extends DoubleStageKey<Void>, IncSSeasonKey<Double>, SStageKey<Double>, DoubleSSeasonKey {
 
     @Override
     DoubleSStatsKey season(int season);

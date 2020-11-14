@@ -13,10 +13,10 @@ public interface DoubleSStatsKey extends DoubleStatsKey<Void>, IncSStatsKey<Doub
     }
 
     @Override
-    BinaryOperator<Double> function();
+    BinaryOperator<Double> addition();
 
     @Override
-    DoubleBinaryOperator doubleFunction();
+    DoubleBinaryOperator additionDouble();
 
     @Override
     Double neutral();

@@ -13,10 +13,10 @@ public interface LongSStatsKey extends LongStatsKey<Void>, IncSStatsKey<Long> {
     }
 
     @Override
-    BinaryOperator<Long> function();
+    BinaryOperator<Long> addition();
 
     @Override
-    LongBinaryOperator longFunction();
+    LongBinaryOperator additionLong();
 
     @Override
     Long neutral();

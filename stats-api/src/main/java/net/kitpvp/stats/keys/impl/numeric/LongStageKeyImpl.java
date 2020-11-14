@@ -6,15 +6,18 @@ import net.kitpvp.stats.keys.numeric.LongStatsKey;
 
 import java.util.function.Function;
 import java.util.function.LongBinaryOperator;
+import java.util.function.LongUnaryOperator;
 
 public class LongStageKeyImpl<K> extends StageKeyImpl<K, Long, LongStatsKey<K>> implements LongStageKey<K> {
 
-    private final LongBinaryOperator sumFunction;
+    private final LongBinaryOperator addition;
+    private final LongUnaryOperator inverse;
     private final long neutral, def, offset;
 
-    public LongStageKeyImpl(Function<K, String> keyFunction, LongBinaryOperator sumFunction, long neutral, long def, long offset) {
+    public LongStageKeyImpl(Function<K, String> keyFunction, LongBinaryOperator addition, LongUnaryOperator inverse, long neutral, long def, long offset) {
         super(keyFunction);
-        this.sumFunction = sumFunction;
+        this.addition = addition;
+        this.inverse = inverse;
         this.neutral = neutral;
         this.def = def;
         this.offset = offset;
@@ -22,11 +25,11 @@ public class LongStageKeyImpl<K> extends StageKeyImpl<K, Long, LongStatsKey<K>> 
 
     @Override
     protected LongStatsKey<K> createKey(int season, int stage) {
-        return new LongStatsKeyImpl<>(this.createKeyFunction(season, stage), this.sumFunction, this.neutral, this.def, this.offset);
+        return new LongStatsKeyImpl<>(this.createKeyFunction(season, stage), this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     protected LongStatsKey<K> createKey(int season) {
-        return new LongStatsKeyImpl<>(this.createKeyFunction(season), this.sumFunction, this.neutral, this.def, this.offset);
+        return new LongStatsKeyImpl<>(this.createKeyFunction(season), this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
 }

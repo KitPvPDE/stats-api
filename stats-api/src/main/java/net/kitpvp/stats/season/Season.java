@@ -54,6 +54,19 @@ public final class Season {
         return stage.getNumber();
     }
 
+    public static int getStagesThisSeason() {
+        Season season = SEASON.get();
+        if(season == null || !season.isLive()) {
+            season = loadSeason();
+            SEASON.set(season);
+        }
+
+        if(season == null)
+            throw new IllegalStateException("No season live currently");
+
+        return season.getStages().size();
+    }
+
     public static Season getSeason(int number) {
         return Arrays.stream(SEASONS).filter(season -> season.getNumber() == number).findAny().orElse(null);
     }

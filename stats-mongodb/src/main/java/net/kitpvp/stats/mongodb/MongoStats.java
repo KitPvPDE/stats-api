@@ -8,6 +8,7 @@ import net.kitpvp.stats.mongodb.query.MongoCountQuery;
 import net.kitpvp.stats.mongodb.query.MongoFindQuery;
 import net.kitpvp.stats.mongodb.query.MongoWriteQuery;
 import net.kitpvp.stats.mongodb.query.filter.MongoFilter;
+import net.kitpvp.stats.mongodb.query.filter.filters.MongoFilters;
 import net.kitpvp.stats.query.WriteQuery;
 
 import java.util.UUID;
@@ -36,17 +37,17 @@ public class MongoStats implements Stats<Database, MongoStatsReader> {
 
     @Override
     public MongoFindQuery find(Database database) {
-        return Mongo.find(database, this.collection, MongoFilter.uuid(this.playerId));
+        return Mongo.find(database, this.collection, MongoFilters.uuid(this.playerId));
     }
 
     @Override
     public MongoCountQuery count(Database database) {
-        return Mongo.count(database, this.collection, MongoFilter.uuid(this.playerId));
+        return Mongo.count(database, this.collection, MongoFilters.uuid(this.playerId));
     }
 
     @Override
     public MongoWriteQuery write(Database database) {
-        return Mongo.write(database, this.collection, MongoFilter.uuid(this.playerId));
+        return Mongo.write(database, this.collection, MongoFilters.uuid(this.playerId));
     }
 
     @Override

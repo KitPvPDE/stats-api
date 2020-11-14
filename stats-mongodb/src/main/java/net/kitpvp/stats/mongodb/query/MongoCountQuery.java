@@ -3,6 +3,8 @@ package net.kitpvp.stats.mongodb.query;
 import com.google.common.base.Preconditions;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
+import net.kitpvp.mongodbapi.log.Log;
+import net.kitpvp.stats.Stats;
 import net.kitpvp.stats.mongodb.MongoStatsReader;
 import net.kitpvp.stats.query.CountQuery;
 import net.kitpvp.stats.query.filter.Filter;
@@ -31,6 +33,9 @@ public final class MongoCountQuery implements CountQuery<MongoStatsReader> {
     }
 
     public final long count() {
+        Stats.checkForMainThread();
+
+        Log.debug("Executing count for {0}", this.query.source());
         return this.database.getCollection(this.collection).countDocuments(this.query.source());
     }
 }

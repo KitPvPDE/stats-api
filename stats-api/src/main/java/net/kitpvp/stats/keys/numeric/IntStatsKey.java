@@ -5,6 +5,8 @@ import net.kitpvp.stats.keys.IncStatsKey;
 
 import java.util.function.BinaryOperator;
 import java.util.function.IntBinaryOperator;
+import java.util.function.IntUnaryOperator;
+import java.util.function.UnaryOperator;
 
 public interface IntStatsKey<K> extends IncStatsKey<K, Integer> {
 
@@ -12,9 +14,14 @@ public interface IntStatsKey<K> extends IncStatsKey<K, Integer> {
         return new IntKeyBuilder<>();
     }
 
-    BinaryOperator<Integer> function();
+    BinaryOperator<Integer> addition();
 
-    IntBinaryOperator intFunction();
+    IntBinaryOperator additionInt();
+
+    @Override
+    UnaryOperator<Integer> inverse();
+
+    IntUnaryOperator inverseInt();
 
     @Override
     @Deprecated

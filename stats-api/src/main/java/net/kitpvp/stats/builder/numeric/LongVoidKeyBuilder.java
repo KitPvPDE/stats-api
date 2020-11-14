@@ -1,15 +1,14 @@
 package net.kitpvp.stats.builder.numeric;
 
-import net.kitpvp.stats.builder.StatsKeyBuilder;
-import net.kitpvp.stats.builder.builders.KeyBuilder;
-import net.kitpvp.stats.builder.builders.VoidKeyBuilder;
+import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.builder.keys.KeyBuilder;
+import net.kitpvp.stats.builder.keys.VoidKeyBuilder;
 import net.kitpvp.stats.keys.impl.numeric.LongVoidSeasonKeyImpl;
 import net.kitpvp.stats.keys.impl.numeric.LongVoidStageKeyImpl;
 import net.kitpvp.stats.keys.impl.numeric.LongVoidStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.LongSSeasonKey;
 import net.kitpvp.stats.keys.numeric.LongSStageKey;
 import net.kitpvp.stats.keys.numeric.LongSStatsKey;
-import net.kitpvp.stats.keys.numeric.LongStageKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -52,16 +51,16 @@ public class LongVoidKeyBuilder extends LongKeyBuilder<Void> implements StatsKey
 
     @Override
     public @NotNull LongSStatsKey build() {
-        return new LongVoidStatsKeyImpl(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new LongVoidStatsKeyImpl(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull LongSSeasonKey season() {
-        return new LongVoidSeasonKeyImpl(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new LongVoidSeasonKeyImpl(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull LongSStageKey stage() {
-        return new LongVoidStageKeyImpl(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new LongVoidStageKeyImpl(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 }

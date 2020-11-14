@@ -1,6 +1,7 @@
 package net.kitpvp.stats;
 
 import net.kitpvp.mongodbapi.async.Async;
+import net.kitpvp.mongodbapi.async.Sync;
 import net.kitpvp.stats.api.Countable;
 import net.kitpvp.stats.api.Findable;
 import net.kitpvp.stats.api.Writable;
@@ -26,5 +27,9 @@ public interface Stats<Source, T> extends Findable<Source, T>, Countable<Source,
         });
     }
 
-
+    static void checkForMainThread() {
+        if(Sync.isMainThread()){
+            throw new IllegalStateException("Synchronous database action via main server thread");
+        }
+    }
 }

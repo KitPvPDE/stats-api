@@ -76,7 +76,7 @@ public class StageKeyImpl<K, V, S extends StatsKey<K, V>> extends SeasonKeyImpl<
 
         @Override
         public String apply(K k) {
-            return ("seasons.season" + this.season + ".stage" + this.stage) + "." + this.seasonKey.keyFunction.apply(k);
+            return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.apply(k);
         }
     }
 }

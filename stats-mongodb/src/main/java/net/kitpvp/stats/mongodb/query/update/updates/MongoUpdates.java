@@ -4,9 +4,9 @@ import net.kitpvp.stats.api.keys.AppendableArrayKey;
 import net.kitpvp.stats.api.keys.AppendableIncKey;
 import net.kitpvp.stats.api.keys.AppendableKey;
 import net.kitpvp.stats.keys.array.ArrayStatsKey;
-import net.kitpvp.stats.mongodb.query.update.ArrayOperator;
+import net.kitpvp.stats.query.update.ArrayAction;
 import net.kitpvp.stats.mongodb.query.update.MongoUpdate;
-import net.kitpvp.stats.mongodb.query.update.Operator;
+import net.kitpvp.stats.query.update.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,83 +15,104 @@ import java.util.function.Supplier;
 public interface MongoUpdates {
 
     static <K, V> MongoUpdate set(AppendableKey<K, V> statsKey, K k, V v) {
-        return new MongoUpdateImpl<>(statsKey, k, v, Operator.SET);
+        return new MongoUpdateImpl<>(statsKey, k, v, Action.SET);
+    }
+
+    static <V> MongoUpdate set(AppendableKey<Void, V> statsKey, V v) {
+        return new MongoUpdateImpl<>(statsKey, null, v, Action.SET);
     }
 
     static <K, V> MongoUpdate unset(AppendableKey<K, V> statsKey, K k, V v) {
-        return new MongoUpdateImpl<>(statsKey, k, v, Operator.UNSET);
+        return new MongoUpdateImpl<>(statsKey, k, v, Action.UNSET);
     }
 
     static <K, V> MongoUpdate inc(AppendableIncKey<K, V> statsKey, K k, V v) {
-        return new MongoUpdateImpl<>(statsKey, k, v, Operator.INC);
+        return new MongoUpdateImpl<>(statsKey, k, v, Action.INC);
+    }
+
+    static <V> MongoUpdate inc(AppendableIncKey<Void, V> statsKey, V v) {
+        return new MongoUpdateImpl<>(statsKey, null, v, Action.INC);
     }
 
     static <K> MongoUpdate inc(AppendableIncKey<K, Integer> statsKey, K k, int v) {
-        return new MongoUpdateImpl<>(statsKey, k, v, Operator.INC);
+        return new MongoUpdateImpl<>(statsKey, k, v, Action.INC);
     }
 
+    static MongoUpdate inc(AppendableIncKey<Void, Integer> statsKey, int v) {
+        return new MongoUpdateImpl<>(statsKey, null, v, Action.INC);
+    }
+
+    static <K> MongoUpdate inc(AppendableIncKey<K, Long> statsKey, K k, long v) {
+        return new MongoUpdateImpl<>(statsKey, k, v, Action.INC);
+    }
+
+    static MongoUpdate inc(AppendableIncKey<Void, Long> statsKey, long v) {
+        return new MongoUpdateImpl<>(statsKey, null, v, Action.INC);
+    }
+
+
     static <K, V> MongoUpdate dec(AppendableIncKey<K, V> statsKey, K k, V v) {
-        return new MongoUpdateImpl<>(statsKey, k, v, Operator.DEC);
+        return new MongoUpdateImpl<>(statsKey, k, v, Action.DEC);
     }
 
     static <K, V> MongoUpdate mul(AppendableIncKey<K, V> statsKey, K k, V v) {
-        return new MongoUpdateImpl<>(statsKey, k, v, Operator.MUL);
+        return new MongoUpdateImpl<>(statsKey, k, v, Action.MUL);
     }
 
     static <K, X> MongoUpdate push(ArrayStatsKey<K, X> statsKey, K k, List<X> v) {
-        return new ArrayUpdateImpl<>(statsKey, k, v, ArrayOperator.PUSH);
+        return new ArrayUpdateImpl<>(statsKey, k, v, ArrayAction.PUSH);
     }
 
     static <X> MongoUpdate push(AppendableArrayKey<Void, X> statsKey, List<X> v) {
-        return new ArrayUpdateImpl<>(statsKey, null, v, ArrayOperator.PUSH);
+        return new ArrayUpdateImpl<>(statsKey, null, v, ArrayAction.PUSH);
     }
 
     @SafeVarargs
     static <K, X> MongoUpdate push(ArrayStatsKey<K, X> statsKey, K k, X... xs) {
-        return new ArrayUpdateImpl<>(statsKey, k, ArrayList::new, xs, ArrayOperator.PUSH);
+        return new ArrayUpdateImpl<>(statsKey, k, ArrayList::new, xs, ArrayAction.PUSH);
     }
 
     @SafeVarargs
     static <K, X> MongoUpdate push(ArrayStatsKey<K, X> statsKey, K k, Supplier<List<X>> supplier, X... xs) {
-        return new ArrayUpdateImpl<>(statsKey, k, supplier, xs, ArrayOperator.PUSH);
+        return new ArrayUpdateImpl<>(statsKey, k, supplier, xs, ArrayAction.PUSH);
     }
 
     @SafeVarargs
     static <X> MongoUpdate push(AppendableArrayKey<Void, X> statsKey, X... xs) {
-        return new ArrayUpdateImpl<>(statsKey, null, ArrayList::new, xs, ArrayOperator.PUSH);
+        return new ArrayUpdateImpl<>(statsKey, null, ArrayList::new, xs, ArrayAction.PUSH);
     }
 
     @SafeVarargs
     static <X> MongoUpdate push(AppendableArrayKey<Void, X> statsKey, Supplier<List<X>> supplier, X... xs) {
-        return new ArrayUpdateImpl<>(statsKey, null, supplier, xs, ArrayOperator.PUSH);
+        return new ArrayUpdateImpl<>(statsKey, null, supplier, xs, ArrayAction.PUSH);
     }
 
     static <K, X> MongoUpdate pull(ArrayStatsKey<K, X> statsKey, K k, List<X> v) {
-        return new ArrayUpdateImpl<>(statsKey, k, v, ArrayOperator.PULL);
+        return new ArrayUpdateImpl<>(statsKey, k, v, ArrayAction.PULL);
     }
 
     static <X> MongoUpdate pull(AppendableArrayKey<Void, X> statsKey, List<X> v) {
-        return new ArrayUpdateImpl<>(statsKey, null, v, ArrayOperator.PULL);
+        return new ArrayUpdateImpl<>(statsKey, null, v, ArrayAction.PULL);
     }
 
     @SafeVarargs
     static <K, X> MongoUpdate pull(ArrayStatsKey<K, X> statsKey, K k, X... xs) {
-        return new ArrayUpdateImpl<>(statsKey, k, ArrayList::new, xs, ArrayOperator.PULL);
+        return new ArrayUpdateImpl<>(statsKey, k, ArrayList::new, xs, ArrayAction.PULL);
     }
 
     @SafeVarargs
     static <K, X> MongoUpdate pull(ArrayStatsKey<K, X> statsKey, K k, Supplier<List<X>> supplier, X... xs) {
-        return new ArrayUpdateImpl<>(statsKey, k, supplier, xs, ArrayOperator.PULL);
+        return new ArrayUpdateImpl<>(statsKey, k, supplier, xs, ArrayAction.PULL);
     }
 
     @SafeVarargs
     static <X> MongoUpdate pull(AppendableArrayKey<Void, X> statsKey, X... xs) {
-        return new ArrayUpdateImpl<>(statsKey, null, ArrayList::new, xs, ArrayOperator.PULL);
+        return new ArrayUpdateImpl<>(statsKey, null, ArrayList::new, xs, ArrayAction.PULL);
     }
 
     @SafeVarargs
     static <X> MongoUpdate pull(AppendableArrayKey<Void, X> statsKey, Supplier<List<X>> supplier, X... xs) {
-        return new ArrayUpdateImpl<>(statsKey, null, supplier, xs, ArrayOperator.PULL);
+        return new ArrayUpdateImpl<>(statsKey, null, supplier, xs, ArrayAction.PULL);
     }
 
 }

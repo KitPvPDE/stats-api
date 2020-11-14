@@ -6,15 +6,18 @@ import net.kitpvp.stats.keys.numeric.LongSStatsKey;
 
 import java.util.function.Function;
 import java.util.function.LongBinaryOperator;
+import java.util.function.LongUnaryOperator;
 
 public class LongVoidSeasonKeyImpl extends VoidSeasonKeyImpl<Long, LongSStatsKey> implements LongSSeasonKey {
 
     private final LongBinaryOperator sumFunction;
+    private final LongUnaryOperator inverse;
     private final long neutral, def, offset;
 
-    public LongVoidSeasonKeyImpl(Function<Void, String> keyFunction, LongBinaryOperator sumFunction, long neutral, long def, long offset) {
+    public LongVoidSeasonKeyImpl(Function<Void, String> keyFunction, LongBinaryOperator sumFunction, LongUnaryOperator inverse, long neutral, long def, long offset) {
         super(keyFunction);
         this.sumFunction = sumFunction;
+        this.inverse = inverse;
         this.neutral = neutral;
         this.def = def;
         this.offset = offset;
@@ -22,6 +25,6 @@ public class LongVoidSeasonKeyImpl extends VoidSeasonKeyImpl<Long, LongSStatsKey
 
     @Override
     protected LongSStatsKey createKey(int season) {
-        return new LongVoidStatsKeyImpl(this.createKeyFunction(season), this.sumFunction, this.neutral, this.def, this.offset);
+        return new LongVoidStatsKeyImpl(this.createKeyFunction(season), this.sumFunction, this.inverse, this.neutral, this.def, this.offset);
     }
 }

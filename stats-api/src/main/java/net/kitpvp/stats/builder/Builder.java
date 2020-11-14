@@ -2,9 +2,13 @@ package net.kitpvp.stats.builder;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import net.kitpvp.stats.api.keys.AppendableKey;
-import net.kitpvp.stats.builder.builders.KeyBuilder;
+import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.builder.keys.KeyBuilder;
+import net.kitpvp.stats.keys.SeasonKey;
+import net.kitpvp.stats.keys.StageKey;
 import net.kitpvp.stats.keys.StatsKey;
+import net.kitpvp.stats.keys.impl.SeasonKeyImpl;
+import net.kitpvp.stats.keys.impl.StageKeyImpl;
 import net.kitpvp.stats.keys.impl.StatsKeyImpl;
 import net.kitpvp.stats.keys.impl.functions.FinalSupplier;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Builder<K, V> implements ComponentBuilder<AppendableKey<K, V>> {
+public class Builder<K, V> implements StatsKeyBuilder<K, V> {
 
     protected final KeyBuilder<K> keyBuilder;
     protected Supplier<V> defaultSupplier;
@@ -41,5 +45,15 @@ public class Builder<K, V> implements ComponentBuilder<AppendableKey<K, V>> {
     @Override
     public @NotNull StatsKey<K, V> build() {
         return new StatsKeyImpl<>(this.defaultSupplier, this.keyBuilder.build());
+    }
+
+    @Override
+    public @NotNull SeasonKey<K, V> season() {
+        return new SeasonKeyImpl<K, V, StatsKey<K, V>>(StatsKeyImpl::new, this.defaultSupplier, this.keyBuilder.build());
+    }
+
+    @Override
+    public @NotNull StageKey<K, V> stage() {
+        return new StageKeyImpl<K, V, StatsKey<K, V>>(StatsKeyImpl::new, this.defaultSupplier, this.keyBuilder.build());
     }
 }

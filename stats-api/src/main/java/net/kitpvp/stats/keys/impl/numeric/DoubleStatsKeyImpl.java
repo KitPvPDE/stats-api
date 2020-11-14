@@ -1,45 +1,30 @@
 package net.kitpvp.stats.keys.impl.numeric;
 
+import net.kitpvp.stats.keys.impl.NumericStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.DoubleStatsKey;
-import net.kitpvp.stats.keys.numeric.IntStatsKey;
 
-import java.util.function.BinaryOperator;
-import java.util.function.DoubleBinaryOperator;
-import java.util.function.Function;
-import java.util.function.IntBinaryOperator;
+import java.util.function.*;
 
-public class DoubleStatsKeyImpl<K> implements DoubleStatsKey<K> {
+public class DoubleStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Double> implements DoubleStatsKey<K> {
 
     private final Function<K, String> keyFunction;
-    private final DoubleBinaryOperator function;
+    private final DoubleBinaryOperator addition;
+    private final DoubleUnaryOperator inverse;
     private final double neutral, def, offset;
 
-    public DoubleStatsKeyImpl(Function<K, String> keyFunction, DoubleBinaryOperator function, double neutral, double def, double offset) {
+    public DoubleStatsKeyImpl(Function<K, String> keyFunction, DoubleBinaryOperator addition, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
+        super(keyFunction, addition::applyAsDouble, inverse::applyAsDouble, neutral, def, offset);
         this.keyFunction = keyFunction;
-        this.function = function;
+        this.addition = addition;
+        this.inverse = inverse;
         this.neutral = neutral;
         this.def = def;
         this.offset = offset;
     }
 
     @Override
-    public String key(K k) {
-        return this.keyFunction.apply(k);
-    }
-
-    @Override
-    public Double apply(Double integer) {
-        return this.applyDouble(integer);
-    }
-
-    @Override
     public double applyDouble(double d) {
-        return d + this.offset;
-    }
-
-    @Override
-    public Double def() {
-        return this.def;
+        return this.addition.applyAsDouble(d, this.offset);
     }
 
     @Override
@@ -48,22 +33,17 @@ public class DoubleStatsKeyImpl<K> implements DoubleStatsKey<K> {
     }
 
     @Override
-    public Double neutral() {
-        return this.neutral;
-    }
-
-    @Override
     public double neutralDouble() {
         return this.neutral;
     }
 
     @Override
-    public BinaryOperator<Double> function() {
-        return this.function::applyAsDouble;
+    public DoubleBinaryOperator additionDouble() {
+        return this.addition;
     }
 
     @Override
-    public DoubleBinaryOperator doubleFunction() {
-        return this.function;
+    public DoubleUnaryOperator inverseDouble() {
+        return this.inverse;
     }
 }

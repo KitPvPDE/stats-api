@@ -4,18 +4,19 @@ import com.google.common.base.Preconditions;
 import com.mongodb.client.model.UpdateOptions;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
+import net.kitpvp.mongodbapi.log.Log;
+import net.kitpvp.stats.Stats;
 import net.kitpvp.stats.mongodb.MongoStatsReader;
 import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
 import net.kitpvp.stats.query.WriteQuery;
 import net.kitpvp.stats.query.filter.Filter;
-import net.kitpvp.stats.query.filter.Update;
+import net.kitpvp.stats.query.update.Update;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
-public final class
-MongoWriteQuery implements WriteQuery<MongoStatsReader>, AsyncExecutable {
+public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, AsyncExecutable {
 
     private final Database database;
     private final Collection collection;
@@ -44,15 +45,26 @@ MongoWriteQuery implements WriteQuery<MongoStatsReader>, AsyncExecutable {
         return this;
     }
 
+    public final int updateSize() {
+        return this.update.source().size();
+    }
+
+    public final int filterSize() {
+        return this.criteria.source().size();
+    }
+
     @Override
     public final void execute() {
         this.execute(false);
     }
 
     public final void execute(boolean updateMany) {
+        Stats.checkForMainThread();
+
         if(this.update.source().isEmpty() || this.criteria.source().isEmpty())
             throw new UnsupportedOperationException("Empty criteria and/or update document");
 
+        Log.debug("Executing update {0} for {1}", this.update.source(), this.criteria.source());
         if(updateMany)
             this.database.getCollection(this.collection).updateMany(this.criteria.source(), this.update.source(), new UpdateOptions().upsert(true));
         else

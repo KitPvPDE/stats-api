@@ -5,6 +5,7 @@ import net.kitpvp.stats.keys.numeric.IntStageKey;
 import net.kitpvp.stats.keys.numeric.IntStatsKey;
 import net.kitpvp.stats.mongodb.MongoStatsReader;
 import net.kitpvp.stats.mongodb.query.update.updates.MongoUpdates;
+import net.kitpvp.stats.season.Season;
 import org.bson.Document;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class ReaderTest {
         MongoUpdates.inc(intSeasonKey, "function", 3).append(statsReader);
 
         assertEquals(statsReader.source(), new Document("$inc", new Document().
-                append("seasons.season4.prefix.function.suffix", 3).
+                append("seasons.season" + Season.getSeason() + ".prefix.function.suffix", 3).
                 append("alltime.prefix.function.suffix", 3)));
     }
 
@@ -48,8 +49,8 @@ public class ReaderTest {
         MongoUpdates.inc(intStageKey, "function", 3).append(statsReader);
 
         assertEquals(statsReader.source(), new Document("$inc", new Document().
-                append("seasons.season4.stage1.prefix.function.suffix", 3).
-                append("seasons.season4.prefix.function.suffix", 3).
+                append("seasons.season" + Season.getSeason() + ".stages.stage1.prefix.function.suffix", 3).
+                append("seasons.season" + Season.getSeason() + ".prefix.function.suffix", 3).
                 append("alltime.prefix.function.suffix", 3)));
     }
 }

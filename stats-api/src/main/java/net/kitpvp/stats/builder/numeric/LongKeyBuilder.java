@@ -1,18 +1,21 @@
 package net.kitpvp.stats.builder.numeric;
 
-import net.kitpvp.stats.builder.StatsKeyBuilder;
-import net.kitpvp.stats.builder.builders.KeyBuilder;
+import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.builder.keys.KeyBuilder;
 import net.kitpvp.stats.keys.impl.numeric.*;
 import net.kitpvp.stats.keys.numeric.*;
+import net.kitpvp.stats.utils.Functions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.LongBinaryOperator;
+import java.util.function.LongUnaryOperator;
 
 public class LongKeyBuilder<K> implements StatsKeyBuilder<K, Long> {
 
     protected final KeyBuilder<K> keyBuilder;
     protected LongBinaryOperator function = Long::sum;
+    protected LongUnaryOperator inverse = Functions::inverse;
     protected long neutral = 0, def = 0, offset = 0;
 
     public LongKeyBuilder() {
@@ -46,16 +49,16 @@ public class LongKeyBuilder<K> implements StatsKeyBuilder<K, Long> {
 
     @Override
     public @NotNull LongStatsKey<K> build() {
-        return new LongStatsKeyImpl<>(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new LongStatsKeyImpl<>(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull LongSeasonKey<K> season() {
-        return new LongSeasonKeyImpl<>(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new LongSeasonKeyImpl<>(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull LongStageKey<K> stage() {
-        return new LongStageKeyImpl<>(this.keyBuilder.build(), this.function, this.neutral, this.def, this.offset);
+        return new LongStageKeyImpl<>(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 }

@@ -3,7 +3,14 @@ package net.kitpvp.stats.mongodb;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.StatsReader;
+import net.kitpvp.stats.keys.StatsKey;
 import org.bson.Document;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class MongoStatsReader implements StatsReader {
@@ -40,4 +47,15 @@ public class MongoStatsReader implements StatsReader {
         }
     }
 
+    @Override
+    public <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, K k, Function<String, U> function) {
+        String key = statsKey.key(k);
+        Map<String, Object> map;
+        if(key.contains("."))
+            map = this.find(key.substring(0, key.lastIndexOf('.')), new HashMap<>());
+        else
+            map = this.source;
+
+        return map.keySet().stream().map(function).collect(Collectors.toSet());
+    }
 }

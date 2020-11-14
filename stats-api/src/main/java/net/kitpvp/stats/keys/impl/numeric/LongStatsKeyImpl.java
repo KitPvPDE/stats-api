@@ -1,45 +1,30 @@
 package net.kitpvp.stats.keys.impl.numeric;
 
-import net.kitpvp.stats.keys.numeric.IntStatsKey;
+import net.kitpvp.stats.keys.impl.NumericStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.LongStatsKey;
 
-import java.util.function.BinaryOperator;
 import java.util.function.Function;
-import java.util.function.IntBinaryOperator;
 import java.util.function.LongBinaryOperator;
+import java.util.function.LongUnaryOperator;
 
-public class LongStatsKeyImpl<K> implements LongStatsKey<K> {
+public class LongStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Long> implements LongStatsKey<K> {
 
-    private final Function<K, String> keyFunction;
-    private final LongBinaryOperator function;
+    private final LongBinaryOperator addition;
+    private final LongUnaryOperator reverse;
     private final long neutral, def, offset;
 
-    public LongStatsKeyImpl(Function<K, String> keyFunction, LongBinaryOperator function, long neutral, long def, long offset) {
-        this.keyFunction = keyFunction;
-        this.function = function;
+    public LongStatsKeyImpl(Function<K, String> keyFunction, LongBinaryOperator addition, LongUnaryOperator inverse, long neutral, long def, long offset) {
+        super(keyFunction, addition::applyAsLong, inverse::applyAsLong, neutral, def, offset);
+        this.addition = addition;
+        this.reverse = inverse;
         this.neutral = neutral;
         this.def = def;
         this.offset = offset;
     }
 
     @Override
-    public String key(K k) {
-        return this.keyFunction.apply(k);
-    }
-
-    @Override
-    public Long apply(Long l) {
-        return this.applyLong(l);
-    }
-
-    @Override
     public long applyLong(long i) {
-        return i + this.offset;
-    }
-
-    @Override
-    public Long def() {
-        return this.def;
+        return this.addition.applyAsLong(i, this.offset);
     }
 
     @Override
@@ -48,22 +33,17 @@ public class LongStatsKeyImpl<K> implements LongStatsKey<K> {
     }
 
     @Override
-    public Long neutral() {
-        return this.neutral;
-    }
-
-    @Override
     public long neutralLong() {
         return this.neutral;
     }
 
     @Override
-    public BinaryOperator<Long> function() {
-        return this.function::applyAsLong;
+    public LongBinaryOperator additionLong() {
+        return this.addition;
     }
 
     @Override
-    public LongBinaryOperator longFunction() {
-        return this.function;
+    public LongUnaryOperator inverseLong() {
+        return this.reverse;
     }
 }

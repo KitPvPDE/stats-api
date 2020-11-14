@@ -4,6 +4,8 @@ import net.kitpvp.stats.api.keys.AppendableKey;
 import net.kitpvp.stats.api.functions.TriConsumer;
 import net.kitpvp.stats.season.Season;
 
+import java.util.stream.Stream;
+
 public interface SeasonKey<K, V> extends AppendableKey<K, V> {
 
     StatsKey<K, V> season(int season);
