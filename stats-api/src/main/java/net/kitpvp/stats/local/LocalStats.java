@@ -11,10 +11,7 @@ import net.kitpvp.stats.query.CountQuery;
 import net.kitpvp.stats.query.FindQuery;
 import org.bson.Document;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,6 +65,6 @@ public class LocalStats implements Stats<Void, LocalStats>, StatsReader, StatsWr
         else
             map = this.database;
 
-        return map.keySet().stream().map(function).collect(Collectors.toSet());
+        return map.keySet().stream().map(function).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 }

@@ -8,6 +8,7 @@ import org.bson.Document;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -56,6 +57,6 @@ public class MongoStatsReader implements StatsReader {
         else
             map = this.source;
 
-        return map.keySet().stream().map(function).collect(Collectors.toSet());
+        return map.keySet().stream().map(function).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 }

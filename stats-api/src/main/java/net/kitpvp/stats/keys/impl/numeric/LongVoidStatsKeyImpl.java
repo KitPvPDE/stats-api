@@ -38,6 +38,11 @@ public class LongVoidStatsKeyImpl extends NumericVoidStatsKeyImpl<Long> implemen
     }
 
     @Override
+    public long offsetLong() {
+        return this.offset;
+    }
+
+    @Override
     public LongBinaryOperator additionLong() {
         return this.function;
     }

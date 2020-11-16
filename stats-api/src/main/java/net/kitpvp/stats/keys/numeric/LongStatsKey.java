@@ -1,7 +1,10 @@
 package net.kitpvp.stats.keys.numeric;
 
+import net.kitpvp.stats.StatsReader;
+import net.kitpvp.stats.api.numbers.NumberConversions;
 import net.kitpvp.stats.builder.numeric.LongKeyBuilder;
 import net.kitpvp.stats.keys.IncStatsKey;
+import net.kitpvp.stats.reader.Reader;
 
 import java.util.function.BinaryOperator;
 import java.util.function.LongBinaryOperator;
@@ -41,5 +44,19 @@ public interface LongStatsKey<K> extends IncStatsKey<K, Long> {
     long applyLong(long l);
 
     @Override
+    Long offset();
+
+    long offsetLong();
+
+    @Override
     String key(K k);
+
+    @Override
+    default Long extract(Reader statsReader, K key) {
+        return this.extractLong(statsReader, key);
+    }
+
+    default long extractLong(Reader statsReader, K key) {
+        return NumberConversions.getLong(this, key, statsReader);
+    }
 }

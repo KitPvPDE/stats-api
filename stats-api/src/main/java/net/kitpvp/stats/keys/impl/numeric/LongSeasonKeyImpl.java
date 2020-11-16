@@ -27,4 +27,24 @@ public class LongSeasonKeyImpl<K> extends SeasonKeyImpl<K, Long, LongStatsKey<K>
     protected LongStatsKey<K> createKey(int season) {
         return new LongStatsKeyImpl<>(this.createKeyFunction(season), this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
+
+    public long defLong() {
+        return this.def;
+    }
+
+    public long neutralLong() {
+        return this.neutral;
+    }
+
+    public long offsetLong() {
+        return this.offset;
+    }
+
+    public LongBinaryOperator additionLong() {
+        return this.addition;
+    }
+
+    public LongUnaryOperator inverseLong() {
+        return this.inverse;
+    }
 }

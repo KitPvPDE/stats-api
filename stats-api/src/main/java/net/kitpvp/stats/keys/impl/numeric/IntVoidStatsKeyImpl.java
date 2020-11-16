@@ -38,6 +38,11 @@ public class IntVoidStatsKeyImpl extends NumericVoidStatsKeyImpl<Integer> implem
     }
 
     @Override
+    public int offsetInt() {
+        return this.offset;
+    }
+
+    @Override
     public IntBinaryOperator additionInt() {
         return this.function;
     }

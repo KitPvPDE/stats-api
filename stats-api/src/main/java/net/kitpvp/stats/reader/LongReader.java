@@ -5,11 +5,11 @@ import net.kitpvp.stats.keys.numeric.*;
 public interface LongReader extends Reader {
 
     default <K> long getLongKey(LongStatsKey<K> statsKey, K key) {
-        return statsKey.applyLong(getStatKey(statsKey, key));
+        return statsKey.applyLong(readStatKey(statsKey, key));
     }
 
     default long getLongKey(LongSStatsKey statsKey) {
-        return statsKey.applyLong(getStatKey(statsKey, null));
+        return statsKey.applyLong(readStatKey(statsKey, null));
     }
 
     default <K> long getLongKey(LongSeasonKey<K> seasonKey, K key, int season) {

@@ -1,8 +1,12 @@
 package net.kitpvp.stats.keys;
 
+import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.api.functions.TriConsumer;
 import net.kitpvp.stats.api.keys.AppendableKey;
 import net.kitpvp.stats.builder.Builder;
+import net.kitpvp.stats.reader.Reader;
+
+import java.util.function.Function;
 
 public interface StatsKey<K, V> extends AppendableKey<K, V> {
 
@@ -10,9 +14,11 @@ public interface StatsKey<K, V> extends AppendableKey<K, V> {
         return new Builder<>();
     }
 
-    V def();
+    Function<K, String> keyFunction();
 
     String key(K k);
+
+    V def();
 
     V apply(V v);
 
@@ -21,4 +27,7 @@ public interface StatsKey<K, V> extends AppendableKey<K, V> {
         function.accept(this, key, value);
     }
 
+    default V extract(Reader statsReader, K key) {
+        return statsReader.find(this.key(key), this.def());
+    }
 }

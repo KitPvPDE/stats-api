@@ -38,6 +38,11 @@ public class IntStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Integer> implemen
     }
 
     @Override
+    public int offsetInt() {
+        return this.offset;
+    }
+
+    @Override
     public IntBinaryOperator additionInt() {
         return this.function;
     }

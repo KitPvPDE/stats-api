@@ -38,6 +38,11 @@ public class DoubleStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Double> implem
     }
 
     @Override
+    public double offsetDouble() {
+        return this.offset;
+    }
+
+    @Override
     public DoubleBinaryOperator additionDouble() {
         return this.addition;
     }

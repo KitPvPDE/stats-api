@@ -1,5 +1,6 @@
 package net.kitpvp.stats.builder;
 
+import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
@@ -44,16 +45,26 @@ public class Builder<K, V> implements StatsKeyBuilder<K, V> {
 
     @Override
     public @NotNull StatsKey<K, V> build() {
+        this.checkNotNull();
+
         return new StatsKeyImpl<>(this.defaultSupplier, this.keyBuilder.build());
     }
 
     @Override
     public @NotNull SeasonKey<K, V> season() {
+        this.checkNotNull();
+
         return new SeasonKeyImpl<K, V, StatsKey<K, V>>(StatsKeyImpl::new, this.defaultSupplier, this.keyBuilder.build());
     }
 
     @Override
     public @NotNull StageKey<K, V> stage() {
+        this.checkNotNull();
+
         return new StageKeyImpl<K, V, StatsKey<K, V>>(StatsKeyImpl::new, this.defaultSupplier, this.keyBuilder.build());
+    }
+
+    protected void checkNotNull() {
+        Preconditions.checkNotNull(this.defaultSupplier, "defaultValue");
     }
 }

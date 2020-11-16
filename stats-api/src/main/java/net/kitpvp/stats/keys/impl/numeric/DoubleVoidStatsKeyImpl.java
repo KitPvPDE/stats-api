@@ -38,6 +38,11 @@ public class DoubleVoidStatsKeyImpl extends NumericVoidStatsKeyImpl<Double> impl
     }
 
     @Override
+    public double offsetDouble() {
+        return this.offset;
+    }
+
+    @Override
     public DoubleBinaryOperator additionDouble() {
         return this.function;
     }

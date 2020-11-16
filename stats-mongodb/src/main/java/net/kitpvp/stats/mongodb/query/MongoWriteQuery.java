@@ -1,6 +1,8 @@
 package net.kitpvp.stats.mongodb.query;
 
 import com.google.common.base.Preconditions;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.model.UpdateOptions;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
@@ -69,5 +71,30 @@ public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, Asyn
             this.database.getCollection(this.collection).updateMany(this.criteria.source(), this.update.source(), new UpdateOptions().upsert(true));
         else
             this.database.getCollection(this.collection).updateOne(this.criteria.source(), this.update.source(), new UpdateOptions().upsert(true));
+
+        this.cleanup();
+    }
+
+    public final MongoStatsReader executeAndFind() {
+        return this.execute(ReturnDocument.AFTER);
+    }
+
+    public final MongoStatsReader findAndExecute() {
+        return this.execute(ReturnDocument.BEFORE);
+    }
+
+    private MongoStatsReader execute(ReturnDocument returnDocument) {
+        Stats.checkForMainThread();
+
+        Log.debug("Executing update {0} for {1} and returning {2}", this.update.source(), this.criteria.source(), returnDocument);
+        if(this.update.source().isEmpty() || this.criteria.source().isEmpty())
+            throw new UnsupportedOperationException("Empty criteria and/or update document");
+
+        return new MongoStatsReader(this.database.getCollection(this.collection).findOneAndUpdate(this.criteria.source(), this.update.source(), new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(true)));
+    }
+
+    private void cleanup() {
+        this.update.source().clear();
+        this.criteria.source().clear();
     }
 }

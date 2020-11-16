@@ -6,11 +6,11 @@ import net.kitpvp.stats.season.Season;
 public interface IntReader extends Reader {
 
     default <K> int getIntKey(IntStatsKey<K> statsKey, K key) {
-        return statsKey.applyInt(getStatKey(statsKey, key));
+        return statsKey.applyInt(readStatKey(statsKey, key));
     }
 
     default int getIntKey(IntSStatsKey statsKey) {
-        return statsKey.applyInt(getStatKey(statsKey, null));
+        return statsKey.applyInt(readStatKey(statsKey, null));
     }
 
     default <K> int getIntKey(IntSeasonKey<K> seasonKey, K key, int season) {

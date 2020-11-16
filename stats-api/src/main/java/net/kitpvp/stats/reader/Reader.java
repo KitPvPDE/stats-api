@@ -10,7 +10,10 @@ public interface Reader {
     <V> V find(String key, V def);
 
     default <K, V> V getStatKey(StatsKey<K, V> statsKey, K k) {
-        return statsKey.apply(this.find(statsKey.key(k), statsKey.def()));
+        return statsKey.apply(this.readStatKey(statsKey, k));
     }
 
+    default <K, V> V readStatKey(StatsKey<K, V> statsKey, K k) {
+        return statsKey.extract(this, k);
+    }
 }

@@ -17,13 +17,18 @@ public class StatsKeyImpl<K, V> implements StatsKey<K, V> {
     }
 
     @Override
-    public V apply(V v) {
-        return v;
+    public Function<K, String> keyFunction() {
+        return this.key;
     }
 
     @Override
     public String key(K k) {
         return this.key.apply(k);
+    }
+
+    @Override
+    public V apply(V v) {
+        return v;
     }
 
     public V def() {

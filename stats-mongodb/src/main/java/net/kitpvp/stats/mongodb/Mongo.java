@@ -33,4 +33,8 @@ public class Mongo {
     public static MongoCountQuery count(@NotNull Database database, @NotNull Collection collection, @NotNull MongoFilter... filters) {
         return new MongoCountQuery(database, collection).filter(filters);
     }
+
+    public static MongoStatsReader findOne(@NotNull Database database, @NotNull Collection collection, @NotNull MongoFilter filter) {
+        return find(database, collection, filter).first();
+    }
 }

@@ -23,6 +23,11 @@ public class NumericStatsKeyImpl<K, V> implements IncStatsKey<K, V> {
     }
 
     @Override
+    public Function<K, String> keyFunction() {
+        return this.keyFunction;
+    }
+
+    @Override
     public String key(K k) {
         return this.keyFunction.apply(k);
     }
@@ -40,6 +45,11 @@ public class NumericStatsKeyImpl<K, V> implements IncStatsKey<K, V> {
     @Override
     public V def() {
         return this.def;
+    }
+
+    @Override
+    public V offset() {
+        return this.offset;
     }
 
     @Override

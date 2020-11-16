@@ -1,7 +1,10 @@
 package net.kitpvp.stats.keys.numeric;
 
+import net.kitpvp.stats.StatsReader;
+import net.kitpvp.stats.api.numbers.NumberConversions;
 import net.kitpvp.stats.builder.numeric.DoubleKeyBuilder;
 import net.kitpvp.stats.keys.IncStatsKey;
+import net.kitpvp.stats.reader.Reader;
 
 import java.util.function.BinaryOperator;
 import java.util.function.DoubleBinaryOperator;
@@ -35,10 +38,24 @@ public interface DoubleStatsKey<K> extends IncStatsKey<K, Double> {
     double defDouble();
 
     @Override
+    Double offset();
+
+    double offsetDouble();
+
+    @Override
     Double apply(Double integer);
 
     double applyDouble(double d);
 
     @Override
     String key(K k);
+
+    @Override
+    default Double extract(Reader statsReader, K key) {
+        return this.extractDouble(statsReader, key);
+    }
+
+    default double extractDouble(Reader statsReader, K key) {
+        return NumberConversions.getDouble(this, key, statsReader);
+    }
 }

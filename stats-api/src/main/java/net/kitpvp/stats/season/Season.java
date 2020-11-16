@@ -9,6 +9,7 @@ import net.kitpvp.json.JsonReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
@@ -40,6 +41,10 @@ public final class Season {
             throw new IllegalStateException("No season live currently");
 
         return season.getNumber();
+    }
+
+    public static Season getActiveSeason() {
+        return getSeason(getSeason());
     }
 
     public static int getStage() {
@@ -109,6 +114,10 @@ public final class Season {
     public boolean isLive() {
         long time = System.currentTimeMillis();
         return time >= start && time <= end;
+    }
+
+    public boolean isEnding(long time, TimeUnit unit) {
+        return (this.end - System.currentTimeMillis()) <= unit.toMillis(time);
     }
 
     public Stage getStage(int stage) {

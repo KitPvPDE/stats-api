@@ -9,6 +9,14 @@ import java.util.function.Supplier;
 
 public class KeyFunctions {
 
+    public static <K> Function<Void, String> bind(Function<K, String> function, K key) {
+        return new BoundKeyFunction<K>(key, function);
+    }
+
+    public static <K> Function<K, String> prepend(String prefix, Function<K, String> function) {
+        return new AppendFunction<>(prefix, function);
+    }
+
     public static <K> Function<K, String> immutable(String path) {
         return new ImmutableAppendFunction<>(path);
     }
@@ -69,6 +77,25 @@ public class KeyFunctions {
         @Override
         public String apply(K k) {
             return this.appendix;
+        }
+    }
+
+    @RequiredArgsConstructor
+    private static class BoundKeyFunction<K> implements Function<Void, String> {
+
+        private final K key;
+        private final Function<K, String> function;
+        private final String result;
+
+        public BoundKeyFunction(K key, Function<K, String> function) {
+            this.key = key;
+            this.function = function;
+            this.result = this.function.apply(this.key);
+        }
+
+        @Override
+        public String apply(Void unused) {
+            return this.result;
         }
     }
 

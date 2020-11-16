@@ -38,6 +38,11 @@ public class LongStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Long> implements
     }
 
     @Override
+    public long offsetLong() {
+        return this.offset;
+    }
+
+    @Override
     public LongBinaryOperator additionLong() {
         return this.addition;
     }

@@ -55,6 +55,10 @@ public class SeasonKeyImpl<K, V, S extends StatsKey<K, V>> implements SeasonKey<
         return this.season(Season.ALLTIME);
     }
 
+    public Function<K, String> keyFunction() {
+        return keyFunction;
+    }
+
     protected S createKey(int season) {
         return this.keyConstructor.apply(this.defaultFunction, this.createKeyFunction(season));
     }

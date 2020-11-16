@@ -16,6 +16,11 @@ public class VoidStatsKeyImpl<V> implements SStatsKey<V> {
     }
 
     @Override
+    public Function<Void, String> keyFunction() {
+        return this.key;
+    }
+
+    @Override
     public String key(Void unused) {
         return this.key.apply(null);
     }

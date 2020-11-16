@@ -21,6 +21,8 @@ public interface IncStatsKey<K, V> extends StatsKey<K, V>, AppendableIncKey<K, V
     @Override
     V def();
 
+    V offset();
+
     @Override
     String key(K k);
 
