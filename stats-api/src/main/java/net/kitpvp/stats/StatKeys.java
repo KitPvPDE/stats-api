@@ -10,11 +10,11 @@ import java.util.function.Function;
 public class StatKeys {
 
     public static <V> SStatsKey<V> newStatsKey(String path, V def) {
-        return null;
+        return SStatsKey.<V>builder().keyBuilder(builder -> builder.path(path)).defaultValue(def).build();
     }
 
-    public static DoubleSStatsKey newStatsKey(String path, double def) {
-        return null;
+    public static DoubleSStatsKey newStatsKey(String path, double offset) {
+        return DoubleSStatsKey.builder().keyBuilder(builder->builder.path(path)).offset(offset).build();
     }
 
     public static LongSStatsKey newStatsKey(String path, long offset) {

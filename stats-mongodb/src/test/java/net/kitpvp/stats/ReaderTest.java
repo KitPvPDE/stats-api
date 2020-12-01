@@ -9,6 +9,8 @@ import net.kitpvp.stats.season.Season;
 import org.bson.Document;
 import org.junit.Test;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
@@ -48,9 +50,29 @@ public class ReaderTest {
         MongoStatsReader statsReader = new MongoStatsReader(new Document());
         MongoUpdates.inc(intStageKey, "function", 3).append(statsReader);
 
-        assertEquals(statsReader.source(), new Document("$inc", new Document().
-                append("seasons.season" + Season.getSeason() + ".stages.stage1.prefix.function.suffix", 3).
+        assertEquals(new Document("$inc", new Document().
+                append("seasons.season" + Season.getSeason() + ".stages.stage" + Season.getStage() + ".prefix.function.suffix", 3).
                 append("seasons.season" + Season.getSeason() + ".prefix.function.suffix", 3).
-                append("alltime.prefix.function.suffix", 3)));
+                append("alltime.prefix.function.suffix", 3)), statsReader.source());
+    }
+
+    @Test
+    public void testKeys() {
+        Document document = new Document().
+                append("test", new Document().
+                        append("first", new Document("test3", 1)).
+                        append("second", new Document("test3", 2)).
+                        append("third", new Document("test3", 3)));
+        MongoStatsReader statsReader = new MongoStatsReader(document);
+        Set<String> keys = new HashSet<String>() {{
+            add("first");
+            add("second");
+            add("third");
+        }};
+        assertEquals(keys, statsReader.getStatKeys(this.intKey));
+
+        for(String key : statsReader.getStatKeys(this.intKey)) {
+            assertEquals(document.get("test", Document.class).get(key, Document.class).getInteger("test3").intValue(), statsReader.getIntKey(this.intKey, key));
+        }
     }
 }

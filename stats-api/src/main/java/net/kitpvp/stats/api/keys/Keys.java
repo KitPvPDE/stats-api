@@ -1,6 +1,5 @@
 package net.kitpvp.stats.api.keys;
 
-import net.kitpvp.stats.api.functions.keys.KeyFunctions;
 import net.kitpvp.stats.keys.impl.numeric.*;
 import net.kitpvp.stats.keys.numeric.*;
 

@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl.set;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.impl.StageKeyImpl;
 import net.kitpvp.stats.keys.set.SetStageKey;
 import net.kitpvp.stats.keys.set.SetStatsKey;
@@ -13,11 +14,11 @@ import java.util.function.Supplier;
 
 public class SetStageKeyImpl<K, X> extends StageKeyImpl<K, Set<X>, SetStatsKey<K, X>> implements SetStageKey<K, X> {
 
-    public SetStageKeyImpl(@Nullable BiFunction<Supplier<Set<X>>, Function<K, String>, SetStatsKey<K, X>> keyConstructor, @Nullable Supplier<Set<X>> defaultFunction, @NotNull Function<K, String> keyFunction) {
+    public SetStageKeyImpl(@Nullable BiFunction<Supplier<Set<X>>, KeyFunction<K>, SetStatsKey<K, X>> keyConstructor, @Nullable Supplier<Set<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction) {
         super(keyConstructor, defaultFunction, keyFunction);
     }
 
-    public SetStageKeyImpl(@NotNull Function<K, String> keyFunction) {
+    public SetStageKeyImpl(@NotNull KeyFunction<K> keyFunction) {
         super(keyFunction);
     }
 

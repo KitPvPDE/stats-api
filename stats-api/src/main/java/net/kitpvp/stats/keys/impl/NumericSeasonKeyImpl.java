@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.IncSeasonKey;
 import net.kitpvp.stats.keys.IncStatsKey;
 
@@ -11,7 +12,7 @@ public class NumericSeasonKeyImpl<K, V> extends SeasonKeyImpl<K, V, IncStatsKey<
     private final UnaryOperator<V> inverse;
     private final V neutral, def, offset;
 
-    public NumericSeasonKeyImpl(Function<K, String> keyFunction, BinaryOperator<V> sumFunction, UnaryOperator<V> inverse, V neutral, V def, V offset) {
+    public NumericSeasonKeyImpl(KeyFunction<K> keyFunction, BinaryOperator<V> sumFunction, UnaryOperator<V> inverse, V neutral, V def, V offset) {
         super(keyFunction);
         this.sumFunction = sumFunction;
         this.inverse = inverse;

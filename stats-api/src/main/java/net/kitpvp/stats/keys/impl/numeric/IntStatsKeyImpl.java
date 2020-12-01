@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl.numeric;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.impl.NumericStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.IntStatsKey;
 
@@ -13,7 +14,7 @@ public class IntStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Integer> implemen
     private final IntUnaryOperator inverse;
     private final int neutral, def, offset;
 
-    public IntStatsKeyImpl(Function<K, String> keyFunction, IntBinaryOperator function, IntUnaryOperator inverse, int neutral, int def, int offset) {
+    public IntStatsKeyImpl(KeyFunction<K> keyFunction, IntBinaryOperator function, IntUnaryOperator inverse, int neutral, int def, int offset) {
         super(keyFunction, function::applyAsInt, inverse::applyAsInt, neutral, def, offset);
         this.function = function;
         this.inverse = inverse;

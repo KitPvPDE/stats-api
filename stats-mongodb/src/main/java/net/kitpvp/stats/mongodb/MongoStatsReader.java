@@ -2,6 +2,7 @@ package net.kitpvp.stats.mongodb;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.kitpvp.mongodbapi.log.Log;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.keys.StatsKey;
 import org.bson.Document;
@@ -17,6 +18,10 @@ import java.util.stream.Collectors;
 public class MongoStatsReader implements StatsReader {
 
     private final Document source;
+
+    public MongoStatsReader() {
+        this(new Document());
+    }
 
     public final Document source() {
         return this.source;
@@ -42,18 +47,23 @@ public class MongoStatsReader implements StatsReader {
             if(!document.containsKey(entry)){
                 return def;
             }
-            Document sub = document.get(entry, Document.class);
-
-            return find(path, sub, def);
+            Object sub = document.get(entry);
+            if(!(sub instanceof Document)) {
+                return def;
+            }
+            return find(path, (Document) sub, def);
         }
     }
 
     @Override
-    public <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, K k, Function<String, U> function) {
-        String key = statsKey.key(k);
+    public <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, Function<String, U> function) {
+        String prefix = statsKey.keyFunction().prefix();
+        if(prefix == null)
+            throw new NullPointerException("prefix");
+
         Map<String, Object> map;
-        if(key.contains("."))
-            map = this.find(key.substring(0, key.lastIndexOf('.')), new HashMap<>());
+        if(!prefix.isEmpty())
+            map = this.find(prefix, new HashMap<>());
         else
             map = this.source;
 

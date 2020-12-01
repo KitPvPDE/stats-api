@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.IncStageKey;
 import net.kitpvp.stats.keys.IncStatsKey;
 
@@ -13,7 +14,7 @@ public class NumericStageKeyImpl<K, V> extends StageKeyImpl<K, V, IncStatsKey<K,
     private final UnaryOperator<V> inverse;
     private final V neutral, def, offset;
 
-    public NumericStageKeyImpl(Function<K, String> keyFunction, BinaryOperator<V> sumFunction, UnaryOperator<V> inverse, V neutral, V def, V offset) {
+    public NumericStageKeyImpl(KeyFunction<K> keyFunction, BinaryOperator<V> sumFunction, UnaryOperator<V> inverse, V neutral, V def, V offset) {
         super(keyFunction);
         this.sumFunction = sumFunction;
         this.inverse = inverse;

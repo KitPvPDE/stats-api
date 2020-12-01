@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.SStatsKey;
 
 import java.util.function.Function;
@@ -8,15 +9,15 @@ import java.util.function.Supplier;
 public class VoidStatsKeyImpl<V> implements SStatsKey<V> {
 
     private final Supplier<V> def;
-    private final Function<Void, String> key;
+    private final KeyFunction<Void> key;
 
-    public VoidStatsKeyImpl(Supplier<V> def, Function<Void, String> key) {
+    public VoidStatsKeyImpl(Supplier<V> def, KeyFunction<Void> key) {
         this.def = def;
         this.key = key;
     }
 
     @Override
-    public Function<Void, String> keyFunction() {
+    public KeyFunction<Void> keyFunction() {
         return this.key;
     }
 

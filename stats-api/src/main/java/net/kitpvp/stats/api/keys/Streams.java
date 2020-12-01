@@ -22,4 +22,12 @@ public interface Streams {
         return Stream.of(stageKey.alltime(), stageKey.season(), stageKey.stage());
     }
 
+    static Stream<LongSStatsKey> stream(LongSSeasonKey seasonKey) {
+        return Stream.of(seasonKey.alltime(), seasonKey.season());
+    }
+
+    static Stream<LongSStatsKey> stream(LongSStageKey stageKey) {
+        return Stream.of(stageKey.alltime(), stageKey.season(), stageKey.stage());
+    }
+
 }

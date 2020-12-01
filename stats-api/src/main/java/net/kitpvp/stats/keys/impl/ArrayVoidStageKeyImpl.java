@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.array.ArraySStageKey;
 import net.kitpvp.stats.keys.array.ArraySStatsKey;
 import org.jetbrains.annotations.NotNull;
@@ -12,11 +13,11 @@ import java.util.function.Supplier;
 
 public class ArrayVoidStageKeyImpl<X> extends VoidStageKeyImpl<List<X>, ArraySStatsKey<X>> implements ArraySStageKey<X> {
 
-    public ArrayVoidStageKeyImpl(@Nullable BiFunction<Supplier<List<X>>, Function<Void, String>, ArraySStatsKey<X>> keyConstructor, @Nullable Supplier<List<X>> defaultFunction, @NotNull Function<Void, String> keyFunction) {
+    public ArrayVoidStageKeyImpl(@Nullable BiFunction<Supplier<List<X>>, KeyFunction<Void>, ArraySStatsKey<X>> keyConstructor, @Nullable Supplier<List<X>> defaultFunction, @NotNull KeyFunction<Void> keyFunction) {
         super(keyConstructor, defaultFunction, keyFunction);
     }
 
-    public ArrayVoidStageKeyImpl(@NotNull Function<Void, String> keyFunction) {
+    public ArrayVoidStageKeyImpl(@NotNull KeyFunction<Void> keyFunction) {
         super(keyFunction);
     }
 

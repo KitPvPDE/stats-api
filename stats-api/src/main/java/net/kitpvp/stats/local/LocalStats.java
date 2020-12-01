@@ -57,11 +57,14 @@ public class LocalStats implements Stats<Void, LocalStats>, StatsReader, StatsWr
     }
 
     @Override
-    public <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, K k, Function<String, U> function) {
-        String key = statsKey.key(k);
+    public <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, Function<String, U> function) {
+        String prefix = statsKey.keyFunction().prefix();
+        if(prefix == null)
+            throw new NullPointerException("prefix");
+
         Map<String, Object> map;
-        if(key.contains("."))
-            map = this.find(key.substring(0, key.lastIndexOf('.')), new HashMap<>());
+        if(!prefix.isEmpty())
+            map = this.find(prefix, new HashMap<>());
         else
             map = this.database;
 

@@ -2,12 +2,13 @@ package net.kitpvp.stats.builder.keys;
 
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.builder.ComponentBuilder;
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class KeyBuilder<K> implements ComponentBuilder<Function<K, String>> {
+public class KeyBuilder<K> implements ComponentBuilder<KeyFunction<K>> {
 
     private String prefix;
     private Function<K, String> function;
@@ -33,7 +34,7 @@ public class KeyBuilder<K> implements ComponentBuilder<Function<K, String>> {
     }
 
     @Override
-    public @NotNull Function<K, String> build() {
+    public @NotNull KeyFunction<K> build() {
         if(this.function == null) {
             if(this.prefix == null && this.suffix == null)
                 throw new NullPointerException("Prefix and suffix are null");
@@ -50,7 +51,7 @@ public class KeyBuilder<K> implements ComponentBuilder<Function<K, String>> {
     }
 
     @RequiredArgsConstructor
-    class ParameterKey implements Function<K, String> {
+    class ParameterKey implements KeyFunction<K> {
         private final String prefix;
         private final Function<K, String> function;
         private final String suffix;
@@ -67,15 +68,35 @@ public class KeyBuilder<K> implements ComponentBuilder<Function<K, String>> {
 
             return builder.toString();
         }
+
+        @Override
+        public String prefix() {
+            return this.prefix;
+        }
+
+        @Override
+        public String suffix() {
+            return this.suffix;
+        }
     }
 
     @RequiredArgsConstructor
-    class StaticKey implements Function<K, String> {
+    class StaticKey implements KeyFunction<K> {
         private final String key;
 
         @Override
         public String apply(K k) {
             return this.key;
+        }
+
+        @Override
+        public String prefix() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String suffix() {
+            throw new UnsupportedOperationException();
         }
     }
 }

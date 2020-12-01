@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl.numeric;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.impl.VoidSeasonKeyImpl;
 import net.kitpvp.stats.keys.numeric.DoubleSSeasonKey;
 import net.kitpvp.stats.keys.numeric.DoubleSStatsKey;
@@ -14,7 +15,7 @@ public class DoubleVoidSeasonKeyImpl extends VoidSeasonKeyImpl<Double, DoubleSSt
     private final DoubleUnaryOperator inverse;
     private final double neutral, def, offset;
 
-    public DoubleVoidSeasonKeyImpl(Function<Void, String> keyFunction, DoubleBinaryOperator sumFunction, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
+    public DoubleVoidSeasonKeyImpl(KeyFunction<Void> keyFunction, DoubleBinaryOperator sumFunction, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
         super(keyFunction);
         this.sumFunction = sumFunction;
         this.inverse = inverse;

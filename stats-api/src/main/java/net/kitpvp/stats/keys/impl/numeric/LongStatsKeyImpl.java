@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl.numeric;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.impl.NumericStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.LongStatsKey;
 
@@ -13,7 +14,7 @@ public class LongStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Long> implements
     private final LongUnaryOperator reverse;
     private final long neutral, def, offset;
 
-    public LongStatsKeyImpl(Function<K, String> keyFunction, LongBinaryOperator addition, LongUnaryOperator inverse, long neutral, long def, long offset) {
+    public LongStatsKeyImpl(KeyFunction<K> keyFunction, LongBinaryOperator addition, LongUnaryOperator inverse, long neutral, long def, long offset) {
         super(keyFunction, addition::applyAsLong, inverse::applyAsLong, neutral, def, offset);
         this.addition = addition;
         this.reverse = inverse;

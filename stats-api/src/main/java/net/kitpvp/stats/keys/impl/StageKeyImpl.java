@@ -2,6 +2,7 @@ package net.kitpvp.stats.keys.impl;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.StageKey;
 import net.kitpvp.stats.keys.StatsKey;
 import net.kitpvp.stats.season.Season;
@@ -20,12 +21,12 @@ public class StageKeyImpl<K, V, S extends StatsKey<K, V>> extends SeasonKeyImpl<
 
     private final Map<Integer, List<S>> seasonKeys;
 
-    public StageKeyImpl(@Nullable BiFunction<Supplier<V>, Function<K, String>, S> keyConstructor, @Nullable Supplier<V> defaultFunction, @NotNull Function<K, String> keyFunction) {
+    public StageKeyImpl(@Nullable BiFunction<Supplier<V>, KeyFunction<K>, S> keyConstructor, @Nullable Supplier<V> defaultFunction, @NotNull KeyFunction<K> keyFunction) {
         super(keyConstructor, defaultFunction, keyFunction);
         this.seasonKeys = new HashMap<>();
     }
 
-    public StageKeyImpl(@NotNull Function<K, String> keyFunction) {
+    public StageKeyImpl(@NotNull KeyFunction<K> keyFunction) {
         super(keyFunction);
         this.seasonKeys = new HashMap<>();
     }
@@ -50,7 +51,7 @@ public class StageKeyImpl<K, V, S extends StatsKey<K, V>> extends SeasonKeyImpl<
         return this.keyConstructor.apply(this.defaultFunction, this.createKeyFunction(season));
     }
 
-    protected final Function<K, String> createKeyFunction(int season, int stage) {
+    protected final KeyFunction<K> createKeyFunction(int season, int stage) {
         return new SeasonToKeyFunction(this, season, stage);
     }
 
@@ -61,7 +62,7 @@ public class StageKeyImpl<K, V, S extends StatsKey<K, V>> extends SeasonKeyImpl<
         }
     }
 
-    protected class SeasonToKeyFunction implements Function<K, String> {
+    protected class SeasonToKeyFunction implements KeyFunction<K> {
 
         protected final SeasonKeyImpl<K, V, S> seasonKey;
         protected final int season, stage;
@@ -77,6 +78,16 @@ public class StageKeyImpl<K, V, S extends StatsKey<K, V>> extends SeasonKeyImpl<
         @Override
         public String apply(K k) {
             return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.apply(k);
+        }
+
+        @Override
+        public String prefix() {
+            return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.prefix();
+        }
+
+        @Override
+        public String suffix() {
+            return this.seasonKey.keyFunction.suffix();
         }
     }
 }

@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.array.ArraySeasonKey;
 import net.kitpvp.stats.keys.array.ArrayStatsKey;
 import org.jetbrains.annotations.NotNull;
@@ -12,11 +13,11 @@ import java.util.function.Supplier;
 
 public class ArraySeasonKeyImpl<K, X> extends SeasonKeyImpl<K, List<X>, ArrayStatsKey<K, X>> implements ArraySeasonKey<K, X> {
 
-    public ArraySeasonKeyImpl(@Nullable BiFunction<Supplier<List<X>>, Function<K, String>, ArrayStatsKey<K, X>> keyConstructor, @Nullable Supplier<List<X>> defaultFunction, @NotNull Function<K, String> keyFunction) {
+    public ArraySeasonKeyImpl(@Nullable BiFunction<Supplier<List<X>>, KeyFunction<K>, ArrayStatsKey<K, X>> keyConstructor, @Nullable Supplier<List<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction) {
         super(keyConstructor, defaultFunction, keyFunction);
     }
 
-    public ArraySeasonKeyImpl(@NotNull Function<K, String> keyFunction) {
+    public ArraySeasonKeyImpl(@NotNull KeyFunction<K> keyFunction) {
         super(keyFunction);
     }
 

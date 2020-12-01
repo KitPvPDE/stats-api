@@ -1,6 +1,7 @@
 package net.kitpvp.stats.keys.impl;
 
 import lombok.RequiredArgsConstructor;
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.SSeasonKey;
 import net.kitpvp.stats.keys.SStatsKey;
 import net.kitpvp.stats.keys.SeasonKey;
@@ -17,12 +18,12 @@ import java.util.function.Supplier;
 
 public class VoidSeasonKeyImpl<V, S extends SStatsKey<V>> implements SSeasonKey<V> {
 
-    protected final BiFunction<Supplier<V>, Function<Void, String>, S> keyConstructor;
-    protected final Function<Void, String> keyFunction;
+    protected final BiFunction<Supplier<V>, KeyFunction<Void>, S> keyConstructor;
+    protected final KeyFunction<Void> keyFunction;
     protected final Supplier<V> defaultFunction;
     private final List<S> keys;
 
-    public VoidSeasonKeyImpl(@Nullable BiFunction<Supplier<V>, Function<Void, String>, S> keyConstructor, @Nullable Supplier<V> defaultFunction, @NotNull Function<Void, String> keyFunction) {
+    public VoidSeasonKeyImpl(@Nullable BiFunction<Supplier<V>, KeyFunction<Void>, S> keyConstructor, @Nullable Supplier<V> defaultFunction, @NotNull KeyFunction<Void> keyFunction) {
         this.keyConstructor = keyConstructor;
         this.keyFunction = keyFunction;
         this.defaultFunction = defaultFunction;
@@ -32,7 +33,7 @@ public class VoidSeasonKeyImpl<V, S extends SStatsKey<V>> implements SSeasonKey<
         }
     }
 
-    public VoidSeasonKeyImpl(@NotNull Function<Void, String> keyFunction) {
+    public VoidSeasonKeyImpl(@NotNull KeyFunction<Void> keyFunction) {
         this(null, null, keyFunction);
     }
 
@@ -61,7 +62,7 @@ public class VoidSeasonKeyImpl<V, S extends SStatsKey<V>> implements SSeasonKey<
         return this.keyConstructor.apply(this.defaultFunction, this.createKeyFunction(season));
     }
 
-    protected final Function<Void, String> createKeyFunction(int season) {
+    protected final KeyFunction<Void> createKeyFunction(int season) {
         return new SeasonToKeyFunction(this, season);
     }
 
@@ -72,7 +73,7 @@ public class VoidSeasonKeyImpl<V, S extends SStatsKey<V>> implements SSeasonKey<
     }
 
     @RequiredArgsConstructor
-    protected class SeasonToKeyFunction implements Function<Void, String> {
+    protected class SeasonToKeyFunction implements KeyFunction<Void> {
 
         protected final VoidSeasonKeyImpl<V, S> seasonKey;
         protected final int season;
@@ -80,6 +81,16 @@ public class VoidSeasonKeyImpl<V, S extends SStatsKey<V>> implements SSeasonKey<
         @Override
         public String apply(Void k) {
             return (this.season == 0 ? "alltime" : "seasons.season" + this.season) + "." + this.seasonKey.keyFunction.apply(k);
+        }
+
+        @Override
+        public String prefix() {
+            return (this.season == 0 ? "alltime" : "seasons.season" + this.season) + "." + this.seasonKey.keyFunction.prefix();
+        }
+
+        @Override
+        public String suffix() {
+            return this.seasonKey.keyFunction.suffix();
         }
     }
 

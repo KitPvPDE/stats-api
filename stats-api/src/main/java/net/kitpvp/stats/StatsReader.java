@@ -12,7 +12,19 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, ListRe
 
     <V> V find(String key, V def);
 
-    <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, K k, Function<String, U> function);
+    <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, Function<String, U> function);
+
+    default <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, K k, Function<String, U> function) {
+        return this.getStatKeys(statsKey, function);
+    }
+
+    default <K, V> Set<String> getStatKeys(StatsKey<K, V> statsKey) {
+        return this.getStatKeys(statsKey, Function.identity());
+    }
+
+    default <K, V> Set<String> getStatKeys(StatsKey<K, V> statsKey, K k) {
+        return this.getStatKeys(statsKey, Function.identity());
+    }
 
     default <K, V> V readStatKey(StatsKey<K, V> statsKey, K k) {
         return statsKey.extract(this, k);
@@ -32,9 +44,5 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, ListRe
 
     default <V, U> U getStatKey(SStatsKey<V> statsKey, Function<V, U> function) {
         return function.apply(statsKey.apply(statsKey.extract(this, null)));
-    }
-
-    default <K, V> Set<String> getStatKeys(StatsKey<K, V> statsKey, K k) {
-        return this.getStatKeys(statsKey, k, Function.identity());
     }
 }

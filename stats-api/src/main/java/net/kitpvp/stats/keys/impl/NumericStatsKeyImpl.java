@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.IncStatsKey;
 
 import java.util.function.BinaryOperator;
@@ -8,12 +9,12 @@ import java.util.function.UnaryOperator;
 
 public class NumericStatsKeyImpl<K, V> implements IncStatsKey<K, V> {
 
-    private final Function<K, String> keyFunction;
+    private final KeyFunction<K> keyFunction;
     private final BinaryOperator<V> addition;
     private final UnaryOperator<V> reverse;
     private final V neutral, def, offset;
 
-    public NumericStatsKeyImpl(Function<K, String> toKey, BinaryOperator<V> addition, UnaryOperator<V> inverse, V neutral, V def, V offset) {
+    public NumericStatsKeyImpl(KeyFunction<K> toKey, BinaryOperator<V> addition, UnaryOperator<V> inverse, V neutral, V def, V offset) {
         this.keyFunction = toKey;
         this.addition = addition;
         this.reverse = inverse;
@@ -23,7 +24,7 @@ public class NumericStatsKeyImpl<K, V> implements IncStatsKey<K, V> {
     }
 
     @Override
-    public Function<K, String> keyFunction() {
+    public KeyFunction<K> keyFunction() {
         return this.keyFunction;
     }
 

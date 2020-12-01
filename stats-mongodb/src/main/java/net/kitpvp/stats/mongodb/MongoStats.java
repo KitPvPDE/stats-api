@@ -53,6 +53,8 @@ public class MongoStats implements Stats<Database, MongoStatsReader> {
     @Override
     public MongoStatsReader load(Database database) {
         MongoStatsReader statsReader = Stats.super.load(database);
+        if(statsReader == null)
+            statsReader = new MongoStatsReader();
 
         if(this.callback != null) {
             this.callback.accept(statsReader);

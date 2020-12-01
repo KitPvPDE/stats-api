@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl.numeric;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.impl.NumericVoidStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.LongSStatsKey;
 
@@ -13,7 +14,7 @@ public class LongVoidStatsKeyImpl extends NumericVoidStatsKeyImpl<Long> implemen
     private final LongUnaryOperator inverse;
     private final long neutral, def, offset;
 
-    public LongVoidStatsKeyImpl(Function<Void, String> keyFunction, LongBinaryOperator function, LongUnaryOperator inverse, long neutral, long def, long offset) {
+    public LongVoidStatsKeyImpl(KeyFunction<Void> keyFunction, LongBinaryOperator function, LongUnaryOperator inverse, long neutral, long def, long offset) {
         super(keyFunction, function::applyAsLong, inverse::applyAsLong, neutral, def, offset);
         this.function = function;
         this.inverse = inverse;

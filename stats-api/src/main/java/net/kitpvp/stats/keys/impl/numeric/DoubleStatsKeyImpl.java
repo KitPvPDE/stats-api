@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys.impl.numeric;
 
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.impl.NumericStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.DoubleStatsKey;
 
@@ -7,12 +8,12 @@ import java.util.function.*;
 
 public class DoubleStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Double> implements DoubleStatsKey<K> {
 
-    private final Function<K, String> keyFunction;
+    private final KeyFunction<K> keyFunction;
     private final DoubleBinaryOperator addition;
     private final DoubleUnaryOperator inverse;
     private final double neutral, def, offset;
 
-    public DoubleStatsKeyImpl(Function<K, String> keyFunction, DoubleBinaryOperator addition, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
+    public DoubleStatsKeyImpl(KeyFunction<K> keyFunction, DoubleBinaryOperator addition, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
         super(keyFunction, addition::applyAsDouble, inverse::applyAsDouble, neutral, def, offset);
         this.keyFunction = keyFunction;
         this.addition = addition;

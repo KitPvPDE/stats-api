@@ -1,10 +1,9 @@
 package net.kitpvp.stats.keys.impl;
 
 import com.google.common.base.Preconditions;
+import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.SStageKey;
 import net.kitpvp.stats.keys.SStatsKey;
-import net.kitpvp.stats.keys.StageKey;
-import net.kitpvp.stats.keys.StatsKey;
 import net.kitpvp.stats.season.Season;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,19 +13,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class VoidStageKeyImpl<V, S extends SStatsKey<V>> extends VoidSeasonKeyImpl<V, S> implements SStageKey<V> {
 
     private final Map<Integer, List<S>> seasonKeys;
 
-    public VoidStageKeyImpl(@Nullable BiFunction<Supplier<V>, Function<Void, String>, S> keyConstructor, @Nullable Supplier<V> defaultFunction, @NotNull Function<Void, String> keyFunction) {
+    public VoidStageKeyImpl(@Nullable BiFunction<Supplier<V>, KeyFunction<Void>, S> keyConstructor, @Nullable Supplier<V> defaultFunction, @NotNull KeyFunction<Void> keyFunction) {
         super(keyConstructor, defaultFunction, keyFunction);
         this.seasonKeys = new HashMap<>();
     }
 
-    public VoidStageKeyImpl(@NotNull Function<Void, String> keyFunction) {
+    public VoidStageKeyImpl(@NotNull KeyFunction<Void> keyFunction) {
         super(keyFunction);
         this.seasonKeys = new HashMap<>();
     }
@@ -51,7 +49,7 @@ public class VoidStageKeyImpl<V, S extends SStatsKey<V>> extends VoidSeasonKeyIm
         return this.keyConstructor.apply(this.defaultFunction, this.createKeyFunction(season));
     }
 
-    protected final Function<Void, String> createKeyFunction(int season, int stage) {
+    protected final KeyFunction<Void> createKeyFunction(int season, int stage) {
         return new SeasonToKeyFunction(this, season, stage);
     }
 
@@ -62,7 +60,7 @@ public class VoidStageKeyImpl<V, S extends SStatsKey<V>> extends VoidSeasonKeyIm
         }
     }
 
-    protected class SeasonToKeyFunction implements Function<Void, String> {
+    protected class SeasonToKeyFunction implements KeyFunction<Void> {
 
         protected final VoidSeasonKeyImpl<V, S> seasonKey;
         protected final int season, stage;
@@ -78,6 +76,16 @@ public class VoidStageKeyImpl<V, S extends SStatsKey<V>> extends VoidSeasonKeyIm
         @Override
         public String apply(Void k) {
             return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.apply(k);
+        }
+
+        @Override
+        public String prefix() {
+            return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.prefix();
+        }
+
+        @Override
+        public String suffix() {
+            return this.seasonKey.keyFunction.suffix();
         }
     }
 }
