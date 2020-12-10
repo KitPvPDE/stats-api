@@ -92,12 +92,20 @@ public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, Asyn
         return this.execute(ReturnDocument.AFTER);
     }
 
+    public final void executeAndFindAsync() {
+        this.executeAndFindAsync(null, null);
+    }
+
     public final void executeAndFindAsync(Consumer<MongoStatsReader> callback, Executor executor) {
         this.executeTaskAsync(this::executeAndFind, callback, executor);
     }
 
     public final MongoStatsReader findAndExecute() {
         return this.execute(ReturnDocument.BEFORE);
+    }
+
+    public final void findAndExecuteAsync() {
+        this.findAndExecuteAsync(null, null);
     }
 
     public final void findAndExecuteAsync(Consumer<MongoStatsReader> callback, Executor executor) {
