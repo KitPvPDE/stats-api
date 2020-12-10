@@ -1,12 +1,14 @@
 package net.kitpvp.stats.mongodb.query.update.updates;
 
 import lombok.RequiredArgsConstructor;
-import net.kitpvp.stats.keys.set.SetStatsKey;
+import net.kitpvp.stats.api.keys.AppendableArrayKey;
+import net.kitpvp.stats.api.keys.AppendableSetKey;
 import net.kitpvp.stats.mongodb.MongoStatsReader;
-import net.kitpvp.stats.query.update.ArrayAction;
 import net.kitpvp.stats.mongodb.query.update.MongoUpdate;
+import net.kitpvp.stats.query.update.ArrayAction;
 import org.bson.Document;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -15,12 +17,12 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 class SetUpdateImpl<K, X> implements MongoUpdate {
 
-    private final SetStatsKey<K, X> statsKey;
+    private final AppendableSetKey<K, X> statsKey;
     private final K k;
     private final Set<X> v;
     private final ArrayAction operator;
 
-    public SetUpdateImpl(SetStatsKey<K, X> statsKey, K k, Supplier<Set<X>> supplier, X[] xs, ArrayAction operator) {
+    public SetUpdateImpl(AppendableSetKey<K, X> statsKey, K k, Supplier<Set<X>> supplier, X[] xs, ArrayAction operator) {
         this.statsKey = statsKey;
         this.k = k;
         this.v = Stream.of(xs).collect(Collectors.toCollection(supplier));

@@ -47,7 +47,7 @@ public class MongoStats implements Stats<Database, MongoStatsReader> {
 
     @Override
     public MongoWriteQuery write(Database database) {
-        return Mongo.write(database, this.collection, MongoFilters.uuid(this.playerId));
+        return Mongo.write(database, this.collection, this.callback, MongoFilters.uuid(this.playerId));
     }
 
     @Override

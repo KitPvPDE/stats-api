@@ -16,6 +16,9 @@ import net.kitpvp.stats.query.update.Update;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, AsyncExecutable {
@@ -23,12 +26,22 @@ public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, Asyn
     private final Database database;
     private final Collection collection;
     private final MongoStatsReader criteria, update;
+    private final Consumer<MongoStatsReader> callback;
 
     public MongoWriteQuery(Database database, Collection collection) {
         this.database = database;
         this.collection = collection;
         this.criteria = new MongoStatsReader(new Document());
         this.update = new MongoStatsReader(new Document());
+        this.callback = null;
+    }
+
+    public MongoWriteQuery(Database database, Collection collection, Consumer<MongoStatsReader> callback) {
+        this.database = database;
+        this.collection = collection;
+        this.criteria = new MongoStatsReader(new Document());
+        this.update = new MongoStatsReader(new Document());
+        this.callback = callback;
     }
 
     @Override
@@ -79,8 +92,16 @@ public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, Asyn
         return this.execute(ReturnDocument.AFTER);
     }
 
+    public final void executeAndFindAsync(Consumer<MongoStatsReader> callback, Executor executor) {
+        this.executeTaskAsync(this::executeAndFind, callback, executor);
+    }
+
     public final MongoStatsReader findAndExecute() {
         return this.execute(ReturnDocument.BEFORE);
+    }
+
+    public final void findAndExecuteAsync(Consumer<MongoStatsReader> callback, Executor executor) {
+        this.executeTaskAsync(this::findAndExecute, callback, executor);
     }
 
     private MongoStatsReader execute(ReturnDocument returnDocument) {
@@ -90,11 +111,18 @@ public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, Asyn
         if(this.update.source().isEmpty() || this.criteria.source().isEmpty())
             throw new UnsupportedOperationException("Empty criteria and/or update document");
 
-        return new MongoStatsReader(this.database.getCollection(this.collection).findOneAndUpdate(this.criteria.source(), this.update.source(), new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(true)));
+        return this.giveBack(new MongoStatsReader(this.database.getCollection(this.collection).findOneAndUpdate(this.criteria.source(), this.update.source(), new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(true))));
     }
 
     private void cleanup() {
         this.update.source().clear();
         this.criteria.source().clear();
+    }
+
+    private MongoStatsReader giveBack(MongoStatsReader statsReader) {
+        if(this.callback != null)
+            this.callback.accept(statsReader);
+
+        return statsReader;
     }
 }

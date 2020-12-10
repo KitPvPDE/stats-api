@@ -3,13 +3,17 @@ package net.kitpvp.stats.mongodb.query.update.updates;
 import net.kitpvp.stats.api.keys.AppendableArrayKey;
 import net.kitpvp.stats.api.keys.AppendableIncKey;
 import net.kitpvp.stats.api.keys.AppendableKey;
+import net.kitpvp.stats.api.keys.AppendableSetKey;
 import net.kitpvp.stats.keys.array.ArrayStatsKey;
+import net.kitpvp.stats.keys.set.SetStatsKey;
 import net.kitpvp.stats.query.update.ArrayAction;
 import net.kitpvp.stats.mongodb.query.update.MongoUpdate;
 import net.kitpvp.stats.query.update.Action;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public interface MongoUpdates {
@@ -115,4 +119,59 @@ public interface MongoUpdates {
         return new ArrayUpdateImpl<>(statsKey, null, supplier, xs, ArrayAction.PULL);
     }
 
+    static <K, X> MongoUpdate push(SetStatsKey<K, X> statsKey, K k, Set<X> v) {
+        return new SetUpdateImpl<K, X>(statsKey, k, v, ArrayAction.PUSH);
+    }
+
+    static <X> MongoUpdate push(AppendableSetKey<Void, X> statsKey, Set<X> v) {
+        return new SetUpdateImpl<>(statsKey, null, v, ArrayAction.PUSH);
+    }
+
+    @SafeVarargs
+    static <K, X> MongoUpdate push(SetStatsKey<K, X> statsKey, K k, X... xs) {
+        return new SetUpdateImpl<>(statsKey, k, HashSet::new, xs, ArrayAction.PUSH);
+    }
+
+    @SafeVarargs
+    static <K, X> MongoUpdate push(SetStatsKey<K, X> statsKey, K k, Supplier<Set<X>> supplier, X... xs) {
+        return new SetUpdateImpl<>(statsKey, k, supplier, xs, ArrayAction.PUSH);
+    }
+
+    @SafeVarargs
+    static <X> MongoUpdate push(AppendableSetKey<Void, X> statsKey, X... xs) {
+        return new SetUpdateImpl<>(statsKey, null, HashSet::new, xs, ArrayAction.PUSH);
+    }
+
+    @SafeVarargs
+    static <X> MongoUpdate push(AppendableSetKey<Void, X> statsKey, Supplier<Set<X>> supplier, X... xs) {
+        return new SetUpdateImpl<>(statsKey, null, supplier, xs, ArrayAction.PUSH);
+    }
+
+    static <K, X> MongoUpdate pull(SetStatsKey<K, X> statsKey, K k, Set<X> v) {
+        return new SetUpdateImpl<>(statsKey, k, v, ArrayAction.PULL);
+    }
+
+    static <X> MongoUpdate pull(AppendableSetKey<Void, X> statsKey, Set<X> v) {
+        return new SetUpdateImpl<>(statsKey, null, v, ArrayAction.PULL);
+    }
+
+    @SafeVarargs
+    static <K, X> MongoUpdate pull(SetStatsKey<K, X> statsKey, K k, X... xs) {
+        return new SetUpdateImpl<>(statsKey, k, HashSet::new, xs, ArrayAction.PULL);
+    }
+
+    @SafeVarargs
+    static <K, X> MongoUpdate pull(SetStatsKey<K, X> statsKey, K k, Supplier<Set<X>> supplier, X... xs) {
+        return new SetUpdateImpl<>(statsKey, k, supplier, xs, ArrayAction.PULL);
+    }
+
+    @SafeVarargs
+    static <X> MongoUpdate pull(AppendableSetKey<Void, X> statsKey, X... xs) {
+        return new SetUpdateImpl<>(statsKey, null, HashSet::new, xs, ArrayAction.PULL);
+    }
+
+    @SafeVarargs
+    static <X> MongoUpdate pull(AppendableSetKey<Void, X> statsKey, Supplier<Set<X>> supplier, X... xs) {
+        return new SetUpdateImpl<>(statsKey, null, supplier, xs, ArrayAction.PULL);
+    }
 }

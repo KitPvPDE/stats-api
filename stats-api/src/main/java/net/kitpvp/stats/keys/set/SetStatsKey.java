@@ -1,6 +1,7 @@
 package net.kitpvp.stats.keys.set;
 
 import net.kitpvp.stats.StatsReader;
+import net.kitpvp.stats.api.keys.AppendableSetKey;
 import net.kitpvp.stats.builder.set.SetKeyBuilder;
 import net.kitpvp.stats.keys.StatsKey;
 import net.kitpvp.stats.reader.Reader;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public interface SetStatsKey<K, X> extends StatsKey<K, Set<X>> {
+public interface SetStatsKey<K, X> extends StatsKey<K, Set<X>>, AppendableSetKey<K, X> {
 
     static <K, X> SetKeyBuilder<K, X> builder() {
         return new SetKeyBuilder<>();

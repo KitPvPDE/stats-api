@@ -7,6 +7,9 @@ import net.kitpvp.stats.mongodb.query.MongoFindQuery;
 import net.kitpvp.stats.mongodb.query.MongoWriteQuery;
 import net.kitpvp.stats.mongodb.query.filter.MongoFilter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 public class Mongo {
 
@@ -24,6 +27,14 @@ public class Mongo {
 
     public static MongoWriteQuery write(@NotNull Database database, @NotNull Collection collection, @NotNull MongoFilter... filters) {
         return new MongoWriteQuery(database, collection).filter(filters);
+    }
+
+    public static MongoWriteQuery write(@NotNull Database database, @NotNull Collection collection, @Nullable Consumer<MongoStatsReader> callback) {
+        return new MongoWriteQuery(database, collection, callback);
+    }
+
+    public static MongoWriteQuery write(@NotNull Database database, @NotNull Collection collection, @Nullable Consumer<MongoStatsReader> callback, @NotNull MongoFilter... filters) {
+        return new MongoWriteQuery(database, collection, callback).filter(filters);
     }
 
     public static MongoCountQuery count(@NotNull Database database, @NotNull Collection collection) {
