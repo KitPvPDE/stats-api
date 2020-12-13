@@ -29,10 +29,6 @@ public class KeyBuilder<K> implements ComponentBuilder<KeyFunction<K>> {
         return this;
     }
 
-    public KeyBuilder<Void> path(@NotNull String path) {
-        return new VoidKeyBuilder().path(path);
-    }
-
     @Override
     public @NotNull KeyFunction<K> build() {
         if(this.function == null) {

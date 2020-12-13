@@ -2,6 +2,8 @@ package net.kitpvp.stats.mongodb.query.filter.filters;
 
 import net.kitpvp.stats.keys.SStatsKey;
 import net.kitpvp.stats.keys.StatsKey;
+import net.kitpvp.stats.keys.array.ArraySStatsKey;
+import net.kitpvp.stats.keys.array.ArrayStatsKey;
 import net.kitpvp.stats.mongodb.query.filter.MongoFilter;
 import net.kitpvp.stats.query.filter.Comparison;
 
@@ -49,4 +51,11 @@ public interface MongoFilters {
         return new CompareFilter<>(key, k, v, comparison);
     }
 
+    static <K, X> MongoFilter all(ArrayStatsKey<K, X> statsKey, K key, List<X> xs) {
+        return new AllFilter<>(statsKey, key, xs);
+    }
+
+    static <K, X> MongoFilter all(ArraySStatsKey<X> statsKey, List<X> xs) {
+        return new AllFilter<>(statsKey, null, xs);
+    }
 }

@@ -9,28 +9,36 @@ import net.kitpvp.stats.keys.impl.numeric.LongVoidStatsKeyImpl;
 import net.kitpvp.stats.keys.numeric.LongSSeasonKey;
 import net.kitpvp.stats.keys.numeric.LongSStageKey;
 import net.kitpvp.stats.keys.numeric.LongSStatsKey;
+import net.kitpvp.stats.utils.Functions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.LongBinaryOperator;
+import java.util.function.LongUnaryOperator;
 
-public class LongVoidKeyBuilder extends LongKeyBuilder<Void> implements StatsKeyBuilder<Void, Long> {
+public class LongVoidKeyBuilder implements StatsKeyBuilder<Void, Long> {
 
     protected final VoidKeyBuilder keyBuilder;
     protected LongBinaryOperator function = Long::sum;
+    protected LongUnaryOperator inverse = Functions::inverse;
     protected long neutral, def, offset;
 
     public LongVoidKeyBuilder() {
         this.keyBuilder = new VoidKeyBuilder();
     }
 
-    public LongVoidKeyBuilder keyBuilder(Consumer<KeyBuilder<Void>> consumer) {
+    public LongVoidKeyBuilder keyBuilder(Consumer<VoidKeyBuilder> consumer) {
         consumer.accept(this.keyBuilder);
         return this;
     }
 
     public LongVoidKeyBuilder function(LongBinaryOperator operator) {
         this.function = operator;
+        return this;
+    }
+
+    public LongVoidKeyBuilder inverse(LongUnaryOperator operator) {
+        this.inverse = inverse;
         return this;
     }
 

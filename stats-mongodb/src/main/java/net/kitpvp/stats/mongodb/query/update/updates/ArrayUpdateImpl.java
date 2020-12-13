@@ -32,10 +32,14 @@ class ArrayUpdateImpl<K, X> implements MongoUpdate {
         this.statsKey.append(this.k, this.v, (statsKey, key, value) -> {
             Document document = this.document(statsReader.source(), this.operator);
             String builtKey = statsKey.key(key);
-            if(document.containsKey(builtKey)) {
+            Document append = document.get(builtKey, Document.class);
+            if(append == null) {
+                document.put(builtKey, (append = new Document()));
+            }
+            if(append.containsKey(this.operator.getMongoArrayOperator())) {
                 throw new IllegalArgumentException(String.format("Cannot update key %s (%s), key already set (%s)", statsKey, builtKey, document));
             } else {
-                document.put(builtKey, value);
+                append.put(this.operator.getMongoArrayOperator(), value);
             }
         });
         return this;

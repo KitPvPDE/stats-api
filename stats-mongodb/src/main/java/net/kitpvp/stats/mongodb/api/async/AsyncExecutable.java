@@ -3,11 +3,13 @@ package net.kitpvp.stats.mongodb.api.async;
 import net.kitpvp.mongodbapi.async.Async;
 import net.kitpvp.mongodbapi.async.Executors;
 import net.kitpvp.mongodbapi.async.Sync;
+import net.kitpvp.mongodbapi.log.Log;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface AsyncExecutable {
@@ -56,10 +58,40 @@ public interface AsyncExecutable {
     @Contract(value = "_, !null, null -> fail")
     default <T> void executeTaskAsync(Supplier<T> task, @Nullable Consumer<T> callback, Executor executor) {
         Runnable executable = () -> {
+            Log.debug("Executing task..");
             T t = task.get();
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
 
             if(callback != null) {
                 executor.execute(() -> callback.accept(t));
+            }
+        };
+        this.executeTaskAsync(executable);
+    }
+
+    @Contract(value = "_, _, !null, null -> fail")
+    default <T> void executeTaskAsync(Consumer<T> task, T t, @Nullable Consumer<Void> callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            task.accept(t);
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(null));
+            }
+        };
+        this.executeTaskAsync(executable);
+    }
+
+    @Contract(value = "_, _, !null, null -> fail")
+    default <T, R> void executeTaskAsync(Function<T, R> task, T t, @Nullable Consumer<R> callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            R r = task.apply(t);
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(r));
             }
         };
         this.executeTaskAsync(executable);

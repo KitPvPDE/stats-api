@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.keys.AppendableKey;
 import net.kitpvp.stats.local.LocalStats;
 import net.kitpvp.stats.local.query.update.LocalUpdate;
-import net.kitpvp.stats.local.DocumentUtils;
 import net.kitpvp.stats.query.update.Action;
 
 @RequiredArgsConstructor

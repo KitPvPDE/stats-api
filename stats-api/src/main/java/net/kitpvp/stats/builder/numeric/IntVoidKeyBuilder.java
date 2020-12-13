@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
 
-public class IntVoidKeyBuilder extends IntKeyBuilder<Void> implements StatsKeyBuilder<Void, Integer> {
+public class IntVoidKeyBuilder implements StatsKeyBuilder<Void, Integer> {
 
     protected final VoidKeyBuilder keyBuilder;
     protected IntBinaryOperator function = Integer::sum;
@@ -27,13 +27,18 @@ public class IntVoidKeyBuilder extends IntKeyBuilder<Void> implements StatsKeyBu
         this.keyBuilder = new VoidKeyBuilder();
     }
 
-    public IntVoidKeyBuilder keyBuilder(Consumer<KeyBuilder<Void>> consumer) {
+    public IntVoidKeyBuilder keyBuilder(Consumer<VoidKeyBuilder> consumer) {
         consumer.accept(this.keyBuilder);
         return this;
     }
 
     public IntVoidKeyBuilder function(IntBinaryOperator operator) {
         this.function = operator;
+        return this;
+    }
+
+    public IntVoidKeyBuilder inverse(IntUnaryOperator operator) {
+        this.inverse = operator;
         return this;
     }
 

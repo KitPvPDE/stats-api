@@ -73,6 +73,10 @@ public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, Asyn
         this.execute(false);
     }
 
+    public final void executeAsync(boolean updateMany) {
+        this.executeTaskAsync((Consumer<? super Boolean>) this::execute, updateMany, null, null);
+    }
+
     public final void execute(boolean updateMany) {
         Stats.checkForMainThread();
 

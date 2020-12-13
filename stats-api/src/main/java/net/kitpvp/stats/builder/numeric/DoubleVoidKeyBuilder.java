@@ -5,23 +5,25 @@ import net.kitpvp.stats.builder.keys.KeyBuilder;
 import net.kitpvp.stats.builder.keys.VoidKeyBuilder;
 import net.kitpvp.stats.keys.impl.numeric.*;
 import net.kitpvp.stats.keys.numeric.*;
+import net.kitpvp.stats.utils.Functions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleUnaryOperator;
 
-public class DoubleVoidKeyBuilder extends DoubleKeyBuilder<Void> implements StatsKeyBuilder<Void, Double> {
+public class DoubleVoidKeyBuilder implements StatsKeyBuilder<Void, Double> {
 
     protected final VoidKeyBuilder keyBuilder;
     protected DoubleBinaryOperator function = Double::sum;
+    protected DoubleUnaryOperator inverse = Functions::inverse;
     protected double neutral = 0, def = 0, offset = 0;
 
     public DoubleVoidKeyBuilder() {
         this.keyBuilder = new VoidKeyBuilder();
     }
 
-    public DoubleVoidKeyBuilder keyBuilder(Consumer<KeyBuilder<Void>> consumer) {
+    public DoubleVoidKeyBuilder keyBuilder(Consumer<VoidKeyBuilder> consumer) {
         consumer.accept(this.keyBuilder);
         return this;
     }
