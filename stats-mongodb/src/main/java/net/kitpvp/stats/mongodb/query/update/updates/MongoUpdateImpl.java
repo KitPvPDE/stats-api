@@ -32,7 +32,7 @@ class MongoUpdateImpl<K, V> implements MongoUpdate {
             Document document = this.document(statsReader.source(), this.operator);
             String builtKey = statsKey.key(key);
             if(document.containsKey(builtKey)) {
-                Log.debug(String.format("Updating key %s, key was already set to %s (%s)", builtKey, document.get(builtKey), document.toJson()));
+                Log.debug(String.format("Updating key %s, key was already set to %s (%s)", builtKey, document.get(builtKey), document));
             }
             document.put(builtKey, value);
         });
