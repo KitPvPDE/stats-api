@@ -31,4 +31,8 @@ public interface StatsKey<K, V> extends AppendableKey<K, V> {
     default V extract(Reader statsReader, K key) {
         return statsReader.find(this.key(key), this.def());
     }
+
+    default boolean contains(Reader statsReader, K key) {
+        return statsReader.find(this.key(key), null) != null;
+    }
 }

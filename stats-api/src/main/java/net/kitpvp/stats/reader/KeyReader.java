@@ -26,4 +26,12 @@ public interface KeyReader extends Reader {
     default <V, U> U getStatKey(SStatsKey<V> statsKey, Function<V, U> function) {
         return function.apply(statsKey.apply(statsKey.extract(this, null)));
     }
+
+    default <V> boolean hasStatKey(SStatsKey<V> statsKey) {
+        return statsKey.contains(this, null);
+    }
+
+    default <K, V> boolean hasStatKey(StatsKey<K, V> statsKey, K key) {
+        return statsKey.contains(this, key);
+    }
 }
