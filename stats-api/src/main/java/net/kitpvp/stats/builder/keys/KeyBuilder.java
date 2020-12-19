@@ -3,6 +3,8 @@ package net.kitpvp.stats.builder.keys;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.builder.ComponentBuilder;
 import net.kitpvp.stats.api.functions.keys.KeyFunction;
+import net.kitpvp.stats.api.keys.Key;
+import net.kitpvp.stats.impl.KeyImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +14,12 @@ public class KeyBuilder<K> implements ComponentBuilder<KeyFunction<K>> {
 
     private String prefix;
     private Function<K, String> function;
+    private Function<String, K> inverse;
     private String suffix;
+
+    public KeyBuilder<K> function(@NotNull Key<K> key) {
+        return this.function(key.keyFunction().function()).inverse(key.keyFunction().inverse());
+    }
 
     public KeyBuilder<K> prefix(@Nullable String prefix) {
         this.prefix = prefix;
@@ -24,6 +31,11 @@ public class KeyBuilder<K> implements ComponentBuilder<KeyFunction<K>> {
         return this;
     }
 
+    public KeyBuilder<K> inverse(@Nullable Function<String, K> inverse) {
+        this.inverse = inverse;
+        return this;
+    }
+
     public KeyBuilder<K> suffix(@Nullable String suffix) {
         this.suffix = suffix;
         return this;
@@ -31,29 +43,26 @@ public class KeyBuilder<K> implements ComponentBuilder<KeyFunction<K>> {
 
     @Override
     public @NotNull KeyFunction<K> build() {
-        if(this.function == null) {
-            if(this.prefix == null && this.suffix == null)
-                throw new NullPointerException("Prefix and suffix are null");
+        if(this.function == null || this.inverse == null)
+            throw new UnsupportedOperationException("no function specified");
 
-            if(this.prefix != null && this.suffix != null) {
-                return new StaticKey(this.prefix + "." + this.suffix);
-            } else if(this.prefix != null) {
-                return new StaticKey(this.prefix);
-            } else{
-                return new StaticKey(this.suffix);
-            }
-        }
-        return new ParameterKey(this.prefix, this.function, this.suffix);
+        return new KeyFunctionImpl<>(this.prefix, this.function, this.inverse, this.suffix);
+    }
+
+    public @NotNull Key<K> buildKey() {
+        return new KeyImpl<>(this.build());
     }
 
     @RequiredArgsConstructor
-    class ParameterKey implements KeyFunction<K> {
-        private final String prefix;
-        private final Function<K, String> function;
-        private final String suffix;
+    private static class KeyFunctionImpl<K> implements KeyFunction<K> {
+
+        private final @Nullable String prefix;
+        private final @NotNull Function<K, String> function;
+        private final @NotNull Function<String, K> inverse;
+        private final @Nullable String suffix;
 
         @Override
-        public String apply(K k) {
+        public String key(K k) {
             StringBuilder builder = new StringBuilder();
             if(this.prefix != null)
                 builder.append(this.prefix).append(".");
@@ -74,25 +83,20 @@ public class KeyBuilder<K> implements ComponentBuilder<KeyFunction<K>> {
         public String suffix() {
             return this.suffix;
         }
-    }
-
-    @RequiredArgsConstructor
-    class StaticKey implements KeyFunction<K> {
-        private final String key;
 
         @Override
-        public String apply(K k) {
-            return this.key;
+        public Function<K, String> function() {
+            return this.function;
         }
 
         @Override
-        public String prefix() {
-            throw new UnsupportedOperationException();
+        public Function<String, K> inverse() {
+            return this.inverse;
         }
 
         @Override
-        public String suffix() {
-            throw new UnsupportedOperationException();
+        public K inverse(String key) {
+            return this.inverse.apply(key);
         }
     }
 }

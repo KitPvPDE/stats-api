@@ -3,8 +3,6 @@ package net.kitpvp.stats.reader;
 import net.kitpvp.stats.keys.StatsKey;
 import org.bson.Document;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
@@ -12,7 +10,29 @@ import java.util.stream.Collectors;
 
 public interface KeysReader extends Reader {
 
-    default <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, Function<String, U> function) {
+    /*
+
+    Syntax:
+
+    statsReader.map(converter)
+
+    CosmeticType -> Enum
+    Cosmetic -> interface
+
+    this.cosmetics = statsReader.getKeys(Stats.COSMETIC)
+    -> Set<CosmeticType>
+
+    BiFunction<StatsReader, CosmeticType, Cosmetic> function = statsReader -> null;
+    this.cosmetics = statsReader.getStatKeys(Stats.COSMETIC)
+    -> Set<Cosmetic>
+
+    this.cosmetics = statsReader.getStatEntries(Stats.COSMETIC)
+    -> Set<Entry<CosmeticType, Cosmetic>>
+
+     */
+
+    /*
+    default <K, V, U> Set<U> getKeys(StatsKey<K, V> statsKey, Function<String, U> function) {
         String prefix = statsKey.keyFunction().prefix();
 
         Document map;
@@ -26,15 +46,16 @@ public interface KeysReader extends Reader {
         return map.keySet().stream().map(function).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
-    default <K, V, U> Set<U> getStatKeys(StatsKey<K, V> statsKey, K k, Function<String, U> function) {
-        return this.getStatKeys(statsKey, function);
+    default <K, V, U> Set<U> getKeys(StatsKey<K, V> statsKey, K k, Function<String, U> function) {
+        return this.getKeys(statsKey, function);
     }
 
-    default <K, V> Set<String> getStatKeys(StatsKey<K, V> statsKey) {
-        return this.getStatKeys(statsKey, Function.identity());
+    default <K, V> Set<String> getKeys(StatsKey<K, V> statsKey) {
+        return this.getKeys(statsKey, Function.identity());
     }
 
-    default <K, V> Set<String> getStatKeys(StatsKey<K, V> statsKey, K k) {
-        return this.getStatKeys(statsKey, Function.identity());
+    default <K, V> Set<String> getKeys(StatsKey<K, V> statsKey, K k) {
+        return this.getKeys(statsKey, Function.identity());
     }
+     */
 }

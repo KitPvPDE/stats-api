@@ -1,8 +1,7 @@
 package net.kitpvp.stats.keys.impl;
 
-import com.google.common.base.Preconditions;
-import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.functions.keys.KeyFunction;
+import net.kitpvp.stats.api.functions.season.StageKeyFunction;
 import net.kitpvp.stats.keys.StageKey;
 import net.kitpvp.stats.keys.StatsKey;
 import net.kitpvp.stats.season.Season;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class StageKeyImpl<K, V, S extends StatsKey<K, V>> extends SeasonKeyImpl<K, V, S> implements StageKey<K, V> {
@@ -52,42 +50,13 @@ public class StageKeyImpl<K, V, S extends StatsKey<K, V>> extends SeasonKeyImpl<
     }
 
     protected final KeyFunction<K> createKeyFunction(int season, int stage) {
-        return new SeasonToKeyFunction(this, season, stage);
+        return new StageKeyFunction<>(this.keyFunction, season, stage);
     }
 
     private void checkCapacity(int season, int stage) {
         List<S> keys = this.seasonKeys.computeIfAbsent(season, (x) -> new ArrayList<>());
         while(keys.size() <= stage) {
             keys.add(null);
-        }
-    }
-
-    protected class SeasonToKeyFunction implements KeyFunction<K> {
-
-        protected final SeasonKeyImpl<K, V, S> seasonKey;
-        protected final int season, stage;
-
-        public SeasonToKeyFunction(SeasonKeyImpl<K, V, S> seasonKey, int season, int stage) {
-            this.seasonKey = seasonKey;
-            this.season = season;
-            this.stage = stage;
-
-            Preconditions.checkArgument(this.season > 0, "Season must be > 0");
-        }
-
-        @Override
-        public String apply(K k) {
-            return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.apply(k);
-        }
-
-        @Override
-        public String prefix() {
-            return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.prefix();
-        }
-
-        @Override
-        public String suffix() {
-            return this.seasonKey.keyFunction.suffix();
         }
     }
 }

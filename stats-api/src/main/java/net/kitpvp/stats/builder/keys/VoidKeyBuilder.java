@@ -1,28 +1,60 @@
 package net.kitpvp.stats.builder.keys;
 
+import lombok.RequiredArgsConstructor;
+import net.kitpvp.stats.api.builder.ComponentBuilder;
+import net.kitpvp.stats.api.functions.keys.VoidKeyFunction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class VoidKeyBuilder extends KeyBuilder<Void> {
+public class VoidKeyBuilder implements ComponentBuilder<VoidKeyFunction> {
+
+    private String path;
 
     public VoidKeyBuilder path(@NotNull String path) {
-        return this.prefix(path).function(null).suffix(null);
+        this.path = path;
+        return this;
     }
 
     @Override
-    public VoidKeyBuilder prefix(@Nullable String prefix) {
-        return (VoidKeyBuilder) super.prefix(prefix);
+    public @NotNull VoidKeyFunction build() {
+        return new VoidKeyFunctionImpl(this.path);
     }
 
-    @Override
-    public VoidKeyBuilder suffix(@Nullable String suffix) {
-        return (VoidKeyBuilder) super.suffix(suffix);
-    }
+    @RequiredArgsConstructor
+    private static class VoidKeyFunctionImpl implements VoidKeyFunction {
 
-    @Override
-    public VoidKeyBuilder function(@Nullable Function<Void, String> function) {
-        return (VoidKeyBuilder) super.function(function);
+        private final Function<Void, String> function = x -> this.key();
+        private final String key;
+
+        @Override
+        public String key() {
+            return this.key;
+        }
+
+        @Override
+        public String prefix() {
+            throw new UnsupportedOperationException("void");
+        }
+
+        @Override
+        public String suffix() {
+            throw new UnsupportedOperationException("void");
+        }
+
+        @Override
+        public Function<Void, String> function() {
+            return this.function;
+        }
+
+        @Override
+        public Function<String, Void> inverse() {
+            throw new UnsupportedOperationException("void");
+        }
+
+        @Override
+        public Void inverse(String key) {
+            throw new UnsupportedOperationException("void");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package net.kitpvp.stats;
 
+import net.kitpvp.stats.bson.BsonStats;
 import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.keys.SStatsKey;
 import net.kitpvp.stats.keys.StatsKey;
@@ -36,10 +37,24 @@ public class TestBsonReader {
     @Test
     public void testNested() {
         BsonStatsReader statsReader = new BsonStatsReader(database);
-        StatsKey<String, Object> statsKey = StatsKey.<String, Object>builder().keyBuilder(builder -> builder.function(Function.identity())).defaultValue((Object) null).build();
+        StatsKey<String, Object> statsKey = StatsKey.<String, Object>builder().keyBuilder(builder -> builder.function(Function.identity()).
+                inverse(Function.identity())).defaultValue((Object) null).build();
 
-        for(String key : statsReader.getStatKeys(statsKey)) {
-            assertEquals(new BsonStatsReader(database.get(key, Document.class)), statsReader.mapStatsReader(statsKey, key));
+        for(String key : statsReader.getKeys(statsKey)) {
+            assertEquals(new BsonStatsReader(database.get(key, Document.class)), statsReader.getStatReader(statsKey, key));
         }
+    }
+
+    @Test
+    public void testHas() {
+        BsonStats statsReader = new BsonStats(database);
+
+        StatsKey<String, Object> statsKey = StatsKey.<String, Object>builder().keyBuilder(builder ->
+                builder.prefix("prefix").function(Function.identity()).inverse(Function.identity()).suffix("suffix")).build();
+
+        assertFalse(statsReader.hasStatKey(statsKey, "test"));
+        statsReader.setStatKey(statsKey, "test", new Object());
+        assertTrue(statsReader.hasStatKey(statsKey, "test"));
+        assertFalse(statsReader.hasStatKey(statsKey, "other"));
     }
 }

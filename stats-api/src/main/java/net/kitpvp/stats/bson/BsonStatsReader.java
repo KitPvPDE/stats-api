@@ -1,24 +1,19 @@
 package net.kitpvp.stats.bson;
 
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.StatsReader;
-import net.kitpvp.stats.keys.StatsKey;
+import net.kitpvp.stats.api.keys.Entry;
+import net.kitpvp.stats.api.keys.Key;
 import org.bson.Document;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static net.kitpvp.stats.api.keys.Entry.entry;
 
 @RequiredArgsConstructor
 public class BsonStatsReader implements StatsReader {
-
-    public static final StatsKey<String, Document> DOCUMENT_KEY = StatsKey.<String, Document>builder().
-            keyBuilder(builder -> builder.function(Function.identity())).defaultValue(Document::new).build();
-    public static final Gson GSON = new Gson();
 
     private final Document database;
 
@@ -26,7 +21,6 @@ public class BsonStatsReader implements StatsReader {
         this(new Document());
     }
 
-    @Override
     public Document bson() {
         return this.database;
     }
@@ -37,18 +31,58 @@ public class BsonStatsReader implements StatsReader {
     }
 
     @Override
-    public <K, V> StatsReader mapStatsReader(StatsKey<K, V> statsKey, K key) {
-        String path = statsKey.key(key);
-        Document document = this.getStatKey(DOCUMENT_KEY, path);
-        return new BsonStatsReader(document);
+    public <K> Set<K> getKeys(Key<K> statsKey) {
+        String prefix = statsKey.keyFunction().prefix();
+
+        Document map;
+        if(prefix != null && !prefix.isEmpty()) {
+            map = this.find(prefix, new Document());
+        } else {
+            map = this.bson();
+        }
+        return map.keySet().stream().map(statsKey.keyFunction().inverse()).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
-    public final <T> T mapFromJson(Gson gson, Class<T> type) {
-        return gson.fromJson(this.database.toJson(), type);
+    @Override
+    public <K> StatsReader getStatReader(Key<K> statsKey, K key) {
+        String path = statsKey.keyFunction().key(key);
+
+        Document map;
+        if(path != null && !path.isEmpty()) {
+            map = this.find(path, new Document());
+        } else {
+            map = this.bson();
+        }
+        return new BsonStatsReader(map);
     }
 
-    public final <T> T mapFromJson(Class<T> type) {
-        return this.mapFromJson(GSON, type);
+    @Override
+    public <K> Set<Entry<K, StatsReader>> getStatEntries(Key<K> statsKey) {
+        String prefix = statsKey.keyFunction().prefix();
+
+        Document map;
+        if(prefix != null && !prefix.isEmpty()) {
+            map = this.find(prefix, new Document());
+        } else {
+            map = this.bson();
+        }
+        return map.entrySet().stream().filter(entry -> entry.getValue() instanceof Document).
+                map(entry -> entry(statsKey.keyFunction().inverse(entry.getKey()), (StatsReader) new BsonStatsReader((Document) entry.getValue()))).
+                collect(Collectors.toSet());
+    }
+
+    @Override
+    public <K> Set<StatsReader> getStatReaders(Key<K> statsKey) {
+        String prefix = statsKey.keyFunction().prefix();
+
+        Document map;
+        if(prefix != null && !prefix.isEmpty()) {
+            map = this.find(prefix, new Document());
+        } else {
+            map = this.bson();
+        }
+        return map.values().stream().filter(value -> value instanceof Document).
+                map(value -> new BsonStatsReader((Document) value)).collect(Collectors.toSet());
     }
 
     @Override

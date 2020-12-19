@@ -22,7 +22,7 @@ public class StatsKeyImpl<K, V> implements StatsKey<K, V> {
 
     @Override
     public String key(K k) {
-        return this.key.apply(k);
+        return this.key.key(k);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package net.kitpvp.stats.keys.numeric;
 
 import net.kitpvp.stats.StatsReader;
+import net.kitpvp.stats.api.keys.Key;
 import net.kitpvp.stats.api.numbers.NumberConversions;
 import net.kitpvp.stats.builder.numeric.IntKeyBuilder;
 import net.kitpvp.stats.keys.IncStatsKey;
 import net.kitpvp.stats.reader.Reader;
 
+import java.util.Objects;
 import java.util.function.BinaryOperator;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
@@ -16,6 +18,8 @@ public interface IntStatsKey<K> extends IncStatsKey<K, Integer> {
     static <K> IntKeyBuilder<K> builder() {
         return new IntKeyBuilder<>();
     }
+
+    Key<Integer> INT_KEY = Key.<Integer>builder().function(Objects::toString).inverse(Integer::parseInt).buildKey();
 
     BinaryOperator<Integer> addition();
 

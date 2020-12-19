@@ -4,16 +4,20 @@ import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.api.functions.TriConsumer;
 import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.api.keys.AppendableKey;
+import net.kitpvp.stats.api.keys.Key;
+import net.kitpvp.stats.api.keys.Keys;
 import net.kitpvp.stats.builder.Builder;
 import net.kitpvp.stats.reader.Reader;
 
 import java.util.function.Function;
 
-public interface StatsKey<K, V> extends AppendableKey<K, V> {
+public interface StatsKey<K, V> extends AppendableKey<K, V>, Key<K> {
 
     static <K, V> Builder<K, V> builder() {
         return new Builder<>();
     }
+
+    Key<String> STRING_KEY = Keys.STRING_KEY;
 
     KeyFunction<K> keyFunction();
 

@@ -10,8 +10,6 @@ public interface Reader {
 
     <V> V find(String key, V def);
 
-    Document bson();
-
     default <K, V> V getStatKey(StatsKey<K, V> statsKey, K k) {
         return statsKey.apply(this.readStatKey(statsKey, k));
     }

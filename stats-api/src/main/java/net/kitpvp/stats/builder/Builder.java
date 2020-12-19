@@ -20,12 +20,12 @@ import java.util.function.Supplier;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Builder<K, V> implements StatsKeyBuilder<K, V> {
 
-    protected final KeyBuilder<K> keyBuilder;
-    protected Supplier<V> defaultSupplier;
+    private final KeyBuilder<K> keyBuilder;
+    private Supplier<V> defaultSupplier;
 
     public Builder() {
         this.keyBuilder = new KeyBuilder<>();
-        this.defaultSupplier = null;
+        this.defaultSupplier = () -> null;
     }
 
     public Builder<K, V> defaultValue(V defaultValue) {

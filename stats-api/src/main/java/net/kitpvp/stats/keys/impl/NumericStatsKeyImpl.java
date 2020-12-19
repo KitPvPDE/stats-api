@@ -4,7 +4,6 @@ import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.IncStatsKey;
 
 import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public class NumericStatsKeyImpl<K, V> implements IncStatsKey<K, V> {
@@ -30,7 +29,7 @@ public class NumericStatsKeyImpl<K, V> implements IncStatsKey<K, V> {
 
     @Override
     public String key(K k) {
-        return this.keyFunction.apply(k);
+        return this.keyFunction.key(k);
     }
 
     @Override

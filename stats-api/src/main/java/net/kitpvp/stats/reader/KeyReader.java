@@ -1,5 +1,7 @@
 package net.kitpvp.stats.reader;
 
+import net.kitpvp.stats.api.keys.Key;
+import net.kitpvp.stats.api.keys.VoidKey;
 import net.kitpvp.stats.keys.SStatsKey;
 import net.kitpvp.stats.keys.StatsKey;
 
@@ -27,11 +29,11 @@ public interface KeyReader extends Reader {
         return function.apply(statsKey.apply(statsKey.extract(this, null)));
     }
 
-    default <V> boolean hasStatKey(SStatsKey<V> statsKey) {
+    default boolean hasStatKey(VoidKey statsKey) {
         return statsKey.contains(this, null);
     }
 
-    default <K, V> boolean hasStatKey(StatsKey<K, V> statsKey, K key) {
+    default <K> boolean hasStatKey(Key<K> statsKey, K key) {
         return statsKey.contains(this, key);
     }
 }

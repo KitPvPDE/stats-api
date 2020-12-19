@@ -30,7 +30,7 @@ public class TestComplex {
         StatsWriter statsWriter = new BsonStatsWriter(document);
 
         Converter<Complex> converter = new Converter<>(new ComplexContext());
-        Complex decoded = statsReader.mapStatsReader(converter);
+        Complex decoded = statsReader.map(converter);
 
         assertEquals(new Complex(3214, true, 34d), decoded);
         assertEquals(statsWriter, converter.encode(decoded));

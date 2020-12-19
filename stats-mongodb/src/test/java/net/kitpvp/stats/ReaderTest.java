@@ -18,13 +18,13 @@ import static org.junit.Assert.assertEquals;
 public class ReaderTest {
 
     private final IntStatsKey<String> intKey = IntStatsKey.<String>builder().
-            keyBuilder((builder) -> builder.prefix("test").function(Function.identity()).suffix("test3")).
+            keyBuilder((builder) -> builder.prefix("test").function(Function.identity()).inverse(Function.identity()).suffix("test3")).
             build();
     private final IntSeasonKey<String> intSeasonKey = IntStatsKey.<String>builder().
-            keyBuilder((builder) -> builder.prefix("prefix").function(Function.identity()).suffix("suffix")).
+            keyBuilder((builder) -> builder.prefix("prefix").function(Function.identity()).inverse(Function.identity()).suffix("suffix")).
             season();
     private final IntStageKey<String> intStageKey = IntStatsKey.<String>builder().
-            keyBuilder((builder) -> builder.prefix("prefix").function(Function.identity()).suffix("suffix")).
+            keyBuilder((builder) -> builder.prefix("prefix").function(Function.identity()).inverse(Function.identity()).suffix("suffix")).
             stage();
 
     @Test
@@ -69,9 +69,9 @@ public class ReaderTest {
             add("second");
             add("third");
         }};
-        assertEquals(keys, statsReader.getStatKeys(this.intKey));
+        assertEquals(keys, statsReader.getKeys(this.intKey));
 
-        for(String key : statsReader.getStatKeys(this.intKey)) {
+        for(String key : statsReader.getKeys(this.intKey)) {
             assertEquals(document.get("test", Document.class).get(key, Document.class).getInteger("test3").intValue(), statsReader.getIntKey(this.intKey, key));
         }
     }

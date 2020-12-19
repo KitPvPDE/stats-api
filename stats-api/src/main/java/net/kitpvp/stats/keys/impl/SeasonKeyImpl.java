@@ -1,7 +1,7 @@
 package net.kitpvp.stats.keys.impl;
 
-import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.functions.keys.KeyFunction;
+import net.kitpvp.stats.api.functions.season.SeasonKeyFunction;
 import net.kitpvp.stats.keys.SeasonKey;
 import net.kitpvp.stats.keys.StatsKey;
 import net.kitpvp.stats.season.Season;
@@ -64,34 +64,12 @@ public class SeasonKeyImpl<K, V, S extends StatsKey<K, V>> implements SeasonKey<
     }
 
     protected final KeyFunction<K> createKeyFunction(int season) {
-        return new SeasonToKeyFunction(this, season);
+        return new SeasonKeyFunction<>(this.keyFunction, season);
     }
 
     private void checkCapacity(int season) {
         while(this.keys.size() <= season) {
             this.keys.add(null);
-        }
-    }
-
-    @RequiredArgsConstructor
-    protected class SeasonToKeyFunction implements KeyFunction<K> {
-
-        protected final SeasonKeyImpl<K, V, S> seasonKey;
-        protected final int season;
-
-        @Override
-        public String apply(K k) {
-            return (this.season == 0 ? "alltime" : "seasons.season" + this.season) + "." + this.seasonKey.keyFunction.apply(k);
-        }
-
-        @Override
-        public String prefix() {
-            return (this.season == 0 ? "alltime" : "seasons.season" + this.season) + "." + this.seasonKey.keyFunction.prefix();
-        }
-
-        @Override
-        public String suffix() {
-            return this.seasonKey.keyFunction.suffix();
         }
     }
 

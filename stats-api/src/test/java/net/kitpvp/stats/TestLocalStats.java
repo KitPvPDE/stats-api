@@ -21,7 +21,7 @@ public class TestLocalStats {
         assertEquals(randomId, localStats.getPlayerId());
 
         StatsKey<String, String> key = StatsKey.<String, String>builder().
-                keyBuilder(builder -> builder.prefix("prefix").function(Function.identity()).suffix("suffix")).
+                keyBuilder(builder -> builder.prefix("prefix").function(Function.identity()).inverse(Function.identity()).suffix("suffix")).
                 defaultValue("default").build();
 
         assertEquals("default", localStats.getStatKey(key, "test"));

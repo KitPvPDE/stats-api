@@ -3,7 +3,6 @@ package net.kitpvp.stats.keys.impl;
 import net.kitpvp.stats.api.functions.keys.KeyFunction;
 import net.kitpvp.stats.keys.SStatsKey;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class VoidStatsKeyImpl<V> implements SStatsKey<V> {
@@ -23,7 +22,7 @@ public class VoidStatsKeyImpl<V> implements SStatsKey<V> {
 
     @Override
     public String key(Void unused) {
-        return this.key.apply(null);
+        return this.key.key(null);
     }
 
     @Override

@@ -6,7 +6,7 @@ import net.kitpvp.stats.StatsWriter;
 import net.kitpvp.stats.bson.BsonStatsWriter;
 
 @RequiredArgsConstructor
-public class Converter<T> {
+public class Converter<T> implements Context<T> {
 
     private final Decoder<T> decode;
     private final Encoder<T> encode;
@@ -21,5 +21,17 @@ public class Converter<T> {
 
     public final StatsWriter encode(T t) {
         return this.encode.encode(t, new BsonStatsWriter());
+    }
+
+    public final StatsWriter encode(T t, StatsWriter writer) {
+        return this.encode.encode(t, writer);
+    }
+
+    public final Decoder<T> decodeFunction() {
+        return this.decode;
+    }
+
+    public final Encoder<T> encodeFunction() {
+        return this.encode;
     }
 }

@@ -1,6 +1,7 @@
 package net.kitpvp.stats.keys.impl.set;
 
 import net.kitpvp.stats.api.functions.keys.KeyFunction;
+import net.kitpvp.stats.api.functions.keys.VoidKeyFunction;
 import net.kitpvp.stats.keys.impl.VoidSeasonKeyImpl;
 import net.kitpvp.stats.keys.set.SetSSeasonKey;
 import net.kitpvp.stats.keys.set.SetSStatsKey;
@@ -14,11 +15,11 @@ import java.util.function.Supplier;
 
 public class SetVoidSeasonKeyImpl<X> extends VoidSeasonKeyImpl<Set<X>, SetSStatsKey<X>> implements SetSSeasonKey<X> {
 
-    public SetVoidSeasonKeyImpl(@Nullable BiFunction<Supplier<Set<X>>, KeyFunction<Void>, SetSStatsKey<X>> keyConstructor, @Nullable Supplier<Set<X>> defaultFunction, @NotNull KeyFunction<Void> keyFunction) {
+    public SetVoidSeasonKeyImpl(@Nullable BiFunction<Supplier<Set<X>>, KeyFunction<Void>, SetSStatsKey<X>> keyConstructor, @Nullable Supplier<Set<X>> defaultFunction, @NotNull VoidKeyFunction keyFunction) {
         super(keyConstructor, defaultFunction, keyFunction);
     }
 
-    public SetVoidSeasonKeyImpl(@NotNull KeyFunction<Void> keyFunction) {
+    public SetVoidSeasonKeyImpl(@NotNull VoidKeyFunction keyFunction) {
         super(keyFunction);
     }
 

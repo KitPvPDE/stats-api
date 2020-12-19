@@ -1,7 +1,8 @@
 package net.kitpvp.stats.keys.impl;
 
-import com.google.common.base.Preconditions;
 import net.kitpvp.stats.api.functions.keys.KeyFunction;
+import net.kitpvp.stats.api.functions.keys.VoidKeyFunction;
+import net.kitpvp.stats.api.functions.season.StageKeyFunction;
 import net.kitpvp.stats.keys.SStageKey;
 import net.kitpvp.stats.keys.SStatsKey;
 import net.kitpvp.stats.season.Season;
@@ -19,12 +20,12 @@ public class VoidStageKeyImpl<V, S extends SStatsKey<V>> extends VoidSeasonKeyIm
 
     private final Map<Integer, List<S>> seasonKeys;
 
-    public VoidStageKeyImpl(@Nullable BiFunction<Supplier<V>, KeyFunction<Void>, S> keyConstructor, @Nullable Supplier<V> defaultFunction, @NotNull KeyFunction<Void> keyFunction) {
+    public VoidStageKeyImpl(@Nullable BiFunction<Supplier<V>, KeyFunction<Void>, S> keyConstructor, @Nullable Supplier<V> defaultFunction, @NotNull VoidKeyFunction keyFunction) {
         super(keyConstructor, defaultFunction, keyFunction);
         this.seasonKeys = new HashMap<>();
     }
 
-    public VoidStageKeyImpl(@NotNull KeyFunction<Void> keyFunction) {
+    public VoidStageKeyImpl(@NotNull VoidKeyFunction keyFunction) {
         super(keyFunction);
         this.seasonKeys = new HashMap<>();
     }
@@ -50,42 +51,13 @@ public class VoidStageKeyImpl<V, S extends SStatsKey<V>> extends VoidSeasonKeyIm
     }
 
     protected final KeyFunction<Void> createKeyFunction(int season, int stage) {
-        return new SeasonToKeyFunction(this, season, stage);
+        return new StageKeyFunction<>(this.keyFunction, season, stage);
     }
 
     private void checkCapacity(int season, int stage) {
         List<S> keys = this.seasonKeys.computeIfAbsent(season, (x) -> new ArrayList<>());
         while(keys.size() <= stage) {
             keys.add(null);
-        }
-    }
-
-    protected class SeasonToKeyFunction implements KeyFunction<Void> {
-
-        protected final VoidSeasonKeyImpl<V, S> seasonKey;
-        protected final int season, stage;
-
-        public SeasonToKeyFunction(VoidSeasonKeyImpl<V, S> seasonKey, int season, int stage) {
-            this.seasonKey = seasonKey;
-            this.season = season;
-            this.stage = stage;
-
-            Preconditions.checkArgument(this.season > 0, "Season must be > 0");
-        }
-
-        @Override
-        public String apply(Void k) {
-            return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.apply(k);
-        }
-
-        @Override
-        public String prefix() {
-            return ("seasons.season" + this.season + ".stages.stage" + this.stage) + "." + this.seasonKey.keyFunction.prefix();
-        }
-
-        @Override
-        public String suffix() {
-            return this.seasonKey.keyFunction.suffix();
         }
     }
 }
