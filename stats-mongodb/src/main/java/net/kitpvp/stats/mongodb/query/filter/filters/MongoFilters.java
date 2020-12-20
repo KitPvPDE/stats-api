@@ -58,4 +58,12 @@ public interface MongoFilters {
     static <K, X> MongoFilter all(ArraySStatsKey<X> statsKey, List<X> xs) {
         return new AllFilter<>(statsKey, null, xs);
     }
+
+    static <K, X> MongoFilter any(ArrayStatsKey<K, X> statsKey, K key, List<X> xs) {
+        return new AnyFilter<>(statsKey, key, xs);
+    }
+
+    static <X> MongoFilter any(ArraySStatsKey<X> statsKey, List<X> xs) {
+        return new AnyFilter<>(statsKey, null, xs);
+    }
 }
