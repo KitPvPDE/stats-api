@@ -3,9 +3,9 @@ package net.kitpvp.stats.converter;
 import net.kitpvp.stats.StatsWriter;
 
 @FunctionalInterface
-public interface Encoder<T> {
+public interface Encoder<T, Writer extends StatsWriter> {
 
-    StatsWriter encode(T t, StatsWriter statsWriter);
+    Writer encode(T t, Writer statsWriter);
 
 
 }

@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.bson.BsonStatsWriter;
-import net.kitpvp.stats.converter.Converter;
-import net.kitpvp.stats.converter.Context;
+import net.kitpvp.stats.bson.codec.BsonCodec;
+import net.kitpvp.stats.bson.codec.BsonConverter;
 import net.kitpvp.stats.keys.bool.BooleanSStatsKey;
 import net.kitpvp.stats.keys.numeric.DoubleSStatsKey;
 import net.kitpvp.stats.keys.numeric.IntSStatsKey;
@@ -29,17 +29,17 @@ public class TestComplex {
         StatsReader statsReader = new BsonStatsReader(document);
         StatsWriter statsWriter = new BsonStatsWriter(document);
 
-        Converter<Complex> converter = new Converter<>(new ComplexContext());
+        BsonConverter<Complex> converter = new BsonConverter<>(new ComplexCodec());
         Complex decoded = statsReader.map(converter);
 
         assertEquals(new Complex(3214, true, 34d), decoded);
         assertEquals(statsWriter, converter.encode(decoded));
     }
 
-    private class ComplexContext implements Context<Complex> {
+    private class ComplexCodec implements BsonCodec<Complex> {
 
         @Override
-        public StatsWriter encode(Complex complex, StatsWriter statsWriter) {
+        public BsonStatsWriter encode(Complex complex, BsonStatsWriter statsWriter) {
             statsWriter.setStatKey(a, null, complex.a);
             statsWriter.setStatKey(b, null, complex.b);
             statsWriter.setStatKey(c, null, complex.c);
@@ -64,14 +64,6 @@ public class TestComplex {
             this.a = statsReader.getIntKey(TestComplex.this.a);
             this.b = statsReader.getBooleanKey(TestComplex.this.b);
             this.c = statsReader.getDoubleKey(TestComplex.this.c);
-        }
-
-        public StatsWriter encode() {
-            BsonStatsWriter statsWriter = new BsonStatsWriter();
-            statsWriter.setStatKey(TestComplex.this.a, null, this.a);
-            statsWriter.setStatKey(TestComplex.this.b, null, this.b);
-            statsWriter.setStatKey(TestComplex.this.c, null, this.c);
-            return statsWriter;
         }
 
         @Override

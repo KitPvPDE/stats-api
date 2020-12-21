@@ -1,9 +1,9 @@
 package net.kitpvp.stats.mongodb.query.update.updates;
 
-import net.kitpvp.stats.api.keys.AppendableArrayKey;
-import net.kitpvp.stats.api.keys.AppendableIncKey;
-import net.kitpvp.stats.api.keys.AppendableKey;
-import net.kitpvp.stats.api.keys.AppendableSetKey;
+import net.kitpvp.stats.api.keys.*;
+import net.kitpvp.stats.bson.BsonStatsWriter;
+import net.kitpvp.stats.bson.codec.BsonEncoder;
+import net.kitpvp.stats.converter.Encoder;
 import net.kitpvp.stats.keys.array.ArrayStatsKey;
 import net.kitpvp.stats.keys.set.SetStatsKey;
 import net.kitpvp.stats.query.update.ArrayAction;
@@ -24,6 +24,10 @@ public interface MongoUpdates {
 
     static <V> MongoUpdate set(AppendableKey<Void, V> statsKey, V v) {
         return new MongoUpdateImpl<>(statsKey, null, v, Action.SET);
+    }
+
+    static <K, U> MongoUpdate set(Key<K> statsKey, K key, U u, BsonEncoder<U> encoder) {
+        return new MongoKeyUpdateImpl<>(statsKey, key, encoder, u, Action.SET);
     }
 
     static <K, V> MongoUpdate unset(AppendableKey<K, V> statsKey, K k, V v) {

@@ -15,6 +15,10 @@ public class BsonStatsWriter implements StatsWriter {
         this(new Document());
     }
 
+    public Document bson() {
+        return this.database;
+    }
+
     @Override
     public <T> void write(String key, T value) {
         BsonUtils.setValue(key, this.database, value);

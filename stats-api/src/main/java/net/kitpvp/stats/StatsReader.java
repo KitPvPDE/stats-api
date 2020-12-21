@@ -59,11 +59,11 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
         return this.getKeys(statsKey).stream().map(key -> this.getStatKey(statsKey, key)).map(function).collect(Collectors.toList());
     }
 
-    default <K, V, U> Set<Entry<K, U>> getStatEntriesAndMap(StatsKey<K, V> statsKey, Decoder<U> decoder) {
+    default <K, V, U, R extends StatsReader> Set<Entry<K, U>> getStatEntriesAndMap(StatsKey<K, V> statsKey, Decoder<U> decoder) {
         return this.getStatEntries(statsKey).stream().map(entry -> entry(entry.getKey(), entry.getValue().map(decoder))).collect(Collectors.toSet());
     }
 
-    default <K, U> Set<U> getStatReadersAndMap(Key<K> statsKey, Converter<U> converter) {
+    default <K, U, W extends StatsWriter> Set<U> getStatReadersAndMap(Key<K> statsKey, Converter<U, W> converter) {
         return this.getStatReaders(statsKey).stream().map(converter::decode).collect(Collectors.toSet());
     }
 }

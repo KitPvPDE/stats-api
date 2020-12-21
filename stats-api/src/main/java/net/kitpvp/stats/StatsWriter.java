@@ -1,5 +1,7 @@
 package net.kitpvp.stats;
 
+import net.kitpvp.stats.api.keys.Key;
+import net.kitpvp.stats.keys.SStatsKey;
 import net.kitpvp.stats.keys.StatsKey;
 
 public interface StatsWriter {
@@ -10,7 +12,15 @@ public interface StatsWriter {
         this.write(statKey.key(key), value);
     }
 
-    default <K, V> void unsetStatKey(StatsKey<K, V> statKey, K key, V ignored) {
+    default <V> void setStatKey(SStatsKey<V> statKey, V value) {
+        this.setStatKey(statKey, null, value);
+    }
+
+    default <K> void unsetStatKey(Key<K> statKey, K key) {
         this.write(statKey.key(key), null);
+    }
+
+    default <K, V> void unsetStatKey(Key<K> statKey, K key, V ignored) {
+        this.unsetStatKey(statKey, key);
     }
 }

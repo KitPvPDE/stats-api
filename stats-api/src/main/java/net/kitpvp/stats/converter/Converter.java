@@ -3,15 +3,14 @@ package net.kitpvp.stats.converter;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.StatsWriter;
-import net.kitpvp.stats.bson.BsonStatsWriter;
 
 @RequiredArgsConstructor
-public class Converter<T> implements Context<T> {
+public abstract class Converter<T, Writer extends StatsWriter> implements Codec<T, Writer> {
 
-    private final Decoder<T> decode;
-    private final Encoder<T> encode;
+    protected final Decoder<T> decode;
+    protected final Encoder<T, Writer> encode;
 
-    public Converter(Context<T> context) {
+    public Converter(Codec<T, Writer> context) {
         this(context, context);
     }
 
@@ -19,11 +18,7 @@ public class Converter<T> implements Context<T> {
         return this.decode.decode(statsReader);
     }
 
-    public final StatsWriter encode(T t) {
-        return this.encode.encode(t, new BsonStatsWriter());
-    }
-
-    public final StatsWriter encode(T t, StatsWriter writer) {
+    public final Writer encode(T t, Writer writer) {
         return this.encode.encode(t, writer);
     }
 
@@ -31,7 +26,7 @@ public class Converter<T> implements Context<T> {
         return this.decode;
     }
 
-    public final Encoder<T> encodeFunction() {
+    public final Encoder<T, Writer> encodeFunction() {
         return this.encode;
     }
 }
