@@ -13,6 +13,8 @@ public interface FindQuery<T> extends Iterable<T> {
     FindQuery<T> skip(int skip);
 
     FindQuery<T> sort(Sort<T>[] filters);
+
+    FindQuery<T> filter(Filter<T>[] filters);
     
     T first();
 

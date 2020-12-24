@@ -25,7 +25,7 @@ public class VoidBuilder<V> implements StatsKeyBuilder<Void, V> {
 
     public VoidBuilder() {
         this.keyBuilder = new VoidKeyBuilder();
-        this.defaultSupplier = null;
+        this.defaultSupplier = () -> null;
     }
 
     public VoidBuilder<V> defaultValue(V defaultValue) {
