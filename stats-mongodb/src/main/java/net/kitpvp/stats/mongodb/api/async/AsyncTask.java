@@ -7,10 +7,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.LongConsumer;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public interface AsyncTask {
 
@@ -75,23 +72,45 @@ public interface AsyncTask {
         this.executeTaskAsync(executable);
     }
 
-    default void executeCallback(@Nullable LongConsumer callback, long value, Executor executor) {
-        if(callback != null) {
-            executor.execute(() -> callback.accept(value));
-        }
+    @Contract(value = "_, !null, null -> fail")
+    default void executeTaskAsync(LongSupplier task, @Nullable LongConsumer callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            long l = task.getAsLong();
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(l));
+            }
+        };
+        this.executeTaskAsync(executable);
     }
 
-    @Contract(value = "!null, _, null -> fail")
-    default <T> void executeCallback(@Nullable Consumer<T> callback, @Nullable T value, Executor executor) {
-        if(callback != null) {
-            executor.execute(() -> callback.accept(value));
-        }
+    @Contract(value = "_, _, !null, null -> fail")
+    default <T> void executeTaskAsync(LongConsumer task, long l, @Nullable Consumer<Void> callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            task.accept(l);
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(null));
+            }
+        };
+        this.executeTaskAsync(executable);
     }
 
-    @Contract(value = "!null, null -> fail")
-    default void executeCallback(@Nullable Runnable callback, Executor executor) {
-        if(callback != null) {
-            executor.execute(callback);
-        }
+    @Contract(value = "_, _, !null, null -> fail")
+    default void executeTaskAsync(LongUnaryOperator task, long l, @Nullable LongConsumer callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            long r = task.applyAsLong(l);
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(r));
+            }
+        };
+        this.executeTaskAsync(executable);
     }
 }

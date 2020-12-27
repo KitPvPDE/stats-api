@@ -7,7 +7,7 @@ import org.bson.Document;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class BsonStatsWriter implements StatsWriter {
+public class BsonStatsWriter implements BsonWriter {
 
     private final Document database;
 
@@ -17,11 +17,6 @@ public class BsonStatsWriter implements StatsWriter {
 
     public Document bson() {
         return this.database;
-    }
-
-    @Override
-    public <T> void write(String key, T value) {
-        BsonUtils.setValue(key, this.database, value);
     }
 
     @Override

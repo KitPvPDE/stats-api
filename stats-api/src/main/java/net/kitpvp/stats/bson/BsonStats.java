@@ -8,7 +8,7 @@ import org.bson.Document;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class BsonStats extends BsonStatsReader implements StatsReader, StatsWriter {
+public class BsonStats extends BsonStatsReader implements BsonReader, BsonWriter {
 
     public BsonStats(Document database) {
         super(database);
@@ -16,16 +16,6 @@ public class BsonStats extends BsonStatsReader implements StatsReader, StatsWrit
 
     public void bson(Document source) {
         this.bson().putAll(source);
-    }
-
-    @Override
-    public <T> void write(String key, T value) {
-        BsonUtils.setValue(key, this.bson(), value);
-    }
-
-    @Override
-    public <V> V find(String key, V def) {
-        return BsonUtils.getValue(key, this.bson(), def);
     }
 
     @Override

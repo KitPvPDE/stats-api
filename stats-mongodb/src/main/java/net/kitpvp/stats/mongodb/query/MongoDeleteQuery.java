@@ -85,11 +85,7 @@ public class MongoDeleteQuery implements DeleteQuery<MongoStatsReader>, AsyncExe
     }
 
     public final void deleteAsync(LongConsumer callback, Executor executor, boolean deleteMany) {
-        this.executeTaskAsync(() -> {
-            long deleted = this.delete(deleteMany);
-
-            this.executeCallback(callback, deleted, executor);
-        });
+        this.executeTaskAsync(() -> this.delete(deleteMany), callback, executor);
     }
 
     public final BsonStatsReader findAndDelete() {

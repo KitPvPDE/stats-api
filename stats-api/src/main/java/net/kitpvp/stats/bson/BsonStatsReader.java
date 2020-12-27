@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import static net.kitpvp.stats.api.keys.Entry.entry;
 
 @RequiredArgsConstructor
-public class BsonStatsReader implements StatsReader {
+public class BsonStatsReader implements BsonReader {
 
     private final Document database;
 
@@ -27,11 +27,6 @@ public class BsonStatsReader implements StatsReader {
 
     public Document bson() {
         return this.database;
-    }
-
-    @Override
-    public <V> V find(String key, V def) {
-        return BsonUtils.getValue(key, this.database, def);
     }
 
     @Override

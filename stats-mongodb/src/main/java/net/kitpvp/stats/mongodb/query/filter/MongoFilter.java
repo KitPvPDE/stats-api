@@ -16,10 +16,4 @@ public interface MongoFilter extends Filter<MongoStatsReader> {
         this.append(statsReader);
         return statsReader.source();
     }
-
-    static Document filter(Filter<MongoStatsReader>[] filters) {
-        MongoStatsReader statsReader = new MongoStatsReader(new Document());
-        Stream.of(filters).forEach(mongoFilter -> mongoFilter.append(statsReader));
-        return statsReader.source();
-    }
 }
