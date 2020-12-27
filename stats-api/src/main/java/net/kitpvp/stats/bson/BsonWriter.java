@@ -6,6 +6,9 @@ import net.kitpvp.stats.api.keys.VoidKey;
 import net.kitpvp.stats.bson.codec.BsonEncoder;
 import org.bson.Document;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public interface BsonWriter extends StatsWriter {
 
     Document bson();
@@ -21,5 +24,13 @@ public interface BsonWriter extends StatsWriter {
 
     default <U> void setBson(VoidKey statKey, U value, BsonEncoder<U> encoder) {
         this.setBson(statKey, null, value, encoder);
+    }
+
+    default <K, U> void setBson(Key<K> statKey, K key, List<U> values, BsonEncoder<U> encoder) {
+        this.write(statKey.key(key), values.stream().map(encoder::encode).map(BsonStatsWriter::bson).collect(Collectors.toList()));
+    }
+
+    default <U> void setBson(VoidKey statKey, List<U> values, BsonEncoder<U> encoder) {
+        this.setBson(statKey, null, values, encoder);
     }
 }
