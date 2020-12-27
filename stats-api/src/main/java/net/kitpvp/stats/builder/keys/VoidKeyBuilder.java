@@ -3,6 +3,10 @@ package net.kitpvp.stats.builder.keys;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.builder.ComponentBuilder;
 import net.kitpvp.stats.api.functions.keys.VoidKeyFunction;
+import net.kitpvp.stats.api.keys.Key;
+import net.kitpvp.stats.api.keys.VoidKey;
+import net.kitpvp.stats.impl.KeyImpl;
+import net.kitpvp.stats.impl.VoidKeyImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -19,6 +23,10 @@ public class VoidKeyBuilder implements ComponentBuilder<VoidKeyFunction> {
     @Override
     public @NotNull VoidKeyFunction build() {
         return new VoidKeyFunctionImpl(this.path);
+    }
+
+    public @NotNull VoidKey buildKey() {
+        return new VoidKeyImpl(this.build());
     }
 
     @RequiredArgsConstructor
