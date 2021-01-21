@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.LongConsumer;
 import java.util.stream.Stream;
 
-public class MongoDeleteQuery implements DeleteQuery<MongoStatsReader>, AsyncExecutable {
+public final class MongoDeleteQuery implements DeleteQuery<MongoStatsReader>, AsyncExecutable {
 
     private final Database database;
     private final Collection collection;

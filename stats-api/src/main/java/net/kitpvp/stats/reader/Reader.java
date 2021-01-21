@@ -1,8 +1,7 @@
 package net.kitpvp.stats.reader;
 
-import net.kitpvp.stats.season.Season;
 import net.kitpvp.stats.keys.StatsKey;
-import org.bson.Document;
+import net.kitpvp.stats.season.Season;
 
 public interface Reader {
 

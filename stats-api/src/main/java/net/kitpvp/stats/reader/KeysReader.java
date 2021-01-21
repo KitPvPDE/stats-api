@@ -1,13 +1,5 @@
 package net.kitpvp.stats.reader;
 
-import net.kitpvp.stats.keys.StatsKey;
-import org.bson.Document;
-
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 public interface KeysReader extends Reader {
 
     /*

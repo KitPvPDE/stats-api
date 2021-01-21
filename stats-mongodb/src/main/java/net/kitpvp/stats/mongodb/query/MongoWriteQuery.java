@@ -8,7 +8,9 @@ import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
 import net.kitpvp.mongodbapi.log.Log;
 import net.kitpvp.stats.Stats;
+import net.kitpvp.stats.api.function.BooleanBiConsumer;
 import net.kitpvp.stats.mongodb.MongoStatsReader;
+import net.kitpvp.stats.api.function.BooleanConsumer;
 import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
 import net.kitpvp.stats.query.WriteQuery;
 import net.kitpvp.stats.query.filter.Filter;
@@ -17,11 +19,13 @@ import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, AsyncExecutable {
+
+    public static final boolean QUERY_UPDATE_MANY = false;
+    public static final boolean QUERY_CHECK_MAIN_THREAD = true;
 
     private final Database database;
     private final Collection collection;
@@ -70,15 +74,24 @@ public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, Asyn
 
     @Override
     public final void execute() {
-        this.execute(false);
+        this.execute(QUERY_UPDATE_MANY);
     }
 
     public final void executeAsync(boolean updateMany) {
-        this.executeTaskAsync((Consumer<? super Boolean>) this::execute, updateMany, null, null);
+        this.executeTaskAsync((BooleanConsumer) this::execute, updateMany, null, null);
     }
 
     public final void execute(boolean updateMany) {
-        Stats.checkForMainThread();
+        this.execute(updateMany, QUERY_CHECK_MAIN_THREAD);
+    }
+
+    public final void executeAsync(boolean updateMany, boolean checkMainThread) {
+        this.executeTaskAsync(this::execute, updateMany, checkMainThread, null, null);
+    }
+
+    public final void execute(boolean updateMany, boolean checkMainThread) {
+        if(checkMainThread)
+            Stats.checkForMainThread();
 
         if(this.update.source().isEmpty() || this.criteria.source().isEmpty())
             throw new UnsupportedOperationException("Empty criteria and/or update document");

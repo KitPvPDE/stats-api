@@ -1,13 +1,14 @@
 package net.kitpvp.stats.bson;
 
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import net.kitpvp.stats.StatsWriter;
+import lombok.ToString;
 import org.bson.Document;
 
-import java.util.Objects;
-
 @RequiredArgsConstructor
-public class BsonStatsWriter implements BsonWriter {
+@ToString(of = "database")
+@EqualsAndHashCode(of = "database")
+public class BsonStatsWriter implements BsonWriter<BsonStatsWriter> {
 
     private final Document database;
 
@@ -20,22 +21,7 @@ public class BsonStatsWriter implements BsonWriter {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-        BsonStatsWriter that = (BsonStatsWriter) o;
-        return database.equals(that.database);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(database);
-    }
-
-    @Override
-    public String toString() {
-        return "BsonStatsWriter{" +
-                "database=" + database +
-                '}';
+    public BsonStatsWriter writer() {
+        return this;
     }
 }

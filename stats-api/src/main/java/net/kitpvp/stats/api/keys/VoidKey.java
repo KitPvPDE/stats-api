@@ -10,6 +10,10 @@ public interface VoidKey extends Key<Void> {
         return new VoidKeyBuilder();
     }
 
+    static VoidKey key(String path) {
+        return builder().path(path).buildKey();
+    }
+
     @Override
     VoidKeyFunction keyFunction();
 

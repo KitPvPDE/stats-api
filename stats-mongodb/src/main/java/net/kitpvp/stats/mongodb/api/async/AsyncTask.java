@@ -3,6 +3,9 @@ package net.kitpvp.stats.mongodb.api.async;
 import net.kitpvp.mongodbapi.async.Async;
 import net.kitpvp.mongodbapi.async.Sync;
 import net.kitpvp.mongodbapi.log.Log;
+import net.kitpvp.stats.api.function.BooleanBiConsumer;
+import net.kitpvp.stats.api.function.BooleanConsumer;
+import net.kitpvp.stats.api.function.BooleanUnaryOperator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -105,6 +108,62 @@ public interface AsyncTask {
         Runnable executable = () -> {
             Log.debug("Executing task..");
             long r = task.applyAsLong(l);
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(r));
+            }
+        };
+        this.executeTaskAsync(executable);
+    }
+
+    @Contract(value = "_, !null, null -> fail")
+    default void executeTaskAsync(BooleanSupplier task, @Nullable BooleanConsumer callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            boolean b = task.getAsBoolean();
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(b));
+            }
+        };
+        this.executeTaskAsync(executable);
+    }
+
+    @Contract(value = "_, _, !null, null -> fail")
+    default <T> void executeTaskAsync(BooleanConsumer task, boolean b, @Nullable Consumer<Void> callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            task.accept(b);
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(null));
+            }
+        };
+        this.executeTaskAsync(executable);
+    }
+
+    @Contract(value = "_, _, _, !null, null -> fail")
+    default <T> void executeTaskAsync(BooleanBiConsumer task, boolean left, boolean right, @Nullable Consumer<Void> callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            task.accept(left, right);
+            Log.debug("Executed task. Calling callback: {0}", callback != null);
+
+            if(callback != null) {
+                executor.execute(() -> callback.accept(null));
+            }
+        };
+        this.executeTaskAsync(executable);
+    }
+
+    @Contract(value = "_, _, !null, null -> fail")
+    default void executeTaskAsync(BooleanUnaryOperator task, boolean b, @Nullable BooleanConsumer callback, Executor executor) {
+        Runnable executable = () -> {
+            Log.debug("Executing task..");
+            boolean r = task.applyAsBoolean(b);
             Log.debug("Executed task. Calling callback: {0}", callback != null);
 
             if(callback != null) {

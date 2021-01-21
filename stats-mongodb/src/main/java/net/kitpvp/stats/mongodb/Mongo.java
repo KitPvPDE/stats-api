@@ -2,11 +2,9 @@ package net.kitpvp.stats.mongodb;
 
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
-import net.kitpvp.stats.mongodb.query.MongoCountQuery;
-import net.kitpvp.stats.mongodb.query.MongoDeleteQuery;
-import net.kitpvp.stats.mongodb.query.MongoFindQuery;
-import net.kitpvp.stats.mongodb.query.MongoWriteQuery;
+import net.kitpvp.stats.mongodb.query.*;
 import net.kitpvp.stats.mongodb.query.filter.MongoFilter;
+import net.kitpvp.stats.mongodb.query.insert.MongoInsert;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +50,14 @@ public class Mongo {
 
     public static MongoDeleteQuery delete(@NotNull Database database, @NotNull Collection collection, @NotNull MongoFilter... filters) {
         return new MongoDeleteQuery(database, collection).filter(filters);
+    }
+
+    public static MongoInsertQuery insert(@NotNull Database database, @NotNull Collection collection) {
+        return new MongoInsertQuery(database, collection);
+    }
+
+    public static MongoInsertQuery insert(@NotNull Database database, @NotNull Collection collection, @NotNull MongoInsert... inserts) {
+        return new MongoInsertQuery(database, collection).insert(inserts);
     }
 
     public static MongoStatsReader findOne(@NotNull Database database, @NotNull Collection collection, @NotNull MongoFilter filter) {
