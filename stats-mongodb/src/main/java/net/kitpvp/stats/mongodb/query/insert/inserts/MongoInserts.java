@@ -17,15 +17,15 @@ public interface MongoInserts {
         return insert(statsKey, null, value);
     }
 
-    static <K, U> MongoInsert insertBson(Key<K> statsKey, K key, U value, BsonEncoder<U> encoder) {
+    static <K, U> MongoInsert insert(Key<K> statsKey, K key, U value, BsonEncoder<U> encoder) {
         return new MongoBsonInsertImpl<>(statsKey, key, value, encoder);
     }
 
-    static <U> MongoInsert insertBson(VoidKey statsKey, U value, BsonEncoder<U> encoder) {
-        return insertBson(statsKey, null, value, encoder);
+    static <U> MongoInsert insert(VoidKey statsKey, U value, BsonEncoder<U> encoder) {
+        return insert(statsKey, null, value, encoder);
     }
 
-    static <U> MongoInsert insertBson(U value, BsonEncoder<U> encoder) {
+    static <U> MongoInsert insert(U value, BsonEncoder<U> encoder) {
         return new MongoBsonInsertImpl<>(null, null, value, encoder);
     }
 }

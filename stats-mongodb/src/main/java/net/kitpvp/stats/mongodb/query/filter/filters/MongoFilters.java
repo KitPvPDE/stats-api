@@ -55,15 +55,31 @@ public interface MongoFilters {
         return new AllFilter<>(statsKey, key, xs);
     }
 
-    static <K, X> MongoFilter all(ArraySStatsKey<X> statsKey, List<X> xs) {
+    static <K, X> MongoFilter all(StatsKey<K, ? extends Collection<? extends X>> statsKey, K key, Collection<? extends X> collection) {
+        return new AllFilter<>(statsKey, key, collection);
+    }
+
+    static <X> MongoFilter all(ArraySStatsKey<X> statsKey, List<X> xs) {
         return new AllFilter<>(statsKey, null, xs);
+    }
+
+    static <X> MongoFilter all(SStatsKey<? extends Collection<? extends X>> statsKey, Collection<? extends X> collection) {
+        return new AllFilter<>(statsKey, null, collection);
     }
 
     static <K, X> MongoFilter any(ArrayStatsKey<K, X> statsKey, K key, List<X> xs) {
         return new AnyFilter<>(statsKey, key, xs);
     }
 
+    static <K, X> MongoFilter any(StatsKey<K, ? extends Collection<? extends X>> statsKey, K key, Collection<? extends X> collection) {
+        return new AnyFilter<>(statsKey, key, collection);
+    }
+
     static <X> MongoFilter any(ArraySStatsKey<X> statsKey, List<X> xs) {
         return new AnyFilter<>(statsKey, null, xs);
+    }
+
+    static <X> MongoFilter any(SStatsKey<? extends Collection<? extends X>> statsKey, Collection<? extends X> collection) {
+        return new AnyFilter<>(statsKey, null, collection);
     }
 }

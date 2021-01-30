@@ -6,7 +6,7 @@
     <parent>
         <artifactId>stats-super</artifactId>
         <groupId>net.kitpvp.stats</groupId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>stats-api</artifactId>

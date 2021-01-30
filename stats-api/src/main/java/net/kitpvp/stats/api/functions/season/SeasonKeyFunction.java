@@ -13,7 +13,7 @@ public class SeasonKeyFunction<K> implements KeyFunction<K> {
     public SeasonKeyFunction(KeyFunction<K> function, int season) {
         this.prefix = (season == 0 ? "alltime" : "seasons.season" + season) + ".";
         this.function = function;
-        this.inverseFunction = (key) -> this.function.inverse().apply(key.substring(this.prefix.length()));
+        this.inverseFunction = (key) -> this.function.inverse(key);
     }
 
     @Override

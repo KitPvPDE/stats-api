@@ -3,10 +3,11 @@ package net.kitpvp.stats.bson;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.api.keys.Entry;
 import net.kitpvp.stats.api.keys.Key;
+import net.kitpvp.stats.converter.Decoder;
+import net.kitpvp.stats.keys.StatsKey;
 import org.bson.Document;
 
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.kitpvp.stats.api.keys.Entry.entry;
@@ -73,5 +74,10 @@ public interface BsonReader extends StatsReader {
         }
         return map.values().stream().filter(value -> value instanceof Document).
                 map(value -> new BsonStatsReader((Document) value)).collect(Collectors.toSet());
+    }
+
+    @Override
+    default <K> List<StatsReader> getStatKeys(Key<K> statsKey, K key) {
+        return this.find(statsKey.key(key), new ArrayList<Document>()).stream().map(BsonStatsReader::new).collect(Collectors.toList());
     }
 }
