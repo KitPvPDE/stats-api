@@ -1,17 +1,18 @@
 package net.kitpvp.stats.api.keys;
 
+import net.kitpvp.stats.keys.StatsKey;
 import net.kitpvp.stats.keys.impl.numeric.*;
 import net.kitpvp.stats.keys.numeric.*;
 
-import java.util.Objects;
 import java.util.function.Function;
 
 import static net.kitpvp.stats.api.functions.keys.KeyFunctions.bind;
 
 public interface Keys {
 
-    Key<String> STRING_KEY = Key.<String>builder().function(Function.identity()).inverse(Function.identity()).buildKey();
+    StatsKey<String, String> IDENTITY = StatsKey.<String, String>builder().keyBuilder(builder -> builder.function(Function.identity()).inverse(Function.identity())).build();
 
+    Key<String> STRING_KEY = IDENTITY;
 
     static <K> LongSStatsKey bindKey(LongStatsKey<K> statsKey, K key) {
         return new LongVoidStatsKeyImpl(bind(statsKey.keyFunction(), key),

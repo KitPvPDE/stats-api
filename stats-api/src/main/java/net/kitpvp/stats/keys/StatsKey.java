@@ -17,6 +17,10 @@ public interface StatsKey<K, V> extends AppendableKey<K, V>, Key<K> {
         return new Builder<>();
     }
 
+    static StatsKey<String, String> identity() {
+        return Keys.IDENTITY;
+    }
+
     Key<String> STRING_KEY = Keys.STRING_KEY;
 
     KeyFunction<K> keyFunction();
