@@ -35,16 +35,18 @@ public interface BsonReader extends StatsReader {
     }
 
     @Override
-    default <K> StatsReader getStatReader(Key<K> statsKey, K key) {
+    default <K> Optional<StatsReader> getStatReader(Key<K> statsKey, K key) {
         String path = statsKey.keyFunction().key(key);
 
         Document map;
-        if(path != null && !path.isEmpty()) {
+        if(path != null ) {
             map = this.find(path, new Document());
-        } else {
+        } else if(path.isEmpty()){
             map = this.bson();
+        } else {
+            return Optional.empty();
         }
-        return new BsonStatsReader(map);
+        return Optional.of(new BsonStatsReader(map));
     }
 
     @Override

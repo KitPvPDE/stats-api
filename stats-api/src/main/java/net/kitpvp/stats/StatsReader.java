@@ -9,6 +9,7 @@ import net.kitpvp.stats.reader.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
 
     <V> V find(String key, V def);
 
-    <K> StatsReader getStatReader(Key<K> statsKey, K key);
+    <K> Optional<StatsReader> getStatReader(Key<K> statsKey, K key);
 
     <K> Set<K> getKeys(Key<K> statsKey);
 
@@ -68,6 +69,10 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
 
     default <K, U> Set<Entry<K, U>> getStatEntriesAndMap(Key<K> statsKey, Decoder<U> decoder) {
         return this.getStatEntries(statsKey).stream().map(entry -> entry(entry.getKey(), entry.getValue().map(decoder))).collect(Collectors.toSet());
+    }
+
+    default <K, U> U getStatReaderAndMap(Key<K> statsKey, K key, Decoder<U> decoder) {
+        return this.getStatReader(statsKey, key).map(decoder::decode).orElse(null);
     }
 
     default <K, U, W extends StatsWriter> Set<U> getStatReadersAndMap(Key<K> statsKey, Converter<U, W> converter) {

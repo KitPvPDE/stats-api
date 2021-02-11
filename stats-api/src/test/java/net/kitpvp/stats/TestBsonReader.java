@@ -41,7 +41,7 @@ public class TestBsonReader {
                 inverse(Function.identity())).defaultValue((Object) null).build();
 
         for(String key : statsReader.getKeys(statsKey)) {
-            assertEquals(new BsonStatsReader(database.get(key, Document.class)), statsReader.getStatReader(statsKey, key));
+            assertEquals(new BsonStatsReader(database.get(key, Document.class)), statsReader.getStatReader(statsKey, key).orElse(null));
         }
     }
 
