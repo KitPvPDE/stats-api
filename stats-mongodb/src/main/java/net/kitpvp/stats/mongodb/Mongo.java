@@ -1,5 +1,7 @@
 package net.kitpvp.stats.mongodb;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
 import net.kitpvp.stats.StatsReader;
@@ -9,6 +11,9 @@ import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
 
 public final class Mongo {
+
+    @Getter @Setter
+    private static MongoUuidRepresentation uuidRepresentation = MongoUuidRepresentation.STRING;
 
     public static MongoBulkQuery bulk(@NotNull Database database, @NotNull Collection collection) {
         return new MongoBulkQuery(database, collection);
