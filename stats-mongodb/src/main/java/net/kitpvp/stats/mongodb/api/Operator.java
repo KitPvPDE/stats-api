@@ -2,10 +2,10 @@ package net.kitpvp.stats.mongodb.api;
 
 public interface Operator {
 
-    String operator();
+    String getOperator();
 
-    default String mongoCommand() {
-        return "$" + this.operator();
+    default String getMongoOperator() {
+        return "$" + this.getOperator();
     }
 
 }

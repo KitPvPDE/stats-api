@@ -2,7 +2,7 @@ package net.kitpvp.stats;
 
 import net.kitpvp.stats.bson.BsonStats;
 import net.kitpvp.stats.bson.BsonStatsReader;
-import net.kitpvp.stats.keys.SStatsKey;
+import net.kitpvp.stats.keys.VoidStatsKey;
 import net.kitpvp.stats.keys.StatsKey;
 import org.bson.Document;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class TestBsonReader {
     @Test
     public void testRead(){
         BsonStatsReader statsReader = new BsonStatsReader(this.database);
-        SStatsKey<String> key = SStatsKey.<String>builder().defaultValue("").keyBuilder(builder -> builder.path("first.second.third")).build();
+        VoidStatsKey<String> key = VoidStatsKey.<String>builder().defaultValue("").keyBuilder(builder -> builder.path("first.second.third")).build();
 
         assertEquals(statsReader.getStatKey(key), "test");
     }
@@ -29,7 +29,7 @@ public class TestBsonReader {
     @Test
     public void testDefault() {
         BsonStatsReader statsReader = new BsonStatsReader(new Document());
-        SStatsKey<String> key = SStatsKey.<String>builder().defaultValue("default").keyBuilder(builder -> builder.path("first.second.third")).build();
+        VoidStatsKey<String> key = VoidStatsKey.<String>builder().defaultValue("default").keyBuilder(builder -> builder.path("first.second.third")).build();
 
         assertEquals("default", statsReader.getStatKey(key));
     }

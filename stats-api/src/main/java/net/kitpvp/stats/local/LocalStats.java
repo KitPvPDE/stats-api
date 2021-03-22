@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class LocalStats extends BsonStats implements Stats<Void, LocalStats> {
+public class LocalStats extends BsonStats implements Stats<Void> {
 
     @Getter
     private final UUID playerId;
@@ -38,17 +38,6 @@ public class LocalStats extends BsonStats implements Stats<Void, LocalStats> {
         return this;
     }
 
-    @Override
-    public FindQuery<LocalStats> find(Void unused) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public CountQuery<LocalStats> count(Void unused) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public LocalWriteQuery write(Void database) {
         return new LocalWriteQuery(this);
     }

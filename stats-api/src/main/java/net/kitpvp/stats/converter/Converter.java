@@ -5,20 +5,22 @@ import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.StatsWriter;
 
 @RequiredArgsConstructor
-public abstract class Converter<T, Writer extends StatsWriter> implements Codec<T, Writer> {
+public abstract class Converter<T> implements Codec<T> {
 
     protected final Decoder<T> decode;
-    protected final Encoder<T, Writer> encode;
+    protected final Encoder<T> encode;
 
-    public Converter(Codec<T, Writer> context) {
+    public Converter(Codec<T> context) {
         this(context, context);
     }
 
+    @Override
     public final T decode(StatsReader statsReader) {
         return this.decode.decode(statsReader);
     }
 
-    public final Writer encode(T t, Writer writer) {
+    @Override
+    public final <W extends StatsWriter> W encode(T t, W writer) {
         return this.encode.encode(t, writer);
     }
 
@@ -26,7 +28,7 @@ public abstract class Converter<T, Writer extends StatsWriter> implements Codec<
         return this.decode;
     }
 
-    public final Encoder<T, Writer> encodeFunction() {
+    public final Encoder<T> encodeFunction() {
         return this.encode;
     }
 }

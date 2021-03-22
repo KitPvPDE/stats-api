@@ -6,19 +6,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 
-public interface FindQuery<T> extends Iterable<T> {
+public interface FindQuery<T, R> extends Iterable<R> {
 
-    FindQuery<T> limit(int limit);
+    FindQuery<T, R> limit(int limit);
 
-    FindQuery<T> skip(int skip);
+    FindQuery<T, R> skip(int skip);
 
-    FindQuery<T> sort(Sort<T>[] filters);
+    FindQuery<T, R> sort(Sort<T>[] filters);
 
-    FindQuery<T> filter(Filter<T>[] filters);
+    FindQuery<T, R> filter(Filter<T>[] filters);
     
-    T first();
+    R first();
 
-    @NotNull Iterator<T> iterator();
+    @NotNull Iterator<R> iterator();
 
 
 }

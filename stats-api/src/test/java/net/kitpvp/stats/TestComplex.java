@@ -7,9 +7,9 @@ import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.bson.BsonStatsWriter;
 import net.kitpvp.stats.bson.codec.BsonCodec;
 import net.kitpvp.stats.bson.codec.BsonConverter;
-import net.kitpvp.stats.keys.bool.BooleanSStatsKey;
-import net.kitpvp.stats.keys.numeric.DoubleSStatsKey;
-import net.kitpvp.stats.keys.numeric.IntSStatsKey;
+import net.kitpvp.stats.keys.BooleanVoidStatsKey;
+import net.kitpvp.stats.keys.DoubleVoidStatsKey;
+import net.kitpvp.stats.keys.IntVoidStatsKey;
 import org.bson.Document;
 import org.junit.Test;
 
@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 
 public class TestComplex {
 
-    private final IntSStatsKey a = IntSStatsKey.builder().keyBuilder(builder -> builder.path("a")).build();
-    private final BooleanSStatsKey b = BooleanSStatsKey.builder().keyBuilder(builder -> builder.path("b")).build();
-    private final DoubleSStatsKey c = DoubleSStatsKey.builder().keyBuilder(builder -> builder.path("c")).build();
+    private final IntVoidStatsKey a = IntVoidStatsKey.builder().keyBuilder(builder -> builder.path("a")).build();
+    private final BooleanVoidStatsKey b = BooleanVoidStatsKey.builder().keyBuilder(builder -> builder.path("b")).build();
+    private final DoubleVoidStatsKey c = DoubleVoidStatsKey.builder().keyBuilder(builder -> builder.path("c")).build();
 
     @Test
     public void testComplex() {
@@ -39,7 +39,7 @@ public class TestComplex {
     private class ComplexCodec implements BsonCodec<Complex> {
 
         @Override
-        public BsonStatsWriter encode(Complex complex, BsonStatsWriter statsWriter) {
+        public StatsWriter encode(Complex complex, StatsWriter statsWriter) {
             statsWriter.setStatKey(a, null, complex.a);
             statsWriter.setStatKey(b, null, complex.b);
             statsWriter.setStatKey(c, null, complex.c);

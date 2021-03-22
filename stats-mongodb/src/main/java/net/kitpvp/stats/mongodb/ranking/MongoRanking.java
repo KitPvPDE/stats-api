@@ -6,7 +6,7 @@ import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.keys.StatsKey;
 import net.kitpvp.stats.mongodb.Mongo;
 import net.kitpvp.stats.mongodb.MongoStats;
-import net.kitpvp.stats.mongodb.query.filter.filters.MongoFilters;
+import net.kitpvp.stats.mongodb.model.Filters;
 
 public class MongoRanking {
 
@@ -18,7 +18,7 @@ public class MongoRanking {
         String key = statsKey.key(k);
         V value = statsReader.getStatKey(statsKey, k);
 
-        return Mongo.count(database, collection, MongoFilters.greater(statsKey, k, value)).
+        return Mongo.count(database, collection, Filters.gt(statsKey, k, value)).
                 count() + 1;
     }
 }

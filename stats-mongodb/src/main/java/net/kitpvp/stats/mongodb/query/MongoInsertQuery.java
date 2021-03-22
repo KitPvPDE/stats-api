@@ -1,17 +1,20 @@
 package net.kitpvp.stats.mongodb.query;
 
-import com.google.common.base.Preconditions;
+import com.mongodb.client.model.InsertOneModel;
+import com.mongodb.client.model.WriteModel;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
 import net.kitpvp.stats.Stats;
 import net.kitpvp.stats.bson.BsonStatsWriter;
 import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
-import net.kitpvp.stats.query.InsertQuery;
-import net.kitpvp.stats.query.insert.Insert;
+import net.kitpvp.stats.mongodb.query.bulk.MongoBulkOperation;
+import org.bson.Document;
 
 import java.util.stream.Stream;
 
-public final class MongoInsertQuery implements InsertQuery<BsonStatsWriter>, AsyncExecutable {
+import static com.mongodb.assertions.Assertions.notNull;
+
+public final class MongoInsertQuery implements AsyncExecutable, MongoBulkOperation {
 
     private final Database database;
     private final Collection collection;
@@ -23,11 +26,9 @@ public final class MongoInsertQuery implements InsertQuery<BsonStatsWriter>, Asy
         this.document = new BsonStatsWriter();
     }
 
-    @Override
-    @SafeVarargs
-    public final MongoInsertQuery insert(Insert<BsonStatsWriter>... inserts) {
-        Preconditions.checkArgument(inserts.length > 0, "Zero inserts specified");
-        Stream.of(inserts).forEach(insert -> insert.append(this.document));
+    public final MongoInsertQuery insert(Document... inserts) {
+        notNull("inserts", inserts);
+        Stream.of(inserts).forEach(document -> this.document.bson().putAll(document));
         return this;
     }
 
@@ -35,5 +36,10 @@ public final class MongoInsertQuery implements InsertQuery<BsonStatsWriter>, Asy
         Stats.checkForMainThread();
 
         this.database.getCollection(this.collection).insertOne(this.document.bson());
+    }
+
+    @Override
+    public final WriteModel<? extends Document> model() {
+        return new InsertOneModel<>(this.document.bson());
     }
 }

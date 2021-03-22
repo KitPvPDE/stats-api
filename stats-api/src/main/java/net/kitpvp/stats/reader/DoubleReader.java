@@ -1,15 +1,15 @@
 package net.kitpvp.stats.reader;
 
-import net.kitpvp.stats.keys.numeric.*;
+import net.kitpvp.stats.keys.*;
 import net.kitpvp.stats.season.Season;
 
 public interface DoubleReader extends Reader {
 
     default <K> double getDoubleKey(DoubleStatsKey<K> statsKey, K key) {
-        return statsKey.applyDouble(readStatKey(statsKey, key));
+        return statsKey.applyDouble(statsKey.extractDouble(this, key));
     }
 
-    default double getDoubleKey(DoubleSStatsKey statsKey) {
+    default double getDoubleKey(DoubleVoidStatsKey statsKey) {
         return getDoubleKey(statsKey, null);
     }
 
@@ -17,7 +17,7 @@ public interface DoubleReader extends Reader {
         return getDoubleKey(seasonKey.season(season), key);
     }
 
-    default double getDoubleKey(DoubleSSeasonKey seasonKey, int season) {
+    default double getDoubleKey(DoubleVoidSeasonKey seasonKey, int season) {
         return getDoubleKey(seasonKey.season(season));
     }
 
@@ -29,7 +29,7 @@ public interface DoubleReader extends Reader {
         return getDoubleKey(seasonKey, key, ALLTIME);
     }
 
-    default double getAlltimeDoubleKey(DoubleSSeasonKey seasonKey) {
+    default double getAlltimeDoubleKey(DoubleVoidSeasonKey seasonKey) {
         return getDoubleKey(seasonKey, null, ALLTIME);
     }
 
@@ -37,7 +37,7 @@ public interface DoubleReader extends Reader {
         return getDoubleKey(seasonKey, key, Season.getSeason());
     }
 
-    default double getSeasonDoubleKey(DoubleSSeasonKey seasonKey) {
+    default double getSeasonDoubleKey(DoubleVoidSeasonKey seasonKey) {
         return getDoubleKey(seasonKey, null, Season.getSeason());
     }
 
@@ -45,7 +45,7 @@ public interface DoubleReader extends Reader {
         return getDoubleKey(stageKey, key, Season.getSeason(), Season.getStage());
     }
 
-    default double getStageDoubleKey(DoubleSStageKey stageKey) {
+    default double getStageDoubleKey(DoubleVoidStageKey stageKey) {
         return getDoubleKey(stageKey, null, Season.getSeason(), Season.getStage());
     }
 }

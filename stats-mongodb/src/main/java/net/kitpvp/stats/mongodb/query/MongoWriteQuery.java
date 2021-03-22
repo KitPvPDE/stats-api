@@ -1,6 +1,5 @@
 package net.kitpvp.stats.mongodb.query;
 
-import com.google.common.base.Preconditions;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.model.UpdateOptions;
@@ -8,68 +7,77 @@ import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
 import net.kitpvp.mongodbapi.log.Log;
 import net.kitpvp.stats.Stats;
-import net.kitpvp.stats.api.function.BooleanBiConsumer;
-import net.kitpvp.stats.mongodb.MongoStatsReader;
+import net.kitpvp.stats.StatsReader;
+import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.api.function.BooleanConsumer;
 import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
-import net.kitpvp.stats.query.WriteQuery;
-import net.kitpvp.stats.query.filter.Filter;
-import net.kitpvp.stats.query.update.Update;
+import net.kitpvp.stats.mongodb.model.Filters;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
-public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, AsyncExecutable {
+import static com.mongodb.assertions.Assertions.notNull;
+import static com.mongodb.assertions.Assertions.isTrue;
+
+public final class MongoWriteQuery implements AsyncExecutable {
 
     public static final boolean QUERY_UPDATE_MANY = false;
     public static final boolean QUERY_CHECK_MAIN_THREAD = true;
+    public static final boolean QUERY_UPSERT = true;
 
     private final Database database;
     private final Collection collection;
-    private final MongoStatsReader criteria, update;
-    private final Consumer<MongoStatsReader> callback;
+    private final List<Bson> updates;
+    private Bson filter = null;
 
     public MongoWriteQuery(Database database, Collection collection) {
         this.database = database;
         this.collection = collection;
-        this.criteria = new MongoStatsReader(new Document());
-        this.update = new MongoStatsReader(new Document());
-        this.callback = null;
+        this.updates = new LinkedList<>();
     }
 
-    public MongoWriteQuery(Database database, Collection collection, Consumer<MongoStatsReader> callback) {
-        this.database = database;
-        this.collection = collection;
-        this.criteria = new MongoStatsReader(new Document());
-        this.update = new MongoStatsReader(new Document());
-        this.callback = callback;
-    }
-
-    @Override
-    @SafeVarargs
-    public final MongoWriteQuery filter(@NotNull Filter<MongoStatsReader>... filters) {
-        Preconditions.checkArgument(filters.length > 0, "Zero filters specified");
-        Stream.of(filters).forEach(filter -> filter.append(this.criteria));
+    public final MongoWriteQuery filter(@NotNull Bson filter) {
+        this.filter = filter;
         return this;
     }
 
-    @Override
-    @SafeVarargs
-    public final MongoWriteQuery update(@NotNull Update<MongoStatsReader>... updates) {
-        Preconditions.checkArgument(updates.length > 0, "Zero updates specified");
-        Stream.of(updates).forEach(update -> update.append(this.update));
+    public final MongoWriteQuery filters(@NotNull Bson... filters) {
+        notNull("filters", filters);
+        return this.filter(Filters.and(filters));
+    }
+
+    public final MongoWriteQuery update(@NotNull Bson update) {
+        notNull("update", update);
+        this.updates.add(update);
         return this;
     }
 
-    public final int updateSize() {
-        return this.update.source().size();
+    public final MongoWriteQuery update(@NotNull Bson... updates) {
+        return this.update(Arrays.asList(updates));
     }
 
-    public final int filterSize() {
-        return this.criteria.source().size();
+    public final MongoWriteQuery update(@NotNull Iterable<Bson> updates) {
+        notNull("updates", updates);
+        for(Bson update : updates) {
+            notNull("update", update);
+            this.updates.add(update);
+        }
+        return this;
+    }
+
+    public final int updates() {
+        return this.updates.size();
+    }
+
+    public final int filters() {
+        return 1;
     }
 
     @Override
@@ -77,77 +85,88 @@ public final class MongoWriteQuery implements WriteQuery<MongoStatsReader>, Asyn
         this.execute(QUERY_UPDATE_MANY);
     }
 
-    public final void executeAsync(boolean updateMany) {
-        this.executeTaskAsync((BooleanConsumer) this::execute, updateMany, null, null);
-    }
-
     public final void execute(boolean updateMany) {
         this.execute(updateMany, QUERY_CHECK_MAIN_THREAD);
     }
 
-    public final void executeAsync(boolean updateMany, boolean checkMainThread) {
-        this.executeTaskAsync(this::execute, updateMany, checkMainThread, null, null);
+    public final void execute(boolean updateMany, boolean checkMainThread) {
+        this.execute(updateMany, checkMainThread, QUERY_UPSERT);
     }
 
-    public final void execute(boolean updateMany, boolean checkMainThread) {
-        if(checkMainThread)
-            Stats.checkForMainThread();
-
-        if(this.update.source().isEmpty() || this.criteria.source().isEmpty())
-            throw new UnsupportedOperationException("Empty criteria and/or update document");
-
-        Log.debug("Executing update {0} for {1}", this.update.source(), this.criteria.source());
+    public final void execute(boolean updateMany, boolean checkMainThread, boolean upsert) {
+        this.checkQuery(updateMany, checkMainThread);
         if(updateMany)
-            this.database.getCollection(this.collection).updateMany(this.criteria.source(), this.update.source(), new UpdateOptions().upsert(true));
+            this.database.getCollection(this.collection).updateMany(this.filter, this.updates, new UpdateOptions().upsert(upsert));
         else
-            this.database.getCollection(this.collection).updateOne(this.criteria.source(), this.update.source(), new UpdateOptions().upsert(true));
+            this.database.getCollection(this.collection).updateOne(this.filter, this.updates, new UpdateOptions().upsert(upsert));
 
         this.cleanup();
     }
 
-    public final MongoStatsReader executeAndFind() {
-        return this.execute(ReturnDocument.AFTER);
+    @Override
+    public void executeAsync() {
+        this.executeTaskAsync((Runnable) this::execute, null, null);
     }
 
-    public final void executeAndFindAsync() {
-        this.executeAndFindAsync(null, null);
+    public final void executeAsync(boolean updateMany) {
+        this.executeTaskAsync((BooleanConsumer) this::execute, updateMany, null, null);
     }
 
-    public final void executeAndFindAsync(Consumer<MongoStatsReader> callback, Executor executor) {
+    public final void executeAsync(boolean updateMany, boolean checkMainThread, boolean upsert) {
+        this.executeTaskAsync(this::execute, updateMany, checkMainThread, upsert, null, null);
+    }
+
+    public final @Nullable StatsReader executeAndFind() {
+        return this.executeAndFind(QUERY_CHECK_MAIN_THREAD, QUERY_UPSERT);
+    }
+
+    public final @Nullable StatsReader executeAndFind(boolean checkMainThread, boolean upsert) {
+        return this.execute(ReturnDocument.AFTER, checkMainThread, upsert);
+    }
+
+    public final void executeAndFindAsync(Consumer<StatsReader> callback, Executor executor) {
         this.executeTaskAsync(this::executeAndFind, callback, executor);
     }
 
-    public final MongoStatsReader findAndExecute() {
-        return this.execute(ReturnDocument.BEFORE);
+    public final @Nullable StatsReader findAndExecute() {
+        return this.findAndExecute(QUERY_CHECK_MAIN_THREAD, QUERY_UPSERT);
+    }
+
+    public final @Nullable StatsReader findAndExecute(boolean checkMainThread, boolean upsert) {
+        return this.execute(ReturnDocument.BEFORE, checkMainThread, upsert);
     }
 
     public final void findAndExecuteAsync() {
         this.findAndExecuteAsync(null, null);
     }
 
-    public final void findAndExecuteAsync(Consumer<MongoStatsReader> callback, Executor executor) {
+    public final void findAndExecuteAsync(Consumer<StatsReader> callback, Executor executor) {
         this.executeTaskAsync(this::findAndExecute, callback, executor);
     }
 
-    private MongoStatsReader execute(ReturnDocument returnDocument) {
-        Stats.checkForMainThread();
+    private @Nullable StatsReader execute(ReturnDocument returnDocument, boolean checkMainThread, boolean upsert) {
+        this.checkQuery(false, checkMainThread);
 
-        Log.debug("Executing update {0} for {1} and returning {2}", this.update.source(), this.criteria.source(), returnDocument);
-        if(this.update.source().isEmpty() || this.criteria.source().isEmpty())
-            throw new UnsupportedOperationException("Empty criteria and/or update document");
-
-        return this.giveBack(new MongoStatsReader(this.database.getCollection(this.collection).findOneAndUpdate(this.criteria.source(), this.update.source(), new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(true))));
+        Document document = this.database.getCollection(this.collection)
+                .findOneAndUpdate(this.filter, this.updates, new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(upsert));
+        if(document != null) {
+            return new BsonStatsReader(document);
+        }
+        return null;
     }
 
     private void cleanup() {
-        this.update.source().clear();
-        this.criteria.source().clear();
+        this.filter = null;
+        this.updates.clear();
     }
 
-    private MongoStatsReader giveBack(MongoStatsReader statsReader) {
-        if(this.callback != null)
-            this.callback.accept(statsReader);
+    private void checkQuery(boolean updateMany, boolean checkMainThread) {
+        if(checkMainThread)
+            Stats.checkForMainThread();
 
-        return statsReader;
+        isTrue("Empty update document", this.updates.size() > 0);
+        isTrue("Empty filter document", !updateMany || this.filter == null);
+
+        Log.debug("Executing update {0} for {1}", this.updates, this.filter);
     }
 }

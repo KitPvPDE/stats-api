@@ -8,7 +8,7 @@ import org.bson.Document;
 @RequiredArgsConstructor
 @ToString(of = "database")
 @EqualsAndHashCode(of = "database")
-public class BsonStatsWriter implements BsonWriter<BsonStatsWriter> {
+public class BsonStatsWriter implements BsonWriter {
 
     private final Document database;
 
@@ -18,10 +18,5 @@ public class BsonStatsWriter implements BsonWriter<BsonStatsWriter> {
 
     public Document bson() {
         return this.database;
-    }
-
-    @Override
-    public BsonStatsWriter writer() {
-        return this;
     }
 }

@@ -1,9 +1,8 @@
 package net.kitpvp.stats.api.numbers;
 
-import net.kitpvp.stats.StatsReader;
-import net.kitpvp.stats.keys.numeric.DoubleStatsKey;
-import net.kitpvp.stats.keys.numeric.IntStatsKey;
-import net.kitpvp.stats.keys.numeric.LongStatsKey;
+import net.kitpvp.stats.keys.DoubleStatsKey;
+import net.kitpvp.stats.keys.IntStatsKey;
+import net.kitpvp.stats.keys.LongStatsKey;
 import net.kitpvp.stats.reader.Reader;
 
 public class NumberConversions {

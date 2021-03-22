@@ -1,8 +1,6 @@
 package net.kitpvp.stats;
 
-import net.kitpvp.stats.api.keys.Key;
-import net.kitpvp.stats.api.keys.VoidKey;
-import net.kitpvp.stats.keys.SStatsKey;
+import net.kitpvp.stats.keys.VoidStatsKey;
 import net.kitpvp.stats.keys.StatsKey;
 
 // TODO do we really wanna be so strict about writing here ?
@@ -14,7 +12,7 @@ public interface StatsWriter {
         this.write(statKey.key(key), value);
     }
 
-    default <V> void setStatKey(SStatsKey<V> statKey, V value) {
+    default <V> void setStatKey(VoidStatsKey<V> statKey, V value) {
         this.setStatKey(statKey, null, value);
     }
 
@@ -39,7 +37,7 @@ public interface StatsWriter {
         return this;
     }
 
-    default <V> StatsWriter appendStatKey(SStatsKey<V> statKey, V value) {
+    default <V> StatsWriter appendStatKey(VoidStatsKey<V> statKey, V value) {
         this.setStatKey(statKey, value);
         return this;
     }

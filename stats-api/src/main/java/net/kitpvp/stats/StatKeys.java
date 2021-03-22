@@ -1,32 +1,31 @@
 package net.kitpvp.stats;
 
-import net.kitpvp.stats.keys.SStatsKey;
-import net.kitpvp.stats.keys.array.ArraySStatsKey;
-import net.kitpvp.stats.keys.array.ArrayStatsKey;
-import net.kitpvp.stats.keys.numeric.*;
+import net.kitpvp.stats.keys.*;
+import net.kitpvp.stats.keys.ArrayVoidStatsKey;
+import net.kitpvp.stats.keys.ArrayStatsKey;
 
 import java.util.function.Function;
 
 public class StatKeys {
 
-    public static <V> SStatsKey<V> newStatsKey(String path, V def) {
-        return SStatsKey.<V>builder().keyBuilder(builder -> builder.path(path)).defaultValue(def).build();
+    public static <V> VoidStatsKey<V> newStatsKey(String path, V def) {
+        return VoidStatsKey.<V>builder().keyBuilder(builder -> builder.path(path)).defaultValue(def).build();
     }
 
-    public static DoubleSStatsKey newStatsKey(String path, double offset) {
-        return DoubleSStatsKey.builder().keyBuilder(builder->builder.path(path)).offset(offset).build();
+    public static DoubleVoidStatsKey newStatsKey(String path, double offset) {
+        return DoubleVoidStatsKey.builder().keyBuilder(builder->builder.path(path)).offset(offset).build();
     }
 
-    public static LongSStatsKey newStatsKey(String path, long offset) {
-        return LongSStatsKey.builder().keyBuilder(builder->builder.path(path)).offset(offset).build();
+    public static LongVoidStatsKey newStatsKey(String path, long offset) {
+        return LongVoidStatsKey.builder().keyBuilder(builder->builder.path(path)).offset(offset).build();
     }
 
-    public static IntSStatsKey newStatsKey(String path, int offset) {
-        return IntSStatsKey.builder().keyBuilder(builder->builder.path(path)).offset(offset).build();
+    public static IntVoidStatsKey newStatsKey(String path, int offset) {
+        return IntVoidStatsKey.builder().keyBuilder(builder->builder.path(path)).offset(offset).build();
     }
 
-    public static <V> ArraySStatsKey<V> newListKey(String path) {
-        return ArraySStatsKey.<V>builder().keyBuilder(builder -> builder.path(path)).build();
+    public static <V> ArrayVoidStatsKey<V> newListKey(String path) {
+        return ArrayVoidStatsKey.<V>builder().keyBuilder(builder -> builder.path(path)).build();
     }
 
     public static <K, V> ArrayStatsKey<K, V> newListKey(String prefix, Function<K, String> function, String suffix) {
@@ -37,16 +36,16 @@ public class StatKeys {
         return LongStatsKey.<K>builder().keyBuilder(builder -> builder.prefix(prefix).function(function).suffix(suffix)).offset(offset).build();
     }
 
-    public static LongSSeasonKey newSeasonKey(String path, long offset) {
-        return LongSStatsKey.builder().keyBuilder(builder -> builder.path(path)).offset(offset).season();
+    public static LongVoidSeasonKey newSeasonKey(String path, long offset) {
+        return LongVoidStatsKey.builder().keyBuilder(builder -> builder.path(path)).offset(offset).season();
     }
 
     public static <K> LongSeasonKey<K> newSeasonKey(String prefix, Function<K, String> function, String suffix, long offset) {
         return LongStatsKey.<K>builder().keyBuilder(builder -> builder.prefix(prefix).function(function).suffix(suffix)).offset(offset).season();
     }
 
-    public static IntSSeasonKey newSeasonKey(String path, int offset) {
-        return IntSStatsKey.builder().keyBuilder(builder -> builder.path(path)).offset(offset).season();
+    public static IntVoidSeasonKey newSeasonKey(String path, int offset) {
+        return IntVoidStatsKey.builder().keyBuilder(builder -> builder.path(path)).offset(offset).season();
     }
 
     public static <K> IntSeasonKey<K> newSeasonKey(String prefix, Function<K, String> function, String suffix, int offset) {

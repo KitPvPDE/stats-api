@@ -1,52 +1,47 @@
 package net.kitpvp.stats.mongodb.query;
 
-import com.google.common.base.Preconditions;
 import net.kitpvp.mongodbapi.async.Executors;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
 import net.kitpvp.mongodbapi.log.Log;
 import net.kitpvp.stats.Stats;
+import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsReader;
-import net.kitpvp.stats.mongodb.MongoStatsReader;
 import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
-import net.kitpvp.stats.query.DeleteQuery;
-import net.kitpvp.stats.query.filter.Filter;
+import net.kitpvp.stats.mongodb.model.Filters;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.LongConsumer;
-import java.util.stream.Stream;
 
-public final class MongoDeleteQuery implements DeleteQuery<MongoStatsReader>, AsyncExecutable {
+import static com.mongodb.assertions.Assertions.notNull;
+
+public final class MongoDeleteQuery implements AsyncExecutable {
+
+    public static final boolean QUERY_DELETE_MANY = false;
+    public static final boolean QUERY_CHECK_MAIN_THREAD = true;
 
     private final Database database;
     private final Collection collection;
-    private final MongoStatsReader criteria;
-    private final Consumer<MongoStatsReader> callback;
+    private Bson filter;
 
     public MongoDeleteQuery(Database database, Collection collection) {
         this.database = database;
         this.collection = collection;
-        this.criteria = new MongoStatsReader(new Document());
-        this.callback = null;
     }
 
-    public MongoDeleteQuery(Database database, Collection collection, Consumer<MongoStatsReader> callback) {
-        this.database = database;
-        this.collection = collection;
-        this.criteria = new MongoStatsReader(new Document());
-        this.callback = callback;
-    }
-
-
-    @Override
-    @SafeVarargs
-    public final MongoDeleteQuery filter(@NotNull Filter<MongoStatsReader>... filters) {
-        Preconditions.checkArgument(filters.length > 0, "Zero filters specified");
-        Stream.of(filters).forEach(filter -> filter.append(this.criteria));
+    public final MongoDeleteQuery filter(@NotNull Bson filter) {
+        notNull("filter", filter);
+        this.filter = filter;
         return this;
+    }
+
+    public final MongoDeleteQuery filters(@NotNull Bson... filters) {
+        notNull("filters", filters);
+        return this.filter(Filters.and(filters));
     }
 
     @Override
@@ -55,24 +50,21 @@ public final class MongoDeleteQuery implements DeleteQuery<MongoStatsReader>, As
     }
 
     public final long delete() {
-        return this.delete(false);
+        return this.delete(QUERY_DELETE_MANY);
     }
 
     public final long delete(boolean deleteMany) {
-        Stats.checkForMainThread();
+        return this.delete(QUERY_CHECK_MAIN_THREAD, deleteMany);
+    }
 
-        if(this.criteria.bson().isEmpty())
-            throw new UnsupportedOperationException("Empty criteria and/or update document");
+    public final long delete(boolean checkMainThread, boolean deleteMany) {
+        this.checkQuery(checkMainThread, deleteMany);
 
-        Log.debug("Executing delete for {0}", this.criteria.bson());
-        try{
-            if(deleteMany){
-                return this.database.getCollection(this.collection).deleteMany(this.criteria.bson()).getDeletedCount();
-            }else{
-                return this.database.getCollection(this.collection).deleteOne(this.criteria.bson()).getDeletedCount();
-            }
-        }finally{
-            this.cleanup();
+        Log.debug("Executing delete for {0}", this.filter);
+        if (deleteMany) {
+            return this.database.getCollection(this.collection).deleteMany(this.filter).getDeletedCount();
+        } else {
+            return this.database.getCollection(this.collection).deleteOne(this.filter).getDeletedCount();
         }
     }
 
@@ -88,40 +80,33 @@ public final class MongoDeleteQuery implements DeleteQuery<MongoStatsReader>, As
         this.executeTaskAsync(() -> this.delete(deleteMany), callback, executor);
     }
 
-    public final BsonStatsReader findAndDelete() {
-        Stats.checkForMainThread();
-
-        if(this.criteria.bson().isEmpty())
-            throw new UnsupportedOperationException("Empty criteria and/or update document");
-
-        Log.debug("Executing findAndDelete for {0}", this.criteria.bson());
-        try{
-            Document document = this.database.getCollection(this.collection).findOneAndDelete(this.criteria.bson());
-            if(document != null)
-                return this.giveBack(new MongoStatsReader(document));
-
-            return null;
-        }finally{
-            this.cleanup();
-        }
+    public final StatsReader findAndDelete() {
+        return this.findAndDelete(QUERY_CHECK_MAIN_THREAD);
     }
 
-    public final void findAndDeleteAsync(Consumer<BsonStatsReader> callback) {
+    public final BsonStatsReader findAndDelete(boolean checkMainThread) {
+        this.checkQuery(checkMainThread, false);
+
+        Log.debug("Executing findAndDelete for {0}", this.filter);
+        Document document = this.database.getCollection(this.collection).findOneAndDelete(this.filter);
+        if (document != null) {
+            return new BsonStatsReader(document);
+        }
+        return null;
+    }
+
+    public final void findAndDeleteAsync(Consumer<StatsReader> callback) {
         this.findAndDeleteAsync(callback, Executors.DIRECT);
     }
 
-    public final void findAndDeleteAsync(Consumer<BsonStatsReader> callback, Executor executor) {
+    public final void findAndDeleteAsync(Consumer<StatsReader> callback, Executor executor) {
         this.executeTaskAsync(this::findAndDelete, callback, executor);
     }
 
-    private void cleanup() {
-        this.criteria.bson().clear();
-    }
+    private void checkQuery(boolean checkMainThread, boolean deleteMany) {
+        if (checkMainThread)
+            Stats.checkForMainThread();
 
-    private MongoStatsReader giveBack(MongoStatsReader statsReader) {
-        if(this.callback != null)
-            this.callback.accept(statsReader);
-
-        return statsReader;
+        notNull("filter cannot be null", this.filter);
     }
 }

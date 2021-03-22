@@ -7,13 +7,13 @@ import net.kitpvp.stats.converter.Converter;
 import net.kitpvp.stats.converter.Decoder;
 import net.kitpvp.stats.converter.Encoder;
 
-public class BsonConverter<T> extends Converter<T, BsonStatsWriter> {
+public class BsonConverter<T> extends Converter<T> {
 
-    public BsonConverter(Decoder<T> decode, Encoder<T, BsonStatsWriter> encode) {
+    public BsonConverter(Decoder<T> decode, Encoder<T> encode) {
         super(decode, encode);
     }
 
-    public BsonConverter(Codec<T, BsonStatsWriter> context) {
+    public BsonConverter(Codec<T> context) {
         super(context);
     }
 

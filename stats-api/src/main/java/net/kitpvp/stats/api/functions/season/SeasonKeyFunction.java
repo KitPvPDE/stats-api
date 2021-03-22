@@ -1,6 +1,6 @@
 package net.kitpvp.stats.api.functions.season;
 
-import net.kitpvp.stats.api.functions.keys.KeyFunction;
+import net.kitpvp.stats.keys.KeyFunction;
 
 import java.util.function.Function;
 

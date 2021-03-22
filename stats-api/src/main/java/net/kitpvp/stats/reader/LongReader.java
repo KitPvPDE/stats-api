@@ -1,22 +1,22 @@
 package net.kitpvp.stats.reader;
 
-import net.kitpvp.stats.keys.numeric.*;
+import net.kitpvp.stats.keys.*;
 
 public interface LongReader extends Reader {
 
     default <K> long getLongKey(LongStatsKey<K> statsKey, K key) {
-        return statsKey.applyLong(readStatKey(statsKey, key));
+        return statsKey.applyLong(statsKey.extractLong(this, key));
     }
 
-    default long getLongKey(LongSStatsKey statsKey) {
-        return statsKey.applyLong(readStatKey(statsKey, null));
+    default long getLongKey(LongVoidStatsKey statsKey) {
+        return this.getLongKey(statsKey, null);
     }
 
     default <K> long getLongKey(LongSeasonKey<K> seasonKey, K key, int season) {
         return getLongKey(seasonKey.season(season), key);
     }
 
-    default long getLongKey(LongSSeasonKey seasonKey, int season) {
+    default long getLongKey(LongVoidSeasonKey seasonKey, int season) {
         return getLongKey(seasonKey.season(season));
     }
 
@@ -24,7 +24,7 @@ public interface LongReader extends Reader {
         return getLongKey(stageKey.stage(season, stage), key);
     }
 
-    default long getLongKey(LongSStageKey stageKey, int season, int stage) {
+    default long getLongKey(LongVoidStageKey stageKey, int season, int stage) {
         return getLongKey(stageKey.stage(season, stage));
     }
 
@@ -32,7 +32,7 @@ public interface LongReader extends Reader {
         return getLongKey(seasonKey.alltime(), key);
     }
 
-    default long getAlltimeLongKey(LongSSeasonKey seasonKey) {
+    default long getAlltimeLongKey(LongVoidSeasonKey seasonKey) {
         return getLongKey(seasonKey.alltime());
     }
 
@@ -40,7 +40,7 @@ public interface LongReader extends Reader {
         return getLongKey(seasonKey.season(), key);
     }
 
-    default long getSeasonLongKey(LongSSeasonKey seasonKey) {
+    default long getSeasonLongKey(LongVoidSeasonKey seasonKey) {
         return getLongKey(seasonKey.season());
     }
 
@@ -48,7 +48,7 @@ public interface LongReader extends Reader {
         return getLongKey(stageKey.stage(), key);
     }
 
-    default long getStageLongKey(LongSStageKey stageKey) {
+    default long getStageLongKey(LongVoidStageKey stageKey) {
         return getLongKey(stageKey.stage());
     }
 }

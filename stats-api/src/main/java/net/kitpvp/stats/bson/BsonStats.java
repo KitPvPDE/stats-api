@@ -10,17 +10,12 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = "database")
-public class BsonStats implements BsonReader, BsonWriter<BsonStats> {
+public class BsonStats implements BsonReader, BsonWriter {
 
     private final Document database;
 
     public BsonStats() {
         this(new Document());
-    }
-
-    @Override
-    public BsonStats writer() {
-        return this;
     }
 
     @Override

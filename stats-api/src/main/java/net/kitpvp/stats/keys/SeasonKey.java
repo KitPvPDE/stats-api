@@ -1,25 +1,21 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.api.functions.TriConsumer;
-import net.kitpvp.stats.api.keys.AppendableKey;
+import net.kitpvp.stats.Key;
 import net.kitpvp.stats.season.Season;
 
-public interface SeasonKey<K, V> extends AppendableKey<K, V> {
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
+public interface SeasonKey<K, V> extends IterableStatsKey<K, V> {
+
+    StatsKey<K, V> alltime();
+
+    StatsKey<K, V> season();
 
     StatsKey<K, V> season(int season);
 
-    default StatsKey<K, V> season() {
-        return this.season(Season.getSeason());
-    }
-
-    default StatsKey<K, V> alltime() {
-        return this.season(0);
-    }
+    VoidSeasonKey<V> bind(K k);
 
     @Override
-    default void append(K key, V value, TriConsumer<StatsKey<K, V>, K, V> function) {
-        this.season().append(key, value, function);
-
-        this.alltime().append(key, value, function);
-    }
+    Stream<? extends StatsKey<K, V>> stream();
 }

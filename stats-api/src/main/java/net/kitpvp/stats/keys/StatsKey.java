@@ -1,27 +1,25 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.StatsReader;
-import net.kitpvp.stats.api.functions.TriConsumer;
-import net.kitpvp.stats.api.functions.keys.KeyFunction;
-import net.kitpvp.stats.api.keys.AppendableKey;
-import net.kitpvp.stats.api.keys.Key;
-import net.kitpvp.stats.api.keys.Keys;
-import net.kitpvp.stats.builder.Builder;
+import net.kitpvp.stats.Key;
 import net.kitpvp.stats.reader.Reader;
 
 import java.util.function.Function;
+import java.util.stream.Stream;
 
-public interface StatsKey<K, V> extends AppendableKey<K, V>, Key<K> {
+public interface StatsKey<K, V> extends Key<K>, IterableStatsKey<K, V> {
 
     static <K, V> Builder<K, V> builder() {
         return new Builder<>();
     }
 
     static StatsKey<String, String> identity() {
-        return Keys.IDENTITY;
+        return IDENTITY;
     }
 
-    Key<String> STRING_KEY = Keys.STRING_KEY;
+    StatsKey<String, String> IDENTITY = StatsKey.<String, String>builder().keyBuilder(builder -> builder.function(Function.identity()).inverse(Function.identity())).build();
+
+    @Deprecated
+    Key<String> STRING_KEY = IDENTITY;
 
     KeyFunction<K> keyFunction();
 
@@ -31,9 +29,11 @@ public interface StatsKey<K, V> extends AppendableKey<K, V>, Key<K> {
 
     V apply(V v);
 
+    VoidStatsKey<V> bind(K k);
+
     @Override
-    default void append(K key, V value, TriConsumer<StatsKey<K, V>, K, V> function) {
-        function.accept(this, key, value);
+    default Stream<? extends StatsKey<K, V>> stream() {
+        return Stream.of(this);
     }
 
     default V extract(Reader statsReader, K key) {

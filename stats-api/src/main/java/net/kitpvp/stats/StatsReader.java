@@ -1,13 +1,14 @@
 package net.kitpvp.stats;
 
 import net.kitpvp.stats.api.keys.Entry;
-import net.kitpvp.stats.api.keys.Key;
 import net.kitpvp.stats.converter.Converter;
 import net.kitpvp.stats.converter.Decoder;
-import net.kitpvp.stats.keys.StatsKey;
+import net.kitpvp.stats.keys.*;
+import net.kitpvp.stats.keys.ArrayVoidStatsKey;
+import net.kitpvp.stats.keys.ArrayStatsKey;
 import net.kitpvp.stats.reader.*;
+import net.kitpvp.stats.season.Season;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,27 +18,6 @@ import java.util.stream.Collectors;
 import static net.kitpvp.stats.api.keys.Entry.entry;
 
 public interface StatsReader extends IntReader, LongReader, DoubleReader, BooleanReader, ListReader, SetReader, KeysReader, KeyReader {
-
-    /*
-
-    Syntax:
-
-    statsReader.map(converter)
-
-    CosmeticType -> Enum
-    Cosmetic -> interface
-
-    this.cosmetics = statsReader.getKeys(Stats.COSMETIC)
-    -> Set<CosmeticType>
-
-    BiFunction<StatsReader, CosmeticType, Cosmetic> function = statsReader -> null;
-    this.cosmetics = statsReader.getStatKeys(Stats.COSMETIC) check
-    -> Set<Cosmetic>
-
-    this.cosmetics = statsReader.getStatEntries(Stats.COSMETIC)
-    -> Set<Entry<CosmeticType, Cosmetic>>
-
-     */
 
     <V> V find(String key, V def);
 
@@ -72,10 +52,127 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
     }
 
     default <K, U> U getStatReaderAndMap(Key<K> statsKey, K key, Decoder<U> decoder) {
-        return this.getStatReader(statsKey, key).map(decoder::decode).orElse(null);
+        return this.getStatReader(statsKey, key).map(reader -> {
+            System.out.println(reader + " -> " + decoder);
+            return reader;
+        }).map(decoder::decode).orElse(null);
     }
 
-    default <K, U, W extends StatsWriter> Set<U> getStatReadersAndMap(Key<K> statsKey, Converter<U, W> converter) {
+    default <K, U> Set<U> getStatReadersAndMap(Key<K> statsKey, Converter<U> converter) {
         return this.getStatReaders(statsKey).stream().map(converter::decode).collect(Collectors.toSet());
     }
+
+    /*
+     *
+     * Key methods
+     *
+     */
+
+    default <K, V> V readStatKey(StatsKey<K, V> statsKey, K k) {
+        return statsKey.extract(this, k);
+    }
+
+    default <K, V> V getStatKey(StatsKey<K, V> statsKey, K k) {
+        return statsKey.apply(statsKey.extract(this, k));
+    }
+
+    default <U, K, V> U getStatKey(StatsKey<K, V> statsKey, K k, Function<V, U> function) {
+        return function.apply(statsKey.apply(statsKey.extract(this, k)));
+    }
+
+    default <V> V getStatKey(VoidStatsKey<V> statsKey) {
+        return statsKey.apply(statsKey.extract(this, null));
+    }
+
+    default <V, U> U getStatKey(VoidStatsKey<V> statsKey, Function<V, U> function) {
+        return function.apply(statsKey.apply(statsKey.extract(this, null)));
+    }
+
+    default boolean hasStatKey(VoidKey statsKey) {
+        return statsKey.contains(this, null);
+    }
+
+    default <K> boolean hasStatKey(Key<K> statsKey, K key) {
+        return statsKey.contains(this, key);
+    }
+
+    /*
+     *
+     * List methods
+     *
+     */
+
+    default <K, X> List<X> getListKey(ArrayStatsKey<K, X> statsKey, K key) {
+        return this.getStatKey(statsKey, key);
+    }
+
+    default <X> List<X> getListKey(ArrayVoidStatsKey<X> statsKey) {
+        return this.getStatKey(statsKey, (Void) null);
+    }
+
+    default <K, X, U> List<U> getListKey(ArrayStatsKey<K, X> statsKey, K key, Function<X, U> function) {
+        return this.getListKey(statsKey, key).stream().map(function).collect(Collectors.toList());
+    }
+
+    default <X, U> List<U> getListKey(ArrayVoidStatsKey<X> statsKey, Function<X, U> function) {
+        return this.getListKey(statsKey).stream().map(function).collect(Collectors.toList());
+    }
+
+    /*
+     *
+     * Boolean Methods
+     *
+     */
+
+    default <K> boolean getBooleanKey(BooleanStatsKey<K> statsKey, K key) {
+        return statsKey.applyBoolean(readStatKey(statsKey, key));
+    }
+
+    default boolean getBooleanKey(BooleanVoidStatsKey statsKey) {
+        return getBooleanKey(statsKey, null);
+    }
+
+    default <K> boolean getBooleanKey(BooleanSeasonKey<K> seasonKey, K key, int season) {
+        return getBooleanKey(seasonKey.season(season), key);
+    }
+
+    default boolean getBooleanKey(BooleanVoidSeasonKey seasonKey, int season) {
+        return getBooleanKey(seasonKey.season(season));
+    }
+
+    default <K> boolean getBooleanKey(BooleanStageKey<K> seasonKey, K key, int season, int stage) {
+        return getBooleanKey(seasonKey.stage(season, stage), key);
+    }
+
+    default <K> boolean getAlltimeBooleanKey(BooleanSeasonKey<K> seasonKey, K key) {
+        return getBooleanKey(seasonKey, key, ALLTIME);
+    }
+
+    default boolean getAlltimeBooleanKey(BooleanVoidSeasonKey seasonKey) {
+        return getBooleanKey(seasonKey, null, ALLTIME);
+    }
+
+    default <K> boolean getSeasonBooleanKey(BooleanSeasonKey<K> seasonKey, K key) {
+        return getBooleanKey(seasonKey, key, Season.getSeason());
+    }
+
+    default boolean getSeasonBooleanKey(BooleanVoidSeasonKey seasonKey) {
+        return getBooleanKey(seasonKey, null, Season.getSeason());
+    }
+
+    default <K> boolean getStageBooleanKey(BooleanStageKey<K> stageKey, K key) {
+        return getBooleanKey(stageKey, key, Season.getSeason(), Season.getStage());
+    }
+
+    default boolean getStageBooleanKey(BooleanVoidStageKey stageKey) {
+        return getBooleanKey(stageKey, null, Season.getSeason(), Season.getStage());
+    }
+
+    /*
+     *
+     * Integer Methods
+     *
+     */
+
+
 }

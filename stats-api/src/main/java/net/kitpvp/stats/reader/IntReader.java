@@ -1,23 +1,23 @@
 package net.kitpvp.stats.reader;
 
-import net.kitpvp.stats.keys.numeric.*;
+import net.kitpvp.stats.keys.*;
 import net.kitpvp.stats.season.Season;
 
 public interface IntReader extends Reader {
 
     default <K> int getIntKey(IntStatsKey<K> statsKey, K key) {
-        return statsKey.applyInt(readStatKey(statsKey, key));
+        return statsKey.applyInt(statsKey.extractInt(this, key));
     }
 
-    default int getIntKey(IntSStatsKey statsKey) {
-        return statsKey.applyInt(readStatKey(statsKey, null));
+    default int getIntKey(IntVoidStatsKey statsKey) {
+        return statsKey.applyInt(statsKey.extractInt(this, null));
     }
 
     default <K> int getIntKey(IntSeasonKey<K> seasonKey, K key, int season) {
         return getIntKey(seasonKey.season(season), key);
     }
 
-    default int getIntKey(IntSSeasonKey seasonKey, int season) {
+    default int getIntKey(IntVoidSeasonKey seasonKey, int season) {
         return getIntKey(seasonKey.season(season));
     }
 
@@ -25,7 +25,7 @@ public interface IntReader extends Reader {
         return getIntKey(stageKey.stage(season, stage), key);
     }
 
-    default int getIntKey(IntSStageKey stageKey, int season, int stage) {
+    default int getIntKey(IntVoidStageKey stageKey, int season, int stage) {
         return getIntKey(stageKey.stage(season, stage));
     }
 
@@ -33,7 +33,7 @@ public interface IntReader extends Reader {
         return getIntKey(seasonKey, key, ALLTIME);
     }
 
-    default int getAlltimeIntKey(IntSSeasonKey seasonKey) {
+    default int getAlltimeIntKey(IntVoidSeasonKey seasonKey) {
         return getIntKey(seasonKey, null, ALLTIME);
     }
 
@@ -41,7 +41,7 @@ public interface IntReader extends Reader {
         return getIntKey(seasonKey, key, Season.getSeason());
     }
 
-    default int getSeasonIntKey(IntSSeasonKey seasonKey) {
+    default int getSeasonIntKey(IntVoidSeasonKey seasonKey) {
         return getIntKey(seasonKey, null, Season.getSeason());
     }
 
@@ -49,7 +49,7 @@ public interface IntReader extends Reader {
         return getIntKey(stageKey.stage(), key);
     }
 
-    default int getStageIntKey(IntSStageKey stageKey) {
+    default int getStageIntKey(IntVoidStageKey stageKey) {
         return getIntKey(stageKey.stage());
     }
 }

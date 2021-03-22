@@ -2,9 +2,7 @@ package net.kitpvp.stats.bson;
 
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.api.keys.Entry;
-import net.kitpvp.stats.api.keys.Key;
-import net.kitpvp.stats.converter.Decoder;
-import net.kitpvp.stats.keys.StatsKey;
+import net.kitpvp.stats.Key;
 import org.bson.Document;
 
 import java.util.*;
@@ -39,14 +37,18 @@ public interface BsonReader extends StatsReader {
         String path = statsKey.keyFunction().key(key);
 
         Document map;
-        if(path != null ) {
-            map = this.find(path, new Document());
-        } else if(path.isEmpty()){
+        if(path != null && !path.isEmpty()) {
+            map = this.find(path, null);
+        } else if(path != null){
             map = this.bson();
         } else {
             return Optional.empty();
         }
-        return Optional.of(new BsonStatsReader(map));
+        if(map != null) {
+            return Optional.of(new BsonStatsReader(map));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override

@@ -1,8 +1,8 @@
 package net.kitpvp.stats.api.functions;
 
 import lombok.RequiredArgsConstructor;
-import net.kitpvp.stats.api.functions.keys.KeyFunction;
-import net.kitpvp.stats.api.functions.keys.VoidKeyFunction;
+import net.kitpvp.stats.keys.KeyFunction;
+import net.kitpvp.stats.keys.VoidKeyFunction;
 
 import java.util.function.Function;
 
