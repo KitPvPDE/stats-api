@@ -8,6 +8,7 @@ import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
 import net.kitpvp.mongodbapi.log.Log;
 import net.kitpvp.stats.Stats;
+import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.mongodb.api.async.AsyncTask;
 import net.kitpvp.stats.mongodb.model.Filters;
@@ -23,7 +24,7 @@ import static com.mongodb.assertions.Assertions.isTrue;
 import static com.mongodb.assertions.Assertions.notNull;
 
 
-public final class MongoFindQuery implements AsyncTask {
+public final class MongoFindQuery implements AsyncTask, Iterable<StatsReader> {
 
     private final Database database;
     private final Collection collection;
@@ -64,37 +65,37 @@ public final class MongoFindQuery implements AsyncTask {
         return this;
     }
 
-    public final @NotNull MongoIterable<BsonStatsReader> find() {
+    public final @NotNull MongoIterable<StatsReader> find() {
         Log.debug("Executing find query for {0} (Limit: {1}, Skip: {2}, Sort: {3})", this.filter, this.limit, this.skip, this.sort);
 
         return this.query();
     }
 
-    public final void findAsync(Consumer<MongoIterable<BsonStatsReader>> callback) {
+    public final void findAsync(Consumer<MongoIterable<StatsReader>> callback) {
         this.findAsync(callback, Executors.DIRECT);
     }
 
-    public final void findAsync(Consumer<MongoIterable<BsonStatsReader>> callback, Executor executor) {
+    public final void findAsync(Consumer<MongoIterable<StatsReader>> callback, Executor executor) {
         this.executeTaskAsync(this::find, callback, executor);
     }
 
-    public final @Nullable BsonStatsReader first() {
+    public final @Nullable StatsReader first() {
         return this.query().first();
     }
 
-    public final void firstAsync(Consumer<BsonStatsReader> callback) {
+    public final void firstAsync(Consumer<StatsReader> callback) {
         this.firstAsync(callback, Executors.DIRECT);
     }
 
-    public final void firstAsync(Consumer<BsonStatsReader> callback, Executor executor) {
+    public final void firstAsync(Consumer<StatsReader> callback, Executor executor) {
         this.executeTaskAsync(this::first, callback, executor);
     }
 
-    public final @NotNull MongoCursor<BsonStatsReader> iterator() {
+    public final @NotNull MongoCursor<StatsReader> iterator() {
         return this.query().cursor();
     }
 
-    private MongoIterable<BsonStatsReader> query() {
+    private MongoIterable<StatsReader> query() {
         Stats.checkForMainThread();
 
         FindIterable<Document> iterable = this.database.getCollection(this.collection)

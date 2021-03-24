@@ -3,6 +3,7 @@ package net.kitpvp.stats.mongodb.model;
 import com.mongodb.assertions.Assertions;
 import com.mongodb.client.model.TextSearchOptions;
 import com.mongodb.lang.Nullable;
+import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.Key;
 import net.kitpvp.stats.VoidKey;
 import net.kitpvp.stats.mongodb.Mongo;
@@ -15,7 +16,11 @@ import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Spliterator;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import static com.mongodb.assertions.Assertions.notNull;
@@ -315,5 +320,156 @@ public final class Filters {
         return com.mongodb.client.model.Filters.bitsAnySet(statKey.key(key), bitmask);
     }
 
+    // mapping functions
+
+    public static <UItem, TItem> Bson eq(Function<TItem, UItem> function, TItem value) {
+        return eq(function.apply(value));
+    }
+
+    public static <UItem, TItem> Bson eq(VoidKey statKey, Function<TItem, UItem> function, TItem value) {
+        return eq(statKey, function.apply(value));
+    }
+
+    public static <K, UItem, TItem> Bson eq(Key<K> statKey, K key, Function<TItem, UItem> function, TItem value) {
+        return eq(statKey, key, function.apply(value));
+    }
+
+    public static <UItem, TItem> Bson ne(VoidKey statKey, Function<TItem, UItem> function, @Nullable TItem value) {
+        return ne(statKey, function.apply(value));
+    }
+
+    public static <K, UItem, TItem> Bson ne(Key<K> statKey, K key, Function<TItem, UItem> function, @Nullable TItem value) {
+        return ne(statKey, key, function.apply(value));
+    }
+
+    public static <UItem, TItem> Bson gt(VoidKey statKey, Function<TItem, UItem> function, TItem value) {
+        return gt(statKey, function.apply(value));
+    }
+
+    public static <K, UItem, TItem> Bson gt(Key<K> statKey, K key, Function<TItem, UItem> function, TItem value) {
+        return gt(statKey, key, function.apply(value));
+    }
+
+    public static <UItem, TItem> Bson lt(VoidKey statKey, Function<TItem, UItem> function, TItem value) {
+        return lt(statKey, function.apply(value));
+    }
+
+    public static <K, UItem, TItem> Bson lt(Key<K> statKey, K key, Function<TItem, UItem> function, TItem value) {
+        return lt(statKey, key, function.apply(value));
+    }
+
+    public static <UItem, TItem> Bson gte(VoidKey statKey, Function<TItem, UItem> function, TItem value) {
+        return gte(statKey, function.apply(value));
+    }
+
+    public static <K, UItem, TItem> Bson gte(Key<K> statKey, K key, Function<TItem, UItem> function, TItem value) {
+        return gte(statKey, key, function.apply(value));
+    }
+
+    public static <UItem, TItem> Bson lte(VoidKey statKey, Function<TItem, UItem> function, TItem value) {
+        return lte(statKey, function.apply(value));
+    }
+
+    public static <K, UItem, TItem> Bson lte(Key<K> statKey, K key, Function<TItem, UItem> function, TItem value) {
+        return lte(statKey, key, function.apply(value));
+    }
+
+    @SafeVarargs
+    public static <UItem, TItem> Bson in(VoidKey statKey, Function<TItem, UItem> function, TItem... values) {
+        notNull("values", values);
+        return in(statKey, function, Arrays.asList(values));
+    }
+
+    @SafeVarargs
+    public static <K, UItem, TItem> Bson in(Key<K> statKey, K key, Function<TItem, UItem> function, TItem... values) {
+        notNull("values", values);
+        return in(statKey, key, function, Arrays.asList(values));
+    }
+
+    public static <UItem, TItem> Bson in(VoidKey statKey, Function<TItem, UItem> function, Iterable<TItem> values) {
+        notNull("values", values);
+        return in(statKey, new MappedIterable<>(values, function));
+    }
+
+    public static <K, UItem, TItem> Bson in(Key<K> statKey, K key, Function<TItem, UItem> function, Iterable<TItem> values) {
+        notNull("values", values);
+        return in(statKey, key, new MappedIterable<>(values, function));
+    }
+
+    @SafeVarargs
+    public static <UItem, TItem> Bson nin(VoidKey statKey, Function<TItem, UItem> function, TItem... values) {
+        notNull("values", values);
+        return nin(statKey, function, Arrays.asList(values));
+    }
+
+    @SafeVarargs
+    public static <K, UItem, TItem> Bson nin(@NotNull Key<K> statKey, K key, Function<TItem, UItem> function, TItem... values) {
+        notNull("values", values);
+        return nin(statKey, key, function, Arrays.asList(values));
+    }
+
+    public static <UItem, TItem> Bson nin(VoidKey statKey, Function<TItem, UItem> function, Iterable<TItem> values) {
+        notNull("values", values);
+        return nin(statKey, new MappedIterable<>(values, function));
+    }
+
+    public static <K, UItem, TItem> Bson nin(@NotNull Key<K> statKey, K key, Function<TItem, UItem> function, Iterable<TItem> values) {
+        notNull("values", values);
+        return nin(statKey, key, new MappedIterable<>(values, function));
+    }
+
+    @SafeVarargs
+    public static <UItem, TItem> Bson all(VoidKey statKey, Function<TItem, UItem> function, TItem... values) {
+        return all(statKey, function, Arrays.asList(values));
+    }
+
+    @SafeVarargs
+    public static <K, UItem, TItem> Bson all(Key<K> statKey, K key, Function<TItem, UItem> function, TItem... values) {
+        return all(statKey, key, function, Arrays.asList(values));
+    }
+
+    public static <UItem, TItem> Bson all(VoidKey statKey, Function<TItem, UItem> function, Iterable<TItem> values) {
+        return all(statKey, new MappedIterable<>(values, function));
+    }
+
+    public static <K, UItem, TItem> Bson all(Key<K> statKey, K key, Function<TItem, UItem> function, Iterable<TItem> values) {
+        return all(statKey, key, new MappedIterable<>(values, function));
+    }
+
     private Filters() {}
+
+    @RequiredArgsConstructor
+    private static class MappedIterable<UItem, KItem> implements Iterable<UItem> {
+
+        private final Iterable<KItem> iterable;
+        private final Function<KItem, UItem> function;
+
+        @NotNull
+        @Override
+        public Iterator<UItem> iterator() {
+            return new Iterator<UItem>() {
+                private final Iterator<KItem> iterator = MappedIterable.this.iterable.iterator();
+
+                @Override
+                public boolean hasNext() {
+                    return this.iterator.hasNext();
+                }
+
+                @Override
+                public UItem next() {
+                    return function.apply(this.iterator.next());
+                }
+            };
+        }
+
+        @Override
+        public void forEach(Consumer<? super UItem> action) {
+            this.iterable.forEach(kItem -> action.accept(this.function.apply(kItem)));
+        }
+
+        @Override
+        public Spliterator<UItem> spliterator() {
+            return Iterable.super.spliterator();
+        }
+    }
 }

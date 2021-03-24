@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
 import net.kitpvp.stats.Stats;
-import net.kitpvp.stats.bson.BsonStatsReader;
+import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.mongodb.query.MongoCountQuery;
 import net.kitpvp.stats.mongodb.query.MongoFindQuery;
 import net.kitpvp.stats.mongodb.query.MongoWriteQuery;
@@ -38,8 +38,8 @@ public class MongoStats implements Stats<Database> {
     }
 
     @Override
-    public BsonStatsReader load(Database database) {
-        BsonStatsReader statsReader = this.find(database).first();
+    public StatsReader load(Database database) {
+        StatsReader statsReader = this.find(database).first();
         if(statsReader == null)
             statsReader = new MongoStatsReader();
         return statsReader;

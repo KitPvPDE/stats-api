@@ -9,19 +9,23 @@ import static com.mongodb.assertions.Assertions.notNull;
 
 public final class Inserts {
 
-    static <K, V> Document insert(Key<K> statKey, K key, V value) {
-        return new Document(buildKey(statKey, key), value);
+    public static <V> Document insert(VoidKey statKey, V value) {
+        return new Document(statKey.key(), value);
     }
 
-    static <K, U> Document insert(Key<K> statsKey, K key, U value, BsonEncoder<U> encoder) {
-        return new Document(buildKey(statsKey, key), encoder.encode(value).bson());
+    public static <K, V> Document insert(Key<K> statKey, K key, V value) {
+        return new Document(statKey.key(key), value);
     }
 
-    static <U> Document insert(VoidKey statsKey, U value, BsonEncoder<U> encoder) {
-        return insert(statsKey, null, value, encoder);
+    public static <K, U> Document insert(Key<K> statsKey, K key, U value, BsonEncoder<U> encoder) {
+        return new Document(statsKey.key(key), encoder.encode(value).bson());
     }
 
-    static <U> Document insert(U value, BsonEncoder<U> encoder) {
+    public static <U> Document insert(VoidKey statsKey, U value, BsonEncoder<U> encoder) {
+        return new Document(statsKey.key(), encoder.encode(value).bson());
+    }
+
+    public static <U> Document insert(U value, BsonEncoder<U> encoder) {
         return encoder.encode(value).bson();
     }
 
