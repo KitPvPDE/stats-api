@@ -7,6 +7,7 @@ import net.kitpvp.stats.api.builder.StatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,6 +34,10 @@ public class Builder<K, V> implements StatsKeyBuilder<K, V> {
     public Builder<K, V> keyBuilder(Consumer<KeyBuilder<K>> consumer) {
         consumer.accept(this.keyBuilder);
         return this;
+    }
+
+    public <T, R> MappedBuilder<K, T, R> map(Function<T, R> mapping) {
+        return new MappedBuilder<>(this.keyBuilder, mapping);
     }
 
     @Override

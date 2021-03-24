@@ -1,23 +1,42 @@
 package net.kitpvp.stats.bson.codec;
 
-import net.kitpvp.stats.StatsWriter;
+import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsWriter;
-import net.kitpvp.stats.converter.Codec;
-import net.kitpvp.stats.converter.Converter;
-import net.kitpvp.stats.converter.Decoder;
-import net.kitpvp.stats.converter.Encoder;
 
-public class BsonConverter<T> extends Converter<T> {
+public class BsonConverter<T> implements BsonCodec<T> {
 
-    public BsonConverter(Decoder<T> decode, Encoder<T> encode) {
-        super(decode, encode);
+    protected final BsonDecoder<T> decode;
+    protected final BsonEncoder<T> encode;
+
+    public BsonConverter(BsonDecoder<T> decode, BsonEncoder<T> encode) {
+        this.decode = decode;
+        this.encode = encode;
     }
 
-    public BsonConverter(Codec<T> context) {
-        super(context);
+    public BsonConverter(BsonCodec<T> context) {
+        this.decode = context;
+        this.encode = context;
     }
 
-    public final StatsWriter encode(T t) {
-        return this.encode.encode(t, new BsonStatsWriter());
+    @Override
+    public T decode(StatsReader statsReader) {
+        return this.decode.decode(statsReader);
+    }
+
+    @Override
+    public void encode(T t, BsonStatsWriter statsWriter) {
+        this.encode.encode(t, statsWriter);
+    }
+
+    public final BsonStatsWriter encode(T t) {
+        return this.encode.encode(t);
+    }
+
+    public BsonEncoder<T> encodeFunction() {
+        return this.encode;
+    }
+
+    public BsonDecoder<T> decodeFunction() {
+        return this.decode;
     }
 }

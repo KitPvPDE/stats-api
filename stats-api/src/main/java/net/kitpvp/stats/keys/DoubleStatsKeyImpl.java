@@ -1,9 +1,15 @@
 package net.kitpvp.stats.keys;
 
+import net.kitpvp.stats.Key;
+
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleUnaryOperator;
 
 class DoubleStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Double> implements DoubleStatsKey<K> {
+
+    static final DoubleStatsKey<String> IDENTITY = DoubleStatsKey.<String>builder()
+            .keyBuilder(builder -> builder.key(Key.identity()))
+            .build();
 
     private final KeyFunction<K> keyFunction;
     private final DoubleBinaryOperator addition;

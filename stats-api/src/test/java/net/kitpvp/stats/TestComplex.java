@@ -39,11 +39,10 @@ public class TestComplex {
     private class ComplexCodec implements BsonCodec<Complex> {
 
         @Override
-        public StatsWriter encode(Complex complex, StatsWriter statsWriter) {
+        public void encode(Complex complex, BsonStatsWriter statsWriter) {
             statsWriter.setStatKey(a, null, complex.a);
             statsWriter.setStatKey(b, null, complex.b);
             statsWriter.setStatKey(c, null, complex.c);
-            return statsWriter;
         }
 
         @Override

@@ -14,6 +14,10 @@ public interface LongStatsKey<K> extends NumericStatsKey<K, Long> {
         return new LongKeyBuilder<>();
     }
 
+    static LongStatsKey<String> identity() {
+        return LongStatsKeyImpl.IDENTITY;
+    }
+
     BinaryOperator<Long> addition();
 
     LongBinaryOperator additionLong();

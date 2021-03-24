@@ -1,9 +1,15 @@
 package net.kitpvp.stats.keys;
 
+import net.kitpvp.stats.Key;
+
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
 
 class IntStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Integer> implements IntStatsKey<K> {
+
+    static final IntStatsKey<String> IDENTITY = IntStatsKey.<String>builder()
+            .keyBuilder(builder -> builder.key(Key.identity()))
+            .build();
 
     private final IntBinaryOperator function;
     private final IntUnaryOperator inverse;

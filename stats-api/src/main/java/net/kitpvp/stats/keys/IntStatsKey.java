@@ -16,6 +16,10 @@ public interface IntStatsKey<K> extends NumericStatsKey<K, Integer> {
         return new IntKeyBuilder<>();
     }
 
+    static IntStatsKey<String> identity() {
+        return IntStatsKeyImpl.IDENTITY;
+    }
+
     Key<Integer> INT_KEY = Key.<Integer>builder().function(Objects::toString).inverse(Integer::parseInt).buildKey();
 
     BinaryOperator<Integer> addition();

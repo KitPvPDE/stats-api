@@ -15,6 +15,10 @@ public interface DoubleStatsKey<K> extends NumericStatsKey<K, Double> {
         return new DoubleKeyBuilder<>();
     }
 
+    static DoubleStatsKey<String> identity() {
+        return DoubleStatsKeyImpl.IDENTITY;
+    }
+
     BinaryOperator<Double> addition();
 
     DoubleBinaryOperator additionDouble();

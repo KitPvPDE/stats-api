@@ -1,9 +1,15 @@
 package net.kitpvp.stats.keys;
 
+import net.kitpvp.stats.Key;
+
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
 
 class LongStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Long> implements LongStatsKey<K> {
+
+    static final LongStatsKey<String> IDENTITY = LongStatsKey.<String>builder()
+            .keyBuilder(builder -> builder.key(Key.identity()))
+            .build();
 
     private final LongBinaryOperator addition;
     private final LongUnaryOperator reverse;

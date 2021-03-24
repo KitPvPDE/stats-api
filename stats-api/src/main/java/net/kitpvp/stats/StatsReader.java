@@ -58,7 +58,7 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
         }).map(decoder::decode).orElse(null);
     }
 
-    default <K, U> Set<U> getStatReadersAndMap(Key<K> statsKey, Converter<U> converter) {
+    default <K, U> Set<U> getStatReadersAndMap(Key<K> statsKey, Decoder<U> converter) {
         return this.getStatReaders(statsKey).stream().map(converter::decode).collect(Collectors.toSet());
     }
 

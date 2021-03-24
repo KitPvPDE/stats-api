@@ -1,0 +1,90 @@
+package net.kitpvp.stats.keys;
+
+import com.google.common.base.Preconditions;
+import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public class MappedBuilder<K, V, U> implements StatsKeyBuilder<K, U> {
+    private final KeyBuilder<K> keyBuilder;
+    private final Function<V, U> mapping;
+    private Supplier<V> mappingDefaultSupplier;
+    private Supplier<U> defaultSupplier;
+
+    MappedBuilder() {
+        this.keyBuilder = new KeyBuilder<>();
+        this.mapping = null;
+        this.defaultSupplier = () -> null;
+    }
+
+    MappedBuilder(Function<V, U> mapping) {
+        this.keyBuilder = new KeyBuilder<>();
+        this.mapping = mapping;
+        this.defaultSupplier = () -> null;
+    }
+
+    MappedBuilder(KeyBuilder<K> keyBuilder, Function<V, U> mapping) {
+        this.keyBuilder = keyBuilder;
+        this.mapping = mapping;
+        this.defaultSupplier = () -> null;
+    }
+
+    public <T, R> MappedBuilder<K, T, R> mapping(Function<T, R> mapping) {
+        return new MappedBuilder<>(this.keyBuilder, mapping);
+    }
+
+    public MappedBuilder<K, V, U> defaultValue(U defaultValue) {
+        this.defaultSupplier = new FinalSupplier<>(defaultValue);
+        return this;
+    }
+
+    public MappedBuilder<K, V, U> defaultValue(Supplier<U> defaultSupplier) {
+        this.defaultSupplier = defaultSupplier;
+        return this;
+    }
+
+    public MappedBuilder<K, V, U> defaultMappingValue(V mappingDefaultSupplier) {
+        this.mappingDefaultSupplier = new FinalSupplier<>(mappingDefaultSupplier);
+        return this;
+    }
+
+    public MappedBuilder<K, V, U> defaultMappingValue(Supplier<V> mappingDefaultSupplier) {
+        this.mappingDefaultSupplier = mappingDefaultSupplier;
+        return this;
+    }
+
+    public MappedBuilder<K, V, U> keyBuilder(Consumer<KeyBuilder<K>> consumer) {
+        consumer.accept(this.keyBuilder);
+        return this;
+    }
+
+    @Override
+    public @NotNull StatsKey<K, U> build() {
+        this.checkNotNull();
+
+        return new MappedStatsKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
+    }
+
+    @Override
+    public @NotNull SeasonKey<K, U> season() {
+        this.checkNotNull();
+
+        return new NormalSeasonKeyImpl<>(this.defaultSupplier, this.keyBuilder.build());
+    }
+
+    @Override
+    public @NotNull StageKey<K, U> stage() {
+        this.checkNotNull();
+
+        return new NormalStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build());
+    }
+
+    protected void checkNotNull() {
+        Preconditions.checkNotNull(this.mapping, "mapping");
+        Preconditions.checkNotNull(this.defaultSupplier, "defaultValue");
+        Preconditions.checkNotNull(this.mappingDefaultSupplier, "mappingDefaultSupplier");
+    }
+}

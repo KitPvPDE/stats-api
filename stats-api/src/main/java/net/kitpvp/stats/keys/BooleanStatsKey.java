@@ -1,6 +1,5 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
 import net.kitpvp.stats.reader.Reader;
 
 import java.util.stream.Stream;
@@ -9,6 +8,10 @@ public interface BooleanStatsKey<K> extends StatsKey<K, Boolean> {
 
     static <K> BooleanKeyBuilder<K> builder() {
         return new BooleanKeyBuilder<>();
+    }
+
+    static BooleanStatsKey<String> identity() {
+        return BooleanStatsKeyImpl.IDENTITY;
     }
 
     @Override
