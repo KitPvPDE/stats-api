@@ -16,7 +16,7 @@ import java.util.function.LongConsumer;
 
 import static com.mongodb.assertions.Assertions.notNull;
 
-public final class MongoCountQuery implements AsyncTask {
+public final class MongoCountQuery extends AbstractMongoQuery implements AsyncTask {
 
     private final Database database;
     private final Collection collection;
@@ -42,10 +42,12 @@ public final class MongoCountQuery implements AsyncTask {
         Stats.checkForMainThread();
 
         Log.debug("Executing count for {0}", this.filter);
-        if(this.filter == null) {
-            return this.database.getCollection(this.collection).countDocuments();
+        try (AbstractMongoQuery ignored = this) {
+            if(this.filter == null) {
+                return this.database.getCollection(this.collection).countDocuments();
+            }
+            return this.database.getCollection(this.collection).countDocuments(this.filter);
         }
-        return this.database.getCollection(this.collection).countDocuments(this.filter);
     }
 
     public final void countAsync(LongConsumer callback) {

@@ -11,6 +11,7 @@ import net.kitpvp.stats.keys.BooleanVoidStatsKey;
 import net.kitpvp.stats.keys.DoubleVoidStatsKey;
 import net.kitpvp.stats.keys.IntVoidStatsKey;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.Objects;
@@ -46,7 +47,7 @@ public class TestComplex {
         }
 
         @Override
-        public Complex decode(StatsReader statsReader) {
+        public @NotNull Complex decode(StatsReader statsReader) {
             return new Complex(statsReader);
         }
     }

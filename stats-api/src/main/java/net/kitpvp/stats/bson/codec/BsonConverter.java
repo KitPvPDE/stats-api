@@ -2,6 +2,7 @@ package net.kitpvp.stats.bson.codec;
 
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsWriter;
+import org.jetbrains.annotations.NotNull;
 
 public class BsonConverter<T> implements BsonCodec<T> {
 
@@ -19,7 +20,7 @@ public class BsonConverter<T> implements BsonCodec<T> {
     }
 
     @Override
-    public T decode(StatsReader statsReader) {
+    public @NotNull T decode(StatsReader statsReader) {
         return this.decode.decode(statsReader);
     }
 

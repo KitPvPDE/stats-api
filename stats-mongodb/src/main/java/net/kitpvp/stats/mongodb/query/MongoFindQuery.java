@@ -10,6 +10,7 @@ import net.kitpvp.mongodbapi.log.Log;
 import net.kitpvp.stats.Stats;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsReader;
+import net.kitpvp.stats.bson.codec.BsonDecoder;
 import net.kitpvp.stats.mongodb.api.async.AsyncTask;
 import net.kitpvp.stats.mongodb.model.Filters;
 import org.bson.Document;
@@ -19,12 +20,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static com.mongodb.assertions.Assertions.isTrue;
 import static com.mongodb.assertions.Assertions.notNull;
 
 
-public final class MongoFindQuery implements AsyncTask, Iterable<StatsReader> {
+public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTask, Iterable<StatsReader> {
 
     private final Database database;
     private final Collection collection;
@@ -65,6 +67,18 @@ public final class MongoFindQuery implements AsyncTask, Iterable<StatsReader> {
         return this;
     }
 
+    public final <T> @NotNull MongoIterable<T> findAndMap(BsonDecoder<T> decoder) {
+        return this.query().map(decoder::decode);
+    }
+
+    public final <T> void findAndMapAsync(BsonDecoder<T> decoder, Consumer<MongoIterable<T>> callback) {
+        this.findAndMapAsync(decoder, callback, Executors.DIRECT);
+    }
+
+    public final <T> void findAndMapAsync(BsonDecoder<T> decoder, Consumer<MongoIterable<T>> callback, Executor executor) {
+        this.executeTaskAsync(this::findAndMap, decoder, callback, executor);
+    }
+
     public final @NotNull MongoIterable<StatsReader> find() {
         Log.debug("Executing find query for {0} (Limit: {1}, Skip: {2}, Sort: {3})", this.filter, this.limit, this.skip, this.sort);
 
@@ -98,12 +112,14 @@ public final class MongoFindQuery implements AsyncTask, Iterable<StatsReader> {
     private MongoIterable<StatsReader> query() {
         Stats.checkForMainThread();
 
-        FindIterable<Document> iterable = this.database.getCollection(this.collection)
-                .find(this.filter)
-                .limit(this.limit)
-                .skip(this.skip)
-                .sort(this.sort);
+        try (AbstractMongoQuery ignored = this) {
+            FindIterable<Document> iterable = this.database.getCollection(this.collection)
+                    .find(this.filter)
+                    .limit(this.limit)
+                    .skip(this.skip)
+                    .sort(this.sort);
 
-        return iterable.map(BsonStatsReader::new);
+            return iterable.map(BsonStatsReader::new);
+        }
     }
 }

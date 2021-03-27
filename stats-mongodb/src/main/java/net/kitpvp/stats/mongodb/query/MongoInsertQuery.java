@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import static com.mongodb.assertions.Assertions.notNull;
 
-public final class MongoInsertQuery implements AsyncExecutable, MongoBulkOperation {
+public final class MongoInsertQuery extends AbstractMongoQuery implements AsyncExecutable, MongoBulkOperation {
 
     private final Database database;
     private final Collection collection;
@@ -35,7 +35,9 @@ public final class MongoInsertQuery implements AsyncExecutable, MongoBulkOperati
     public final void execute() {
         Stats.checkForMainThread();
 
-        this.database.getCollection(this.collection).insertOne(this.document.bson());
+        try (AbstractMongoQuery ignored = this) {
+            this.database.getCollection(this.collection).insertOne(this.document.bson());
+        }
     }
 
     @Override

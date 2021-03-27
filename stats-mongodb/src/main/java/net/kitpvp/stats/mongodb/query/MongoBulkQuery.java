@@ -10,12 +10,13 @@ import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
 import net.kitpvp.stats.mongodb.query.bulk.MongoBulkOperation;
 import org.bson.Document;
 
+import java.io.Closeable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-public class MongoBulkQuery implements AsyncExecutable {
+public class MongoBulkQuery extends AbstractMongoQuery implements AsyncExecutable {
 
     public static final boolean QUERY_ORDERED = true;
 
@@ -34,8 +35,10 @@ public class MongoBulkQuery implements AsyncExecutable {
     }
 
     public final void execute(boolean ordered) {
-        this.database.getCollection(this.collection).
-                bulkWrite(this.models, new BulkWriteOptions().ordered(ordered));
+        try (AbstractMongoQuery ignored = this) {
+            this.database.getCollection(this.collection).
+                    bulkWrite(this.models, new BulkWriteOptions().ordered(ordered));
+        }
     }
 
     public final void executeAsync(boolean ordered) {

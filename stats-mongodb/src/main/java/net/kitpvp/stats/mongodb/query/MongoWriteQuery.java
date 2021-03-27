@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 import static com.mongodb.assertions.Assertions.notNull;
 import static com.mongodb.assertions.Assertions.isTrue;
 
-public final class MongoWriteQuery implements AsyncExecutable {
+public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncExecutable {
 
     public static final boolean QUERY_UPDATE_MANY = false;
     public static final boolean QUERY_CHECK_MAIN_THREAD = true;
@@ -95,12 +95,13 @@ public final class MongoWriteQuery implements AsyncExecutable {
 
     public final void execute(boolean updateMany, boolean checkMainThread, boolean upsert) {
         this.checkQuery(updateMany, checkMainThread);
-        if(updateMany)
-            this.database.getCollection(this.collection).updateMany(this.filter, this.updates, new UpdateOptions().upsert(upsert));
-        else
-            this.database.getCollection(this.collection).updateOne(this.filter, this.updates, new UpdateOptions().upsert(upsert));
-
-        this.cleanup();
+        try (AbstractMongoQuery ignored = this) {
+            if(updateMany) {
+                this.database.getCollection(this.collection).updateMany(this.filter, this.updates, new UpdateOptions().upsert(upsert));
+            } else {
+                this.database.getCollection(this.collection).updateOne(this.filter, this.updates, new UpdateOptions().upsert(upsert));
+            }
+        }
     }
 
     @Override
@@ -147,17 +148,14 @@ public final class MongoWriteQuery implements AsyncExecutable {
     private @Nullable StatsReader execute(ReturnDocument returnDocument, boolean checkMainThread, boolean upsert) {
         this.checkQuery(false, checkMainThread);
 
-        Document document = this.database.getCollection(this.collection)
-                .findOneAndUpdate(this.filter, this.updates, new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(upsert));
-        if(document != null) {
-            return new BsonStatsReader(document);
+        try (AbstractMongoQuery ignored = this) {
+            Document document = this.database.getCollection(this.collection)
+                    .findOneAndUpdate(this.filter, this.updates, new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(upsert));
+            if(document != null) {
+                return new BsonStatsReader(document);
+            }
+            return null;
         }
-        return null;
-    }
-
-    private void cleanup() {
-        this.filter = null;
-        this.updates.clear();
     }
 
     private void checkQuery(boolean updateMany, boolean checkMainThread) {

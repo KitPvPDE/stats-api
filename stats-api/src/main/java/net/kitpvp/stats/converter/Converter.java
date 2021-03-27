@@ -3,6 +3,7 @@ package net.kitpvp.stats.converter;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.StatsWriter;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 public abstract class Converter<T, Writer extends StatsWriter> implements Codec<T, Writer> {
@@ -15,7 +16,7 @@ public abstract class Converter<T, Writer extends StatsWriter> implements Codec<
     }
 
     @Override
-    public final T decode(StatsReader statsReader) {
+    public final @NotNull T decode(StatsReader statsReader) {
         return this.decode.decode(statsReader);
     }
 

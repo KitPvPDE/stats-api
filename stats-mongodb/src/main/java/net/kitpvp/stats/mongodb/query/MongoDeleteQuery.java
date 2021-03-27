@@ -19,7 +19,7 @@ import java.util.function.LongConsumer;
 
 import static com.mongodb.assertions.Assertions.notNull;
 
-public final class MongoDeleteQuery implements AsyncExecutable {
+public final class MongoDeleteQuery extends AbstractMongoQuery implements AsyncExecutable {
 
     public static final boolean QUERY_DELETE_MANY = false;
     public static final boolean QUERY_CHECK_MAIN_THREAD = true;
@@ -61,10 +61,12 @@ public final class MongoDeleteQuery implements AsyncExecutable {
         this.checkQuery(checkMainThread, deleteMany);
 
         Log.debug("Executing delete for {0}", this.filter);
-        if (deleteMany) {
-            return this.database.getCollection(this.collection).deleteMany(this.filter).getDeletedCount();
-        } else {
-            return this.database.getCollection(this.collection).deleteOne(this.filter).getDeletedCount();
+        try (AbstractMongoQuery ignored = this) {
+            if (deleteMany) {
+                return this.database.getCollection(this.collection).deleteMany(this.filter).getDeletedCount();
+            } else {
+                return this.database.getCollection(this.collection).deleteOne(this.filter).getDeletedCount();
+            }
         }
     }
 
@@ -88,11 +90,13 @@ public final class MongoDeleteQuery implements AsyncExecutable {
         this.checkQuery(checkMainThread, false);
 
         Log.debug("Executing findAndDelete for {0}", this.filter);
-        Document document = this.database.getCollection(this.collection).findOneAndDelete(this.filter);
-        if (document != null) {
-            return new BsonStatsReader(document);
+        try (AbstractMongoQuery ignored = this) {
+            Document document = this.database.getCollection(this.collection).findOneAndDelete(this.filter);
+            if (document != null) {
+                return new BsonStatsReader(document);
+            }
+            return null;
         }
-        return null;
     }
 
     public final void findAndDeleteAsync(Consumer<StatsReader> callback) {
