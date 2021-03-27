@@ -6,6 +6,16 @@ Stats API to integrate MongoDB with Java for **easy**, **typesafe** usage.
 
 ### Keys, Readers
 
+There are predefined keys in every ``StatsKey`` class, accessible via e.g. `LongStatsKey.identity()`, that do provide
+the default behaviour of each key. You might want to use them in the following fashion:
+
+```java
+int data=statsReader.getLongKey(LongStatsKey.identity(),"prefixed.key.suffix");
+```
+How you retrieve ``StatsReader`` objects and use them in a more individualized fashion will now be told below.
+
+If you want to create new, individualized keys you can do that in the following way:
+
 ```java
 Key<String> key=Key.<String>builder()
         .prefix("prefix")
@@ -51,7 +61,7 @@ int balanceOfBarbara=statsReader.getIntKey(statsKey,"barbara"); // 304
         int balanceOfErnie=statsReader.getIntKey(statsKey,"ernie"); // 149
 
         if(balanceOfBarbara>balanceOfErnie){
-        // do something    
+// do something    
         }
 ````
 
