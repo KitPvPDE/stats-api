@@ -26,6 +26,11 @@ public class ArrayKeyBuilder<K, X> implements StatsKeyBuilder<K, List<X>> {
         return this;
     }
 
+    public ArrayKeyBuilder<K, X> defaultNull() {
+        this.def = () -> null;
+        return this;
+    }
+
     public ArrayKeyBuilder<K, X> defaultValue(Supplier<List<X>> constructor) {
         this.def = constructor;
         return this;

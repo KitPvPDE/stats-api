@@ -21,6 +21,11 @@ public class ArrayVoidKeyBuilder<X> implements StatsKeyBuilder<Void, List<X>> {
         return this;
     }
 
+    public ArrayVoidKeyBuilder<X> defaultNull() {
+        this.def = () -> null;
+        return this;
+    }
+
     public ArrayVoidKeyBuilder<X> defaultValue(Supplier<List<X>> constructor) {
         this.def = constructor;
         return this;

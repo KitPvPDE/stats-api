@@ -21,6 +21,11 @@ public class SetKeyBuilder<K, X> implements StatsKeyBuilder<K, Set<X>> {
         return this;
     }
 
+    public SetKeyBuilder<K, X> defaultNull() {
+        this.def = () -> null;
+        return this;
+    }
+
     public SetKeyBuilder<K, X> defaultValue(Supplier<Set<X>> constructor) {
         this.def = constructor;
         return this;

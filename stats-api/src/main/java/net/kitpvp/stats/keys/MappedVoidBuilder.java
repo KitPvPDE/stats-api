@@ -8,83 +8,83 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class MappedBuilder<K, V, U> implements StatsKeyBuilder<K, U> {
-    private final KeyBuilder<K> keyBuilder;
+public class MappedVoidBuilder<V, U> implements StatsKeyBuilder<Void, U> {
+    private final VoidKeyBuilder keyBuilder;
     private final Function<V, U> mapping;
     private Supplier<V> mappingDefaultSupplier;
     private Supplier<U> defaultSupplier;
 
-    MappedBuilder() {
-        this.keyBuilder = new KeyBuilder<>();
+    MappedVoidBuilder() {
+        this.keyBuilder = new VoidKeyBuilder();
         this.mapping = null;
         this.defaultSupplier = () -> null;
     }
 
-    MappedBuilder(Function<V, U> mapping) {
-        this.keyBuilder = new KeyBuilder<>();
+    MappedVoidBuilder(Function<V, U> mapping) {
+        this.keyBuilder = new VoidKeyBuilder();
         this.mapping = mapping;
         this.defaultSupplier = () -> null;
     }
 
-    MappedBuilder(KeyBuilder<K> keyBuilder, Function<V, U> mapping) {
+    MappedVoidBuilder(VoidKeyBuilder keyBuilder, Function<V, U> mapping) {
         this.keyBuilder = keyBuilder;
         this.mapping = mapping;
         this.defaultSupplier = () -> null;
     }
 
-    public <T, R> MappedBuilder<K, T, R> mapping(Function<T, R> mapping) {
-        return new MappedBuilder<>(this.keyBuilder, mapping);
+    public <T, R> MappedVoidBuilder<T, R> mapping(Function<T, R> mapping) {
+        return new MappedVoidBuilder<>(this.keyBuilder, mapping);
     }
 
-    public MappedBuilder<K, V, U> defaultNull() {
+    public MappedVoidBuilder<V, U> defaultNull() {
         this.defaultSupplier = () -> null;
         return this;
     }
 
-    public MappedBuilder<K, V, U> defaultValue(U defaultValue) {
+    public MappedVoidBuilder<V, U> defaultValue(U defaultValue) {
         this.defaultSupplier = new FinalSupplier<>(defaultValue);
         return this;
     }
 
-    public MappedBuilder<K, V, U> defaultValue(Supplier<U> defaultSupplier) {
+    public MappedVoidBuilder<V, U> defaultValue(Supplier<U> defaultSupplier) {
         this.defaultSupplier = defaultSupplier;
         return this;
     }
 
-    public MappedBuilder<K, V, U> defaultMappingValue(V mappingDefaultSupplier) {
+    public MappedVoidBuilder<V, U> defaultMappingValue(V mappingDefaultSupplier) {
         this.mappingDefaultSupplier = new FinalSupplier<>(mappingDefaultSupplier);
         return this;
     }
 
-    public MappedBuilder<K, V, U> defaultMappingValue(Supplier<V> mappingDefaultSupplier) {
+    public MappedVoidBuilder<V, U> defaultMappingValue(Supplier<V> mappingDefaultSupplier) {
         this.mappingDefaultSupplier = mappingDefaultSupplier;
         return this;
     }
 
-    public MappedBuilder<K, V, U> keyBuilder(Consumer<KeyBuilder<K>> consumer) {
+    public MappedVoidBuilder<V, U> keyBuilder(Consumer<VoidKeyBuilder> consumer) {
         consumer.accept(this.keyBuilder);
         return this;
     }
 
     @Override
-    public @NotNull StatsKey<K, U> build() {
+    public @NotNull VoidStatsKey<U> build() {
         this.checkNotNull();
 
-        return new MappedStatsKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
+        return new MappedVoidStatsKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
     }
 
     @Override
-    public @NotNull SeasonKey<K, U> season() {
+    public @NotNull VoidSeasonKey<U> season() {
         this.checkNotNull();
 
-        return new MappedSeasonKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
+        return new MappedVoidSeasonKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
     }
 
     @Override
-    public @NotNull StageKey<K, U> stage() {
+    public @NotNull VoidStageKey<U> stage() {
         this.checkNotNull();
 
-        return new MappedStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
+        return new MappedVoidStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
     }
 
     protected void checkNotNull() {

@@ -21,6 +21,11 @@ public class Builder<K, V> implements StatsKeyBuilder<K, V> {
         this.defaultSupplier = () -> null;
     }
 
+    public Builder<K, V> defaultNull() {
+        this.defaultSupplier = () -> null;
+        return this;
+    }
+
     public Builder<K, V> defaultValue(V defaultValue) {
         this.defaultSupplier = new FinalSupplier<>(defaultValue);
         return this;

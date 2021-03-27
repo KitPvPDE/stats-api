@@ -21,6 +21,11 @@ public class SetVoidKeyBuilder<X> implements StatsKeyBuilder<Void, Set<X>> {
         return this;
     }
 
+    public SetVoidKeyBuilder<X> defaultNull() {
+        this.def = () -> null;
+        return this;
+    }
+
     public SetVoidKeyBuilder<X> defaultValue(Supplier<Set<X>> constructor) {
         this.def = constructor;
         return this;
