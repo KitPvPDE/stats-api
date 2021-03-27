@@ -87,11 +87,42 @@ entries and one skipped entry.
 ```java
 import static net.kitpvp.stats.mongodb.model.Filters.gte;
 
-Mongo.find(database,collection)
+Iterable<StatsReader> iterable = Mongo.find(database,collection)
         .filter(gte(statsKey,300))
         .limit(2)
         .skip(1);
 ```
+
+We now can iterate the resulting documents in a simple ``for-each loop``
+
+````java
+for(StatsReader statsReader : iterable) {
+    // do something    
+}
+````
+
+All other queries are aswell possible to be executed via the ``Mongo`` class, 
+the central point of the MongoDB API. This includes ``count``, `update`, `bulk` and `delete` operations.
+
+For every sync operation there is also a simple handle to have it executed asynchronous,
+with or without `Callbacks` and specific ``Executors`` to have the callbacks executed in.
+
+Here is a quick example on how to do so:
+
+````java
+// We want up increment the key "balance" in every document
+// in our collection by 5, when the "balance" is already higher
+// than 10, and we want to use a callback to print something when
+// the operation is complete.
+
+import static net.kitpvp.stats.mongodb.model.Filters.gte;
+import static net.kitpvp.stats.mongodb.model.Updates.inc;
+
+Mongo.write(database, collection)
+    .filter(gte(Key.identity(), "balance", 10))
+    .update(inc(IntStatsKey.identity(), "balance", 5))
+    .executeAsync(() -> System.out.println("done"));
+````
 
 ### Filters, Updates and Sorts
 

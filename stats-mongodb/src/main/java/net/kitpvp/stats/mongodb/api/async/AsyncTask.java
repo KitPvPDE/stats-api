@@ -35,6 +35,17 @@ public interface AsyncTask {
     }
 
     @Contract(value = "_, !null, null -> fail")
+    default void executeTaskAsync(Runnable task, @Nullable Runnable callback, Executor executor) {
+        this.executeTaskAsync(() -> {
+            task.run();
+
+            if(callback != null) {
+                executor.execute(callback);
+            }
+        });
+    }
+
+    @Contract(value = "_, !null, null -> fail")
     default <T> void executeTaskAsync(Supplier<T> task, @Nullable Consumer<T> callback, Executor executor) {
         Runnable executable = () -> {
             Log.debug("Executing task..");

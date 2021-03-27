@@ -3,6 +3,7 @@ package net.kitpvp.stats.mongodb.query;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.model.UpdateOptions;
+import net.kitpvp.mongodbapi.async.Executors;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
 import net.kitpvp.mongodbapi.log.Log;
@@ -106,7 +107,15 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
 
     @Override
     public void executeAsync() {
-        this.executeTaskAsync((Runnable) this::execute, null, null);
+        this.executeTaskAsync((Runnable) this::execute, (Runnable) null, null);
+    }
+
+    public void executeAsync(Runnable callback) {
+        this.executeAsync(callback, Executors.DIRECT);
+    }
+
+    public void executeAsync(Runnable callback, Executor executor) {
+        this.executeTaskAsync(this::execute, callback, executor);
     }
 
     public final void executeAsync(boolean updateMany) {
