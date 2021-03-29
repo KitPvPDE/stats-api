@@ -1,14 +1,16 @@
 package net.kitpvp.stats.keys;
 
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import net.kitpvp.stats.utils.Functions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
+import java.util.function.UnaryOperator;
 
-public class LongVoidKeyBuilder implements StatsKeyBuilder<Void, Long> {
+public class LongVoidKeyBuilder implements VoidStatsKeyBuilder<Long> {
 
     protected final VoidKeyBuilder keyBuilder;
     protected LongBinaryOperator function = Long::sum;
@@ -60,7 +62,7 @@ public class LongVoidKeyBuilder implements StatsKeyBuilder<Void, Long> {
     }
 
     @Override
-    public @NotNull LongVoidStageKey stage() {
-        return new LongVoidStageKeyImpl(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
+    public @NotNull LongVoidStageKey stage(UnaryOperator<VoidKeyFunction> remapFunction) {
+        return new LongVoidStageKeyImpl(this.keyBuilder.build(), remapFunction, this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 }

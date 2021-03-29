@@ -1,7 +1,5 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-
 import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;

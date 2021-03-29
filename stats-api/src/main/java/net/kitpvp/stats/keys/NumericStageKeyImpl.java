@@ -9,8 +9,8 @@ class NumericStageKeyImpl<K, V> extends StageKeyImpl<K, V, NumericStatsKey<K, V>
     private final UnaryOperator<V> inverse;
     private final V neutral, def, offset;
 
-    NumericStageKeyImpl(KeyFunction<K> keyFunction, BinaryOperator<V> sumFunction, UnaryOperator<V> inverse, V neutral, V def, V offset) {
-        super(keyFunction);
+    NumericStageKeyImpl(KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction, BinaryOperator<V> sumFunction, UnaryOperator<V> inverse, V neutral, V def, V offset) {
+        super(keyFunction, remapFunction);
         this.sumFunction = sumFunction;
         this.inverse = inverse;
         this.neutral = neutral;
@@ -20,7 +20,9 @@ class NumericStageKeyImpl<K, V> extends StageKeyImpl<K, V, NumericStatsKey<K, V>
 
     @Override
     public NumericVoidStageKey<V> bind(K k) {
-        return new NumericVoidStageKeyImpl<>(this.keyFunction().bind(k), this.sumFunction, this.inverse, this.neutral, this.def, this.offset);
+        return new NumericVoidStageKeyImpl<>(this.keyFunction.bind(k),
+                function -> this.remapFunction.apply(this.keyFunction).bind(k),
+                this.sumFunction, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override

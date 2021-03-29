@@ -1,10 +1,8 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-
 import java.util.stream.Stream;
 
-public interface IntSeasonKey<K> extends NumericSeasonKey<K, Integer> {
+public interface IntSeasonKey<K> extends NumericSeasonKey<K, Integer>, IterableIntKey<K> {
 
     @Override
     IntStatsKey<K> season(int season);

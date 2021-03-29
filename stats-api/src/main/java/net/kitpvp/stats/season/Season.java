@@ -1,6 +1,5 @@
 package net.kitpvp.stats.season;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import lombok.Getter;
 import net.kitpvp.json.JsonConfig;
@@ -9,6 +8,7 @@ import net.kitpvp.json.JsonReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -16,19 +16,21 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class Season {
 
     static {
+        Season[] result;
         try{
-            JsonElement element = JsonReader.readToJson(Season.class.getResourceAsStream("/seasons.json"));
+            JsonElement element = JsonReader.readToJson(Objects.requireNonNull(Season.class.getResourceAsStream("/seasons.json")));
             List<Season> seasons = JsonConfig.readList(element, JsonElement::isJsonObject, Season::new, new String[]{"seasons"});
-            SEASONS = seasons.toArray(new Season[0]);
+            result = seasons.toArray(new Season[0]);
         }catch(IOException | NullPointerException e){
-            throw new ExceptionInInitializerError(e);
+            result = new Season[] {new Season()};
         }
+
+        SEASONS = result;
     }
 
     public static final int ALLTIME = 0;
     private static final Season[] SEASONS;
-    private static AtomicReference<Season> SEASON = new AtomicReference<>();
-    private static AtomicReference<Stage> STAGE = new AtomicReference<>();
+    private static final AtomicReference<Season> SEASON = new AtomicReference<>();
 
     public static int getSeason() {
         Season season = SEASON.get();
@@ -47,31 +49,6 @@ public final class Season {
         return getSeason(getSeason());
     }
 
-    public static int getStage() {
-        Stage stage = STAGE.get();
-        if(stage == null || !stage.isLive()) {
-            stage = loadStage();
-            STAGE.set(stage);
-        }
-
-        if(stage == null)
-            throw new IllegalStateException("No stage live currently");
-        return stage.getNumber();
-    }
-
-    public static int getStagesThisSeason() {
-        Season season = SEASON.get();
-        if(season == null || !season.isLive()) {
-            season = loadSeason();
-            SEASON.set(season);
-        }
-
-        if(season == null)
-            throw new IllegalStateException("No season live currently");
-
-        return season.getStages().size();
-    }
-
     public static Season getSeason(int number) {
         return Arrays.stream(SEASONS).filter(season -> season.getNumber() == number).findAny().orElse(null);
     }
@@ -88,27 +65,22 @@ public final class Season {
         return null;
     }
 
-    private static Stage loadStage() {
-        for(Stage stage : getSeason(getSeason()).getStages()) {
-            if(stage.isLive())
-                return stage;
-        }
-        return null;
-    }
-
     private final int number;
     private final String title;
-    private final List<Stage> stages;
     private final long start, end;
 
     private Season(JsonElement element) {
         this.number = JsonConfig.readInteger(element, -1, "number");
         this.title = JsonConfig.readString(element, null, "title");
-        this.stages = JsonConfig.readList(element, JsonElement::isJsonObject, Stage::new, new String[]{"stages"});
-        Preconditions.checkArgument(this.stages.size() >= 1, "Each season must have at least one stage");
+        this.start = JsonConfig.readLong(element, 0, "start");
+        this.end = JsonConfig.readLong(element, Long.MAX_VALUE, "end");
+    }
 
-        this.start = this.stages.get(0).getStart();
-        this.end = this.stages.get(this.stages.size() - 1).getEnd();
+    private Season() {
+        this.number = -1;
+        this.title = "Fallback Season";
+        this.start = 0;
+        this.end = Long.MAX_VALUE;
     }
 
     public boolean isLive() {
@@ -118,11 +90,6 @@ public final class Season {
 
     public boolean isEnding(long time, TimeUnit unit) {
         return (this.end - System.currentTimeMillis()) <= unit.toMillis(time);
-    }
-
-    public Stage getStage(int stage) {
-        Preconditions.checkElementIndex(stage, this.stages.size());
-        return this.stages.get(stage);
     }
 
     @Override

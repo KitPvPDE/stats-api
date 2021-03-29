@@ -3,10 +3,10 @@ package net.kitpvp.stats.mongodb.api.async;
 import net.kitpvp.mongodbapi.async.Async;
 import net.kitpvp.mongodbapi.async.Sync;
 import net.kitpvp.mongodbapi.log.Log;
-import net.kitpvp.stats.api.function.BooleanBiConsumer;
-import net.kitpvp.stats.api.function.BooleanConsumer;
-import net.kitpvp.stats.api.function.BooleanTriConsumer;
-import net.kitpvp.stats.api.function.BooleanUnaryOperator;
+import net.kitpvp.stats.function.BooleanBiConsumer;
+import net.kitpvp.stats.function.BooleanConsumer;
+import net.kitpvp.stats.function.BooleanTriConsumer;
+import net.kitpvp.stats.function.BooleanUnaryOperator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 

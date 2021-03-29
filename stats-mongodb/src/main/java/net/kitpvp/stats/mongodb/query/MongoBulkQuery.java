@@ -5,12 +5,11 @@ import com.mongodb.client.model.WriteModel;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.mongodbapi.database.Collection;
 import net.kitpvp.mongodbapi.database.Database;
-import net.kitpvp.stats.api.function.BooleanConsumer;
+import net.kitpvp.stats.function.BooleanConsumer;
 import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
 import net.kitpvp.stats.mongodb.query.bulk.MongoBulkOperation;
 import org.bson.Document;
 
-import java.io.Closeable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;

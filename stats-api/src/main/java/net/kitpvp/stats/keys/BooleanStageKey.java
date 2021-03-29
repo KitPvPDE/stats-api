@@ -1,10 +1,8 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-
 import java.util.stream.Stream;
 
-public interface BooleanStageKey<K> extends BooleanSeasonKey<K>, StageKey<K, Boolean> {
+public interface BooleanStageKey<K> extends BooleanSeasonKey<K>, StageKey<K, Boolean>, IterableBooleanKey<K> {
 
     @Override
     BooleanStatsKey<K> alltime();
@@ -17,9 +15,6 @@ public interface BooleanStageKey<K> extends BooleanSeasonKey<K>, StageKey<K, Boo
 
     @Override
     BooleanStatsKey<K> season(int season);
-
-    @Override
-    BooleanStatsKey<K> stage(int season, int stage);
 
     @Override
     BooleanVoidStageKey bind(K k);

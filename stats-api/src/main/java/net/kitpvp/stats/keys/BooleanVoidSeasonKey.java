@@ -1,10 +1,8 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.VoidKey;
-
 import java.util.stream.Stream;
 
-public interface BooleanVoidSeasonKey extends BooleanSeasonKey<Void>, VoidSeasonKey<Boolean> {
+public interface BooleanVoidSeasonKey extends BooleanSeasonKey<Void>, VoidSeasonKey<Boolean>, IterableBooleanVoidKey {
 
     @Override
     BooleanVoidStatsKey alltime();

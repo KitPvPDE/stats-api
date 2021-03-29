@@ -4,17 +4,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 class SetVoidStageKeyImpl<X> extends VoidStageKeyImpl<Set<X>, SetVoidStatsKey<X>> implements SetVoidStageKey<X> {
 
-    SetVoidStageKeyImpl(@Nullable Supplier<Set<X>> defaultFunction, @NotNull VoidKeyFunction keyFunction) {
-        super(defaultFunction, keyFunction);
-    }
-
-    SetVoidStageKeyImpl(@NotNull VoidKeyFunction keyFunction) {
-        super(keyFunction);
+    SetVoidStageKeyImpl(@Nullable Supplier<Set<X>> defaultFunction, @NotNull VoidKeyFunction keyFunction, UnaryOperator<VoidKeyFunction> remapFunction) {
+        super(defaultFunction, keyFunction, remapFunction);
     }
 
     @Override

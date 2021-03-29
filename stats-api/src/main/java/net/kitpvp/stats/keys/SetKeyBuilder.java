@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class SetKeyBuilder<K, X> implements StatsKeyBuilder<K, Set<X>> {
@@ -42,7 +43,7 @@ public class SetKeyBuilder<K, X> implements StatsKeyBuilder<K, Set<X>> {
     }
 
     @Override
-    public @NotNull SetStageKey<K, X> stage() {
-        return new SetStageKeyImpl<>(this.def, this.keyBuilder.build());
+    public @NotNull SetStageKey<K, X> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
+        return new SetStageKeyImpl<>(this.def, this.keyBuilder.build(), remapFunction);
     }
 }

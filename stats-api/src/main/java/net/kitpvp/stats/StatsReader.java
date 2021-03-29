@@ -52,10 +52,7 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
     }
 
     default <K, U> U getStatReaderAndMap(Key<K> statsKey, K key, Decoder<U> decoder) {
-        return this.getStatReader(statsKey, key).map(reader -> {
-            System.out.println(reader + " -> " + decoder);
-            return reader;
-        }).map(decoder::decode).orElse(null);
+        return this.getStatReader(statsKey, key).map(decoder::decode).orElse(null);
     }
 
     default <K, U> Set<U> getStatReadersAndMap(Key<K> statsKey, Decoder<U> converter) {
@@ -140,10 +137,6 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
         return getBooleanKey(seasonKey.season(season));
     }
 
-    default <K> boolean getBooleanKey(BooleanStageKey<K> seasonKey, K key, int season, int stage) {
-        return getBooleanKey(seasonKey.stage(season, stage), key);
-    }
-
     default <K> boolean getAlltimeBooleanKey(BooleanSeasonKey<K> seasonKey, K key) {
         return getBooleanKey(seasonKey, key, ALLTIME);
     }
@@ -161,11 +154,11 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
     }
 
     default <K> boolean getStageBooleanKey(BooleanStageKey<K> stageKey, K key) {
-        return getBooleanKey(stageKey, key, Season.getSeason(), Season.getStage());
+        return getBooleanKey(stageKey.stage(), key);
     }
 
     default boolean getStageBooleanKey(BooleanVoidStageKey stageKey) {
-        return getBooleanKey(stageKey, null, Season.getSeason(), Season.getStage());
+        return getBooleanKey(stageKey.stage());
     }
 
     /*

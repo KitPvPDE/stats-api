@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleUnaryOperator;
+import java.util.function.UnaryOperator;
 
 public class DoubleKeyBuilder<K> implements StatsKeyBuilder<K, Double> {
 
@@ -60,7 +61,7 @@ public class DoubleKeyBuilder<K> implements StatsKeyBuilder<K, Double> {
     }
 
     @Override
-    public @NotNull DoubleStageKey<K> stage() {
-        return new DoubleStageKeyImpl<>(this.keyBuilder.build(), this.addition, this.inverse, this.neutral, this.def, this.offset);
+    public @NotNull DoubleStageKey<K> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
+        return new DoubleStageKeyImpl<>(this.keyBuilder.build(), remapFunction, this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
 }

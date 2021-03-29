@@ -3,13 +3,14 @@ package net.kitpvp.stats.keys;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public class NumericVoidKeyBuilder<V> implements StatsKeyBuilder<Void, V> {
+public class NumericVoidKeyBuilder<V> implements VoidStatsKeyBuilder<V> {
 
     protected final VoidKeyBuilder keyBuilder = new VoidKeyBuilder();
     private BinaryOperator<V> addition;
@@ -52,7 +53,7 @@ public class NumericVoidKeyBuilder<V> implements StatsKeyBuilder<Void, V> {
     }
 
     @Override
-    public @NotNull NumericVoidStageKey<V> stage() {
-        return new NumericVoidStageKeyImpl<>(this.keyBuilder.build(), this.addition, this.reverse, this.neutral, this.def, this.offset);
+    public @NotNull NumericVoidStageKey<V> stage(UnaryOperator<VoidKeyFunction> remapFunction) {
+        return new NumericVoidStageKeyImpl<>(this.keyBuilder.build(), remapFunction, this.addition, this.reverse, this.neutral, this.def, this.offset);
     }
 }

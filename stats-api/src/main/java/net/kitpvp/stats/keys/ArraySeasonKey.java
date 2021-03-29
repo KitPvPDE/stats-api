@@ -3,7 +3,7 @@ package net.kitpvp.stats.keys;
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface ArraySeasonKey<K, X> extends SeasonKey<K, List<X>> {
+public interface ArraySeasonKey<K, X> extends SeasonKey<K, List<X>>, IterableArrayKey<K, X> {
 
     @Override
     ArrayStatsKey<K, X> season();

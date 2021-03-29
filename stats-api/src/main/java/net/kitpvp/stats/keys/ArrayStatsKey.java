@@ -1,11 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface ArrayStatsKey<K, X> extends StatsKey<K, List<X>> {
+public interface ArrayStatsKey<K, X> extends StatsKey<K, List<X>>, IterableArrayKey<K, X> {
 
     static <K, X> ArrayKeyBuilder<K, X> builder() {
         return new ArrayKeyBuilder<>();

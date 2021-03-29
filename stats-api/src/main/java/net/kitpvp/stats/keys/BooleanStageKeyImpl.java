@@ -1,17 +1,20 @@
 package net.kitpvp.stats.keys;
 
+import java.util.function.UnaryOperator;
+
 class BooleanStageKeyImpl<K> extends StageKeyImpl<K, Boolean, BooleanStatsKey<K>> implements BooleanStageKey<K> {
 
     private final boolean def;
 
-    BooleanStageKeyImpl(KeyFunction<K> keyFunction, boolean def) {
-        super(keyFunction);
+    BooleanStageKeyImpl(KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction, boolean def) {
+        super(keyFunction, remapFunction);
         this.def = def;
     }
 
     @Override
     public BooleanVoidStageKey bind(K k) {
-        return new BooleanVoidStageKeyImpl(this.keyFunction.bind(k), this.def);
+        return new BooleanVoidStageKeyImpl(this.keyFunction.bind(k),
+                (function) -> this.remapFunction.apply(this.keyFunction).bind(k), this.def);
     }
 
     @Override

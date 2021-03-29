@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Builder<K, V> implements StatsKeyBuilder<K, V> {
@@ -60,10 +61,10 @@ public class Builder<K, V> implements StatsKeyBuilder<K, V> {
     }
 
     @Override
-    public @NotNull StageKey<K, V> stage() {
+    public @NotNull StageKey<K, V> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
         this.checkNotNull();
 
-        return new NormalStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build());
+        return new NormalStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), remapFunction);
     }
 
     protected void checkNotNull() {

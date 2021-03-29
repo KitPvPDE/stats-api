@@ -1,10 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.VoidKey;
-
 import java.util.stream.Stream;
 
-public interface NumericVoidSeasonKey<V> extends NumericSeasonKey<Void, V>, VoidSeasonKey<V> {
+public interface NumericVoidSeasonKey<V> extends NumericSeasonKey<Void, V>, VoidSeasonKey<V>,
+        IterableNumericVoidKey<V> {
 
     @Override
     NumericVoidStatsKey<V> alltime();

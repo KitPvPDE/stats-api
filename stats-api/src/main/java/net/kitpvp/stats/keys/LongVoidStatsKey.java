@@ -1,12 +1,11 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.VoidKey;
-
 import java.util.function.BinaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.stream.Stream;
 
-public interface LongVoidStatsKey extends LongStatsKey<Void>, NumericVoidStatsKey<Long>, VoidStatsKey<Long> {
+public interface LongVoidStatsKey extends LongStatsKey<Void>, NumericVoidStatsKey<Long>, VoidStatsKey<Long>,
+        IterableLongVoidKey {
 
     static LongVoidKeyBuilder builder() {
         return new LongVoidKeyBuilder();

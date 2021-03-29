@@ -9,8 +9,8 @@ class NumericVoidStageKeyImpl<V> extends VoidStageKeyImpl<V, NumericVoidStatsKey
     private final UnaryOperator<V> inverse;
     private final V neutral, def, offset;
 
-    NumericVoidStageKeyImpl(VoidKeyFunction keyFunction, BinaryOperator<V> sumFunction, UnaryOperator<V> inverse, V neutral, V def, V offset) {
-        super(keyFunction);
+    NumericVoidStageKeyImpl(VoidKeyFunction keyFunction, UnaryOperator<VoidKeyFunction> remapFunction, BinaryOperator<V> sumFunction, UnaryOperator<V> inverse, V neutral, V def, V offset) {
+        super(keyFunction, remapFunction);
         this.sumFunction = sumFunction;
         this.inverse = inverse;
         this.neutral = neutral;

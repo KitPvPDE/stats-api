@@ -4,13 +4,15 @@ import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class VoidBuilder<V> implements StatsKeyBuilder<Void, V> {
+public class VoidBuilder<V> implements VoidStatsKeyBuilder<V> {
 
     protected final VoidKeyBuilder keyBuilder;
     protected Supplier<V> defaultSupplier;
@@ -55,10 +57,10 @@ public class VoidBuilder<V> implements StatsKeyBuilder<Void, V> {
     }
 
     @Override
-    public @NotNull VoidStageKey<V> stage() {
+    public @NotNull VoidStageKey<V> stage(UnaryOperator<VoidKeyFunction> remapFunction) {
         this.checkNotNull();
 
-        return new NormalVoidStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build());
+        return new NormalVoidStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), remapFunction);
     }
 
     protected void checkNotNull() {

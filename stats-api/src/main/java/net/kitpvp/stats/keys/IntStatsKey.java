@@ -9,8 +9,9 @@ import java.util.function.BinaryOperator;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
-public interface IntStatsKey<K> extends NumericStatsKey<K, Integer> {
+public interface IntStatsKey<K> extends NumericStatsKey<K, Integer>, IterableIntKey<K> {
 
     static <K> IntKeyBuilder<K> builder() {
         return new IntKeyBuilder<>();
@@ -55,6 +56,11 @@ public interface IntStatsKey<K> extends NumericStatsKey<K, Integer> {
 
     @Override
     String key(K k);
+
+    @Override
+    default Stream<? extends IntStatsKey<K>> stream() {
+        return Stream.of(this);
+    }
 
     @Override
     default Integer extract(Reader statsReader, K key) {

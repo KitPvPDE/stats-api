@@ -1,11 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface ArrayStageKey<K, X> extends StageKey<K, List<X>> {
+public interface ArrayStageKey<K, X> extends StageKey<K, List<X>>, IterableArrayKey<K, X> {
 
     @Override
     ArrayStatsKey<K, X> alltime();
@@ -18,9 +16,6 @@ public interface ArrayStageKey<K, X> extends StageKey<K, List<X>> {
 
     @Override
     ArrayStatsKey<K, X> season(int season);
-
-    @Override
-    ArrayStatsKey<K, X> stage(int season, int stage);
 
     @Override
     ArrayVoidStageKey<X> bind(K k);

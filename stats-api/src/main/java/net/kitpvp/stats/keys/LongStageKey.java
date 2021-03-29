@@ -1,10 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-
 import java.util.stream.Stream;
 
-public interface LongStageKey<K> extends LongSeasonKey<K>, NumericStageKey<K, Long> {
+public interface LongStageKey<K> extends LongSeasonKey<K>, NumericStageKey<K, Long>,
+        IterableLongKey<K> {
 
     @Override
     LongStatsKey<K> alltime();
@@ -17,9 +16,6 @@ public interface LongStageKey<K> extends LongSeasonKey<K>, NumericStageKey<K, Lo
 
     @Override
     LongStatsKey<K> season(int season);
-
-    @Override
-    LongStatsKey<K> stage(int season, int stage);
 
     @Override
     LongVoidStageKey bind(K k);

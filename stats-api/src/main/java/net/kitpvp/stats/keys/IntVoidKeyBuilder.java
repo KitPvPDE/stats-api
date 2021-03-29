@@ -1,14 +1,16 @@
 package net.kitpvp.stats.keys;
 
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import net.kitpvp.stats.utils.Functions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
+import java.util.function.UnaryOperator;
 
-public class IntVoidKeyBuilder implements StatsKeyBuilder<Void, Integer> {
+public class IntVoidKeyBuilder implements VoidStatsKeyBuilder<Integer> {
 
     protected final VoidKeyBuilder keyBuilder;
     protected IntBinaryOperator function = Integer::sum;
@@ -60,7 +62,7 @@ public class IntVoidKeyBuilder implements StatsKeyBuilder<Void, Integer> {
     }
 
     @Override
-    public @NotNull IntVoidStageKey stage() {
-        return new IntVoidStageKeyImpl(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
+    public @NotNull IntVoidStageKey stage(UnaryOperator<VoidKeyFunction> remapFunction) {
+        return new IntVoidStageKeyImpl(this.keyBuilder.build(), remapFunction, this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 }

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
+import java.util.function.UnaryOperator;
 
 public class LongKeyBuilder<K> implements StatsKeyBuilder<K, Long> {
 
@@ -55,7 +56,7 @@ public class LongKeyBuilder<K> implements StatsKeyBuilder<K, Long> {
     }
 
     @Override
-    public @NotNull LongStageKey<K> stage() {
-        return new LongStageKeyImpl<>(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
+    public @NotNull LongStageKey<K> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
+        return new LongStageKeyImpl<>(this.keyBuilder.build(), remapFunction, this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 }

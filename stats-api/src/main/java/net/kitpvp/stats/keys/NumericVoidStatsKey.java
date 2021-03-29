@@ -1,12 +1,11 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.VoidKey;
-
 import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-public interface NumericVoidStatsKey<V> extends NumericStatsKey<Void, V>, VoidStatsKey<V> {
+public interface NumericVoidStatsKey<V> extends NumericStatsKey<Void, V>, VoidStatsKey<V>,
+        IterableNumericVoidKey<V> {
 
     static <V> NumericVoidKeyBuilder<V> builder() {
         return new NumericVoidKeyBuilder<>();

@@ -21,10 +21,6 @@ public interface DoubleReader extends Reader {
         return getDoubleKey(seasonKey.season(season));
     }
 
-    default <K> double getDoubleKey(DoubleStageKey<K> seasonKey, K key, int season, int stage) {
-        return getDoubleKey(seasonKey.stage(season, stage), key);
-    }
-
     default <K> double getAlltimeDoubleKey(DoubleSeasonKey<K> seasonKey, K key) {
         return getDoubleKey(seasonKey, key, ALLTIME);
     }
@@ -42,10 +38,10 @@ public interface DoubleReader extends Reader {
     }
 
     default <K> double getStageDoubleKey(DoubleStageKey<K> stageKey, K key) {
-        return getDoubleKey(stageKey, key, Season.getSeason(), Season.getStage());
+        return getDoubleKey(stageKey.stage(), key);
     }
 
     default double getStageDoubleKey(DoubleVoidStageKey stageKey) {
-        return getDoubleKey(stageKey, null, Season.getSeason(), Season.getStage());
+        return getDoubleKey(stageKey.stage());
     }
 }

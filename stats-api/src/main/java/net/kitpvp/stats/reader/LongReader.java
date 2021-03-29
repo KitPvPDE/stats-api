@@ -20,14 +20,6 @@ public interface LongReader extends Reader {
         return getLongKey(seasonKey.season(season));
     }
 
-    default <K> long getLongKey(LongStageKey<K> stageKey, K key, int season, int stage) {
-        return getLongKey(stageKey.stage(season, stage), key);
-    }
-
-    default long getLongKey(LongVoidStageKey stageKey, int season, int stage) {
-        return getLongKey(stageKey.stage(season, stage));
-    }
-
     default <K> long getAlltimeLongKey(LongSeasonKey<K> seasonKey, K key) {
         return getLongKey(seasonKey.alltime(), key);
     }

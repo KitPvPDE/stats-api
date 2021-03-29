@@ -1,4 +1,4 @@
-package net.kitpvp.stats.api.function;
+package net.kitpvp.stats.function;
 
 @FunctionalInterface
 public interface BiLongConsumer<T, U> {

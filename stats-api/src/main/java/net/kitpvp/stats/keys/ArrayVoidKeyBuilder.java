@@ -3,15 +3,17 @@ package net.kitpvp.stats.keys;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-public class ArrayVoidKeyBuilder<X> implements StatsKeyBuilder<Void, List<X>> {
+public class ArrayVoidKeyBuilder<X> implements VoidStatsKeyBuilder<List<X>> {
 
     private final VoidKeyBuilder keyBuilder = new VoidKeyBuilder();
     private Supplier<List<X>> def = ArrayList::new;
@@ -42,7 +44,7 @@ public class ArrayVoidKeyBuilder<X> implements StatsKeyBuilder<Void, List<X>> {
     }
 
     @Override
-    public @NotNull ArrayVoidStageKey<X> stage() {
-        return new ArrayVoidStageKeyImpl<>(this.def, this.keyBuilder.build());
+    public @NotNull ArrayVoidStageKey<X> stage(UnaryOperator<VoidKeyFunction> remapFunction) {
+        return new ArrayVoidStageKeyImpl<>(this.def, this.keyBuilder.build(), remapFunction);
     }
 }

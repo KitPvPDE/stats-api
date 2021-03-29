@@ -1,6 +1,7 @@
 package net.kitpvp.stats.keys;
 
-import java.util.function.*;
+import java.util.function.BinaryOperator;
+import java.util.function.UnaryOperator;
 
 class NumericSeasonKeyImpl<K, V> extends SeasonKeyImpl<K, V, NumericStatsKey<K, V>> implements NumericSeasonKey<K, V> {
 

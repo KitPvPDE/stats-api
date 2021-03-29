@@ -1,11 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.VoidKey;
-
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface ArrayVoidStatsKey<X> extends ArrayStatsKey<Void, X>, VoidStatsKey<List<X>> {
+public interface ArrayVoidStatsKey<X> extends ArrayStatsKey<Void, X>, VoidStatsKey<List<X>>, IterableArrayVoidKey<X> {
 
     static <X> ArrayVoidKeyBuilder<X> builder() {
         return new ArrayVoidKeyBuilder<>();

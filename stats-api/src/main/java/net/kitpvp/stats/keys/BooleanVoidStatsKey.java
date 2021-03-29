@@ -1,10 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.VoidKey;
-
 import java.util.stream.Stream;
 
-public interface BooleanVoidStatsKey extends BooleanStatsKey<Void>, VoidStatsKey<Boolean> {
+public interface BooleanVoidStatsKey extends BooleanStatsKey<Void>, VoidStatsKey<Boolean>,
+        IterableBooleanVoidKey {
 
     static BooleanVoidKeyBuilder builder() {
         return new BooleanVoidKeyBuilder();

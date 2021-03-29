@@ -1,11 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-
 import java.util.Set;
 import java.util.stream.Stream;
 
-public interface SetSeasonKey<K, X> extends SeasonKey<K, Set<X>> {
+public interface SetSeasonKey<K, X> extends SeasonKey<K, Set<X>>, IterableSetKey<K, X> {
 
     @Override
     SetStatsKey<K, X> alltime();

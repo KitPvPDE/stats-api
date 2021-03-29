@@ -1,8 +1,9 @@
 package net.kitpvp.stats.keys;
 
 import net.kitpvp.stats.api.functions.BindKeyFunction;
+import net.kitpvp.stats.api.functions.season.PrefixedKeyFunction;
+import net.kitpvp.stats.api.functions.season.PrefixedVoidKeyFunction;
 import net.kitpvp.stats.api.functions.season.SeasonKeyFunction;
-import net.kitpvp.stats.api.functions.season.StageKeyFunction;
 import net.kitpvp.stats.season.Season;
 
 
@@ -24,11 +25,11 @@ public class KeyFunctions {
         return new SeasonKeyFunction<>(function, season);
     }
 
-    public static <K> KeyFunction<K> stage(KeyFunction<K> function) {
-        return new StageKeyFunction<>(function, Season.getSeason(), Season.getStage());
+    public static <K> KeyFunction<K> prefixed(KeyFunction<K> function, String prefix) {
+        return new PrefixedKeyFunction<>(function, prefix);
     }
 
-    public static <K> KeyFunction<K> stage(int season, int stage, KeyFunction<K> function) {
-        return new StageKeyFunction<>(function, season, stage);
+    public static VoidKeyFunction prefixed(VoidKeyFunction function, String prefix) {
+        return new PrefixedVoidKeyFunction(function, prefix);
     }
 }

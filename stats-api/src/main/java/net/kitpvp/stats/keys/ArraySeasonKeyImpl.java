@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 class ArraySeasonKeyImpl<K, X> extends SeasonKeyImpl<K, List<X>, ArrayStatsKey<K, X>> implements ArraySeasonKey<K, X> {

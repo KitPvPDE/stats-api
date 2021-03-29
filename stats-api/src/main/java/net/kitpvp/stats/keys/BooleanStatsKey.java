@@ -4,7 +4,7 @@ import net.kitpvp.stats.reader.Reader;
 
 import java.util.stream.Stream;
 
-public interface BooleanStatsKey<K> extends StatsKey<K, Boolean> {
+public interface BooleanStatsKey<K> extends StatsKey<K, Boolean>, IterableBooleanKey<K> {
 
     static <K> BooleanKeyBuilder<K> builder() {
         return new BooleanKeyBuilder<>();

@@ -4,6 +4,7 @@ import net.kitpvp.stats.api.builder.StatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 public class BooleanKeyBuilder<K> implements StatsKeyBuilder<K, Boolean> {
 
@@ -35,7 +36,7 @@ public class BooleanKeyBuilder<K> implements StatsKeyBuilder<K, Boolean> {
     }
 
     @Override
-    public @NotNull BooleanStageKey<K> stage() {
-        return new BooleanStageKeyImpl<>(this.keyBuilder.build(), this.def);
+    public @NotNull BooleanStageKey<K> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
+        return new BooleanStageKeyImpl<>(this.keyBuilder.build(), remapFunction, this.def);
     }
 }

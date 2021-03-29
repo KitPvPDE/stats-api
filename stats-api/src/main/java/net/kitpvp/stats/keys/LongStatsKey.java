@@ -7,8 +7,9 @@ import java.util.function.BinaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
-public interface LongStatsKey<K> extends NumericStatsKey<K, Long> {
+public interface LongStatsKey<K> extends NumericStatsKey<K, Long>, IterableLongKey<K> {
 
     static <K> LongKeyBuilder<K> builder() {
         return new LongKeyBuilder<>();
@@ -53,6 +54,11 @@ public interface LongStatsKey<K> extends NumericStatsKey<K, Long> {
     String key(K k);
 
     LongVoidStatsKey bind(K k);
+
+    @Override
+    default Stream<? extends LongStatsKey<K>> stream() {
+        return Stream.of(this);
+    }
 
     @Override
     default Long extract(Reader statsReader, K key) {

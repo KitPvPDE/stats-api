@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 class MappedStageKeyImpl<K, V, U> extends StageKeyImpl<K, U, StatsKey<K, U>> {
@@ -12,8 +13,8 @@ class MappedStageKeyImpl<K, V, U> extends StageKeyImpl<K, U, StatsKey<K, U>> {
     private final Function<V, U> mapping;
     private final Supplier<V> mappingDef;
 
-    public MappedStageKeyImpl(@Nullable Supplier<U> defaultFunction, @NotNull KeyFunction<K> keyFunction, Function<V, U> mapping, Supplier<V> mappingDef) {
-        super(defaultFunction, keyFunction);
+    public MappedStageKeyImpl(@Nullable Supplier<U> defaultFunction, @NotNull KeyFunction<K> keyFunction, Function<V, U> mapping, Supplier<V> mappingDef, UnaryOperator<KeyFunction<K>> remapFunction) {
+        super(defaultFunction, keyFunction, remapFunction);
         this.mapping = mapping;
         this.mappingDef = mappingDef;
     }
@@ -25,7 +26,8 @@ class MappedStageKeyImpl<K, V, U> extends StageKeyImpl<K, U, StatsKey<K, U>> {
 
     @Override
     public VoidStageKey<U> bind(K k) {
-        return new MappedVoidStageKeyImpl<>(this.defaultFunction, this.keyFunction.bind(k), this.mapping, this.mappingDef);
+        return new MappedVoidStageKeyImpl<>(this.defaultFunction, this.keyFunction.bind(k), this.mapping, this.mappingDef,
+                function -> this.remapFunction.apply(this.keyFunction).bind(k));
     }
 
     @Override

@@ -1,20 +1,16 @@
 package net.kitpvp.stats.api.functions.season;
 
-import com.google.common.base.Preconditions;
 import net.kitpvp.stats.keys.VoidKeyFunction;
 
 import java.util.function.Function;
 
-public class VoidStageKeyFunction implements VoidKeyFunction {
+public class PrefixedVoidKeyFunction implements VoidKeyFunction {
 
     private final VoidKeyFunction function;
     private final String prefix;
 
-    public VoidStageKeyFunction(VoidKeyFunction function, int season, int stage) {
-        Preconditions.checkArgument(season > 0, "Season must be > 0");
-        Preconditions.checkArgument(stage > 0, "Stage must be > 0");
-
-        this.prefix = "seasons.season" + season + ".stages.stage" + stage + ".";
+    public PrefixedVoidKeyFunction(VoidKeyFunction function, String prefix) {
+        this.prefix = prefix + (prefix.endsWith(".") ? "" : ".");
         this.function = function;
     }
 

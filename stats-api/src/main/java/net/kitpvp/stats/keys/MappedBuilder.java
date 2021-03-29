@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class MappedBuilder<K, V, U> implements StatsKeyBuilder<K, U> {
     private final KeyBuilder<K> keyBuilder;
@@ -81,10 +82,10 @@ public class MappedBuilder<K, V, U> implements StatsKeyBuilder<K, U> {
     }
 
     @Override
-    public @NotNull StageKey<K, U> stage() {
+    public @NotNull StageKey<K, U> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
         this.checkNotNull();
 
-        return new MappedStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
+        return new MappedStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier, remapFunction);
     }
 
     protected void checkNotNull() {

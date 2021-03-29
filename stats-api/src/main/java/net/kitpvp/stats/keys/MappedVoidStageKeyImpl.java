@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 class MappedVoidStageKeyImpl<V, U> extends VoidStageKeyImpl<U, VoidStatsKey<U>> {
@@ -12,8 +13,8 @@ class MappedVoidStageKeyImpl<V, U> extends VoidStageKeyImpl<U, VoidStatsKey<U>> 
     private final Function<V, U> mapping;
     private final Supplier<V> mappingDef;
 
-    public MappedVoidStageKeyImpl(@Nullable Supplier<U> defaultFunction, @NotNull VoidKeyFunction keyFunction, Function<V, U> mapping, Supplier<V> mappingDef) {
-        super(defaultFunction, keyFunction);
+    public MappedVoidStageKeyImpl(@Nullable Supplier<U> defaultFunction, @NotNull VoidKeyFunction keyFunction, Function<V, U> mapping, Supplier<V> mappingDef, UnaryOperator<VoidKeyFunction> remapFunction) {
+        super(defaultFunction, keyFunction, remapFunction);
         this.mapping = mapping;
         this.mappingDef = mappingDef;
     }

@@ -1,8 +1,8 @@
 package net.kitpvp.stats.keys;
 
 import lombok.RequiredArgsConstructor;
-import net.kitpvp.stats.api.builder.ComponentBuilder;
 import net.kitpvp.stats.VoidKey;
+import net.kitpvp.stats.api.builder.ComponentBuilder;
 import net.kitpvp.stats.impl.VoidKeyImpl;
 import org.jetbrains.annotations.NotNull;
 

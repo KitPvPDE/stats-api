@@ -1,9 +1,5 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-import net.kitpvp.stats.season.Season;
-
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public interface SeasonKey<K, V> extends IterableStatsKey<K, V> {

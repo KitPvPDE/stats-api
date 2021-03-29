@@ -21,10 +21,6 @@ public interface BooleanReader extends Reader {
         return getBooleanKey(seasonKey.season(season));
     }
 
-    default <K> boolean getBooleanKey(BooleanStageKey<K> seasonKey, K key, int season, int stage) {
-        return getBooleanKey(seasonKey.stage(season, stage), key);
-    }
-
     default <K> boolean getAlltimeBooleanKey(BooleanSeasonKey<K> seasonKey, K key) {
         return getBooleanKey(seasonKey, key, ALLTIME);
     }
@@ -42,10 +38,10 @@ public interface BooleanReader extends Reader {
     }
 
     default <K> boolean getStageBooleanKey(BooleanStageKey<K> stageKey, K key) {
-        return getBooleanKey(stageKey, key, Season.getSeason(), Season.getStage());
+        return getBooleanKey(stageKey.stage(), key);
     }
 
     default boolean getStageBooleanKey(BooleanVoidStageKey stageKey) {
-        return getBooleanKey(stageKey, null, Season.getSeason(), Season.getStage());
+        return getBooleanKey(stageKey.stage());
     }
 }

@@ -2,7 +2,8 @@ package net.kitpvp.stats.keys;
 
 import java.util.stream.Stream;
 
-public interface DoubleVoidStageKey extends NumericVoidStageKey<Double>, DoubleStageKey<Void>, VoidStageKey<Double>, DoubleVoidSeasonKey {
+public interface DoubleVoidStageKey extends NumericVoidStageKey<Double>, DoubleStageKey<Void>, VoidStageKey<Double>,
+        DoubleVoidSeasonKey, IterableDoubleVoidKey {
 
     @Override
     DoubleVoidStatsKey alltime();
@@ -15,9 +16,6 @@ public interface DoubleVoidStageKey extends NumericVoidStageKey<Double>, DoubleS
 
     @Override
     DoubleVoidStatsKey season(int season);
-
-    @Override
-    DoubleVoidStatsKey stage(int season, int stage);
 
     @Override
     default DoubleVoidStageKey bind(Void unused) {

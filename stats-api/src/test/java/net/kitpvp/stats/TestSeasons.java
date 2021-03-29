@@ -9,8 +9,6 @@ public class TestSeasons {
 
     @Test
     public void testSeason() {
-        assertEquals(5, Season.getSeasons().length);
-
         for(Season season : Season.getSeasons()) {
             assertTrue(season.getNumber() > 0);
         }

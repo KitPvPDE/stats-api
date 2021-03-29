@@ -2,6 +2,7 @@ package net.kitpvp.stats.keys;
 
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleUnaryOperator;
+import java.util.function.UnaryOperator;
 
 class DoubleVoidStageKeyImpl extends VoidStageKeyImpl<Double, DoubleVoidStatsKey> implements DoubleVoidStageKey {
 
@@ -9,8 +10,8 @@ class DoubleVoidStageKeyImpl extends VoidStageKeyImpl<Double, DoubleVoidStatsKey
     private final DoubleUnaryOperator inverse;
     private final double neutral, def, offset;
 
-    DoubleVoidStageKeyImpl(VoidKeyFunction keyFunction, DoubleBinaryOperator sumFunction, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
-        super(keyFunction);
+    DoubleVoidStageKeyImpl(VoidKeyFunction keyFunction, UnaryOperator<VoidKeyFunction> remapFunction, DoubleBinaryOperator sumFunction, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
+        super(keyFunction, remapFunction);
         this.sumFunction = sumFunction;
         this.inverse = inverse;
         this.neutral = neutral;

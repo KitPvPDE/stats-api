@@ -2,13 +2,15 @@ package net.kitpvp.stats.keys;
 
 import com.google.common.base.Preconditions;
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
-public class MappedVoidBuilder<V, U> implements StatsKeyBuilder<Void, U> {
+public class MappedVoidBuilder<V, U> implements VoidStatsKeyBuilder<U> {
     private final VoidKeyBuilder keyBuilder;
     private final Function<V, U> mapping;
     private Supplier<V> mappingDefaultSupplier;
@@ -81,10 +83,10 @@ public class MappedVoidBuilder<V, U> implements StatsKeyBuilder<Void, U> {
     }
 
     @Override
-    public @NotNull VoidStageKey<U> stage() {
+    public @NotNull VoidStageKey<U> stage(UnaryOperator<VoidKeyFunction> remapFunction) {
         this.checkNotNull();
 
-        return new MappedVoidStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
+        return new MappedVoidStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier, remapFunction);
     }
 
     protected void checkNotNull() {

@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-public interface DoubleStatsKey<K> extends NumericStatsKey<K, Double> {
+public interface DoubleStatsKey<K> extends NumericStatsKey<K, Double>, IterableDoubleKey<K> {
 
     static <K> DoubleKeyBuilder<K> builder() {
         return new DoubleKeyBuilder<>();

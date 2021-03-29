@@ -1,11 +1,10 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.VoidKey;
-
 import java.util.Set;
 import java.util.stream.Stream;
 
-public interface SetVoidStatsKey<X> extends SetStatsKey<Void, X>, VoidStatsKey<Set<X>> {
+public interface SetVoidStatsKey<X> extends SetStatsKey<Void, X>, VoidStatsKey<Set<X>>,
+        IterableSetVoidKey<X> {
 
     static <X> SetVoidKeyBuilder<X> builder() {
         return new SetVoidKeyBuilder<>();

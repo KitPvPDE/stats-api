@@ -1,11 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import net.kitpvp.stats.Key;
-
 import java.util.Set;
 import java.util.stream.Stream;
 
-public interface SetStageKey<K, X> extends StageKey<K, Set<X>> {
+public interface SetStageKey<K, X> extends StageKey<K, Set<X>>, IterableSetKey<K, X> {
 
     @Override
     SetStatsKey<K, X> alltime();
@@ -18,9 +16,6 @@ public interface SetStageKey<K, X> extends StageKey<K, Set<X>> {
 
     @Override
     SetStatsKey<K, X> season(int season);
-
-    @Override
-    SetStatsKey<K, X> stage(int season, int stage);
 
     @Override
     VoidStageKey<Set<X>> bind(K k);

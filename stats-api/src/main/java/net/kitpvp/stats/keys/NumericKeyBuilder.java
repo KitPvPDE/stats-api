@@ -52,7 +52,7 @@ public class NumericKeyBuilder<K, V> implements StatsKeyBuilder<K, V> {
     }
 
     @Override
-    public @NotNull NumericStageKey<K, V> stage() {
-        return new NumericStageKeyImpl<>(this.keyBuilder.build(), this.addition, this.reverse, this.neutral, this.def, this.offset);
+    public @NotNull NumericStageKey<K, V> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
+        return new NumericStageKeyImpl<>(this.keyBuilder.build(), remapFunction, this.addition, this.reverse, this.neutral, this.def, this.offset);
     }
 }

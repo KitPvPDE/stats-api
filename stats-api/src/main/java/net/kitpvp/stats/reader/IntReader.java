@@ -21,14 +21,6 @@ public interface IntReader extends Reader {
         return getIntKey(seasonKey.season(season));
     }
 
-    default <K> int getIntKey(IntStageKey<K> stageKey, K key, int season, int stage) {
-        return getIntKey(stageKey.stage(season, stage), key);
-    }
-
-    default int getIntKey(IntVoidStageKey stageKey, int season, int stage) {
-        return getIntKey(stageKey.stage(season, stage));
-    }
-
     default <K> int getAlltimeIntKey(IntSeasonKey<K> seasonKey, K key) {
         return getIntKey(seasonKey, key, ALLTIME);
     }

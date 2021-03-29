@@ -1,11 +1,13 @@
 package net.kitpvp.stats.keys;
 
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
-public class BooleanVoidKeyBuilder implements StatsKeyBuilder<Void, Boolean> {
+public class BooleanVoidKeyBuilder implements VoidStatsKeyBuilder<Boolean> {
 
     protected final VoidKeyBuilder keyBuilder;
     protected boolean def;
@@ -35,7 +37,7 @@ public class BooleanVoidKeyBuilder implements StatsKeyBuilder<Void, Boolean> {
     }
 
     @Override
-    public @NotNull BooleanVoidStageKey stage() {
-        return new BooleanVoidStageKeyImpl(this.keyBuilder.build(), this.def);
+    public @NotNull BooleanVoidStageKey stage(UnaryOperator<VoidKeyFunction> remapFunction) {
+        return new BooleanVoidStageKeyImpl(this.keyBuilder.build(), remapFunction, this.def);
     }
 }

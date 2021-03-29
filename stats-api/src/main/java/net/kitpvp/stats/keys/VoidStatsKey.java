@@ -4,7 +4,8 @@ import net.kitpvp.stats.VoidKey;
 
 import java.util.stream.Stream;
 
-public interface VoidStatsKey<V> extends StatsKey<Void, V>, VoidKey, IterableVoidStatsKey<V> {
+public interface VoidStatsKey<V> extends StatsKey<Void, V>, VoidKey,
+        IterableVoidStatsKey<V> {
 
     static <V> VoidBuilder<V> builder() {
         return new VoidBuilder<>();

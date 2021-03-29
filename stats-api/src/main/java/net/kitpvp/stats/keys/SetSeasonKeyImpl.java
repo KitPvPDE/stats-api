@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 class SetSeasonKeyImpl<K, X> extends SeasonKeyImpl<K, Set<X>, SetStatsKey<K, X>> implements SetSeasonKey<K, X> {

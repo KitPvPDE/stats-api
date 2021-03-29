@@ -10,7 +10,7 @@ import net.kitpvp.mongodbapi.log.Log;
 import net.kitpvp.stats.Stats;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsReader;
-import net.kitpvp.stats.api.function.BooleanConsumer;
+import net.kitpvp.stats.function.BooleanConsumer;
 import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
 import net.kitpvp.stats.mongodb.model.Filters;
 import org.bson.Document;

@@ -11,7 +11,7 @@ class BooleanSeasonKeyImpl<K> extends SeasonKeyImpl<K, Boolean, BooleanStatsKey<
 
     @Override
     public BooleanVoidSeasonKey bind(K k) {
-        return new BooleanVoidStageKeyImpl(this.keyFunction.bind(k), this.def);
+        return new BooleanVoidSeasonKeyImpl(this.keyFunction.bind(k), this.def);
     }
 
     @Override
