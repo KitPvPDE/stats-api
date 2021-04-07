@@ -15,6 +15,7 @@ import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
 import net.kitpvp.stats.mongodb.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,11 +127,13 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
         this.executeTaskAsync(this::execute, updateMany, checkMainThread, upsert, null, null);
     }
 
-    public final @Nullable StatsReader executeAndFind() {
+    @NotNull
+    public final StatsReader executeAndFind() {
         return this.executeAndFind(QUERY_CHECK_MAIN_THREAD, QUERY_UPSERT);
     }
 
-    public final @Nullable StatsReader executeAndFind(boolean checkMainThread, boolean upsert) {
+    @Contract("_,true -> !null")
+    public final StatsReader executeAndFind(boolean checkMainThread, boolean upsert) {
         return this.execute(ReturnDocument.AFTER, checkMainThread, upsert);
     }
 
