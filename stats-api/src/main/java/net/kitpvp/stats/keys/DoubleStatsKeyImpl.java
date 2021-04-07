@@ -27,6 +27,11 @@ class DoubleStatsKeyImpl<K> extends NumericStatsKeyImpl<K, Double> implements Do
     }
 
     @Override
+    public DoubleVoidStatsKey bind(K k) {
+        return new DoubleVoidStatsKeyImpl(this.keyFunction.bind(k), this.addition, this.inverse, this.neutral, this.def, this.offset);
+    }
+
+    @Override
     public double applyDouble(double d) {
         return this.addition.applyAsDouble(d, this.offset);
     }
