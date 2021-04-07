@@ -53,6 +53,9 @@ public interface DoubleStatsKey<K> extends NumericStatsKey<K, Double>, IterableD
     String key(K k);
 
     @Override
+    DoubleVoidStatsKey bind(K k);
+
+    @Override
     default Stream<? extends DoubleStatsKey<K>> stream() {
         return Stream.of(this);
     }
