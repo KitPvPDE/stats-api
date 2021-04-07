@@ -4,6 +4,8 @@ import com.mongodb.client.model.PushOptions;
 import com.mongodb.lang.Nullable;
 import net.kitpvp.stats.Key;
 import net.kitpvp.stats.VoidKey;
+import net.kitpvp.stats.bson.BsonWriter;
+import net.kitpvp.stats.bson.codec.BsonEncoder;
 import net.kitpvp.stats.keys.IterableKey;
 import net.kitpvp.stats.keys.IterableVoidKey;
 import org.bson.conversions.Bson;
@@ -39,6 +41,24 @@ public final class Updates {
 
     public static <K, TItem> Bson set(Key<K> statKey, K key, @Nullable TItem value) {
         return com.mongodb.client.model.Updates.set(buildKey(statKey, key), value);
+    }
+
+    public static <TItem> Bson[] set(IterableVoidKey statKey, @Nullable TItem value, BsonEncoder<TItem> encoder) {
+        BsonWriter writer = encoder.encode(value);
+        return statKey.stream().map(voidKey -> set(voidKey, writer.bson())).toArray(Bson[]::new);
+    }
+
+    public static <TItem> Bson set(VoidKey statKey, @Nullable TItem value, BsonEncoder<TItem> encoder) {
+        return com.mongodb.client.model.Updates.set(statKey.key(), encoder.encode(value).bson());
+    }
+
+    public static <K, TItem> Bson[] set(IterableKey<K> iterableKey, K key, @Nullable TItem value, BsonEncoder<TItem> encoder) {
+        BsonWriter writer = encoder.encode(value);
+        return iterableKey.stream().map(statKey -> set(statKey, key, writer.bson())).toArray(Bson[]::new);
+    }
+
+    public static <K, TItem> Bson set(Key<K> statKey, K key, @Nullable TItem value, BsonEncoder<TItem> encoder) {
+        return com.mongodb.client.model.Updates.set(statKey.key(key), encoder.encode(value).bson());
     }
 
     public static Bson[] unset(IterableVoidKey iterableVoidKey) {
