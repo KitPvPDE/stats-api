@@ -43,7 +43,7 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
 
     public final MongoFindQuery filter(@NotNull Bson filter) {
         notNull("filter", filter);
-        isTrue("filter already set", this.filter == null);
+        isTrue("filter already set", this.filter == EMPTY);
         this.filter = filter;
         return this;
     }
