@@ -28,9 +28,11 @@ import static com.mongodb.assertions.Assertions.notNull;
 
 public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTask, Iterable<StatsReader> {
 
+    private static final Document EMPTY = new Document();
+
     private final Database database;
     private final Collection collection;
-    private Bson filter, sort;
+    private Bson filter = EMPTY, sort = EMPTY;
     private int limit, skip;
 
     public MongoFindQuery(Database database, Collection collection) {
