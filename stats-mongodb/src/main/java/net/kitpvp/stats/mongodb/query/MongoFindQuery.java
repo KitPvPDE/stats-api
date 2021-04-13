@@ -12,6 +12,7 @@ import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.bson.codec.BsonDecoder;
 import net.kitpvp.stats.mongodb.api.async.AsyncTask;
+import net.kitpvp.stats.mongodb.cursor.IterableCursor;
 import net.kitpvp.stats.mongodb.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -69,29 +70,29 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
         return this;
     }
 
-    public final <T> @NotNull MongoIterable<T> findAndMap(BsonDecoder<T> decoder) {
+    public final <T> @NotNull IterableCursor<T> findAndMap(BsonDecoder<T> decoder) {
         return this.query().map(decoder::decode);
     }
 
-    public final <T> void findAndMapAsync(BsonDecoder<T> decoder, Consumer<MongoIterable<T>> callback) {
+    public final <T> void findAndMapAsync(BsonDecoder<T> decoder, Consumer<IterableCursor<T>> callback) {
         this.findAndMapAsync(decoder, callback, Executors.DIRECT);
     }
 
-    public final <T> void findAndMapAsync(BsonDecoder<T> decoder, Consumer<MongoIterable<T>> callback, Executor executor) {
+    public final <T> void findAndMapAsync(BsonDecoder<T> decoder, Consumer<IterableCursor<T>> callback, Executor executor) {
         this.executeTaskAsync(this::findAndMap, decoder, callback, executor);
     }
 
-    public final @NotNull MongoIterable<StatsReader> find() {
+    public final @NotNull IterableCursor<StatsReader> find() {
         Log.debug("Executing find query for {0} (Limit: {1}, Skip: {2}, Sort: {3})", this.filter, this.limit, this.skip, this.sort);
 
         return this.query();
     }
 
-    public final void findAsync(Consumer<MongoIterable<StatsReader>> callback) {
+    public final void findAsync(Consumer<IterableCursor<StatsReader>> callback) {
         this.findAsync(callback, Executors.DIRECT);
     }
 
-    public final void findAsync(Consumer<MongoIterable<StatsReader>> callback, Executor executor) {
+    public final void findAsync(Consumer<IterableCursor<StatsReader>> callback, Executor executor) {
         this.executeTaskAsync(this::find, callback, executor);
     }
 
@@ -111,17 +112,18 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
         return this.query().cursor();
     }
 
-    private MongoIterable<StatsReader> query() {
+    private IterableCursor<StatsReader> query() {
         Stats.checkForMainThread();
 
         try (AbstractMongoQuery ignored = this) {
-            FindIterable<Document> iterable = this.database.getCollection(this.collection)
+            MongoIterable<StatsReader> iterable = this.database.getCollection(this.collection)
                     .find(this.filter)
                     .limit(this.limit)
                     .skip(this.skip)
-                    .sort(this.sort);
+                    .sort(this.sort)
+                    .map(BsonStatsReader::new);
 
-            return iterable.map(BsonStatsReader::new);
+            return new IterableCursor<>(iterable);
         }
     }
 }
