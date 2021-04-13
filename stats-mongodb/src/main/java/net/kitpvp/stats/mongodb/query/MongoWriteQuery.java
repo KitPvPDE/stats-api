@@ -13,6 +13,7 @@ import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.function.BooleanConsumer;
 import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
 import net.kitpvp.stats.mongodb.model.Filters;
+import net.kitpvp.stats.mongodb.model.Updates;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.jetbrains.annotations.Contract;
@@ -99,16 +100,16 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
         this.checkQuery(updateMany, checkMainThread);
         try (AbstractMongoQuery ignored = this) {
             if(updateMany) {
-                this.database.getCollection(this.collection).updateMany(this.filter, this.updates, new UpdateOptions().upsert(upsert));
+                this.database.getCollection(this.collection).updateMany(this.filter, Updates.combine(this.updates), new UpdateOptions().upsert(upsert));
             } else {
-                this.database.getCollection(this.collection).updateOne(this.filter, this.updates, new UpdateOptions().upsert(upsert));
+                this.database.getCollection(this.collection).updateOne(this.filter, Updates.combine(this.updates), new UpdateOptions().upsert(upsert));
             }
         }
     }
 
     @Override
     public void executeAsync() {
-        this.executeTaskAsync((Runnable) this::execute, (Runnable) null, null);
+        this.executeTaskAsync(this::execute, (Runnable) null, null);
     }
 
     public void executeAsync(Runnable callback) {
