@@ -8,6 +8,7 @@ import net.kitpvp.stats.bson.BsonWriter;
 import net.kitpvp.stats.bson.codec.BsonEncoder;
 import net.kitpvp.stats.keys.IterableKey;
 import net.kitpvp.stats.keys.IterableVoidKey;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.Arrays;
@@ -25,6 +26,10 @@ public final class Updates {
     public static Bson combine(List<? extends Bson> updates) {
         notNull("updates", updates);
         return com.mongodb.client.model.Updates.combine(updates);
+    }
+
+    public static <TItem> Bson set(TItem item, BsonEncoder<TItem> encoder) {
+        return new Document("$set", encoder.encode(item).bson());
     }
 
     public static <TItem> Bson[] set(IterableVoidKey statKey, @Nullable TItem value) {
