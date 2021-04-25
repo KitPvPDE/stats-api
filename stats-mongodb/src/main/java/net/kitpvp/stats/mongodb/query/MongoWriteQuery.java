@@ -75,6 +75,16 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
         return this;
     }
 
+    public final MongoWriteQuery update(@NotNull Bson[]... updates) {
+        notNull("updates", updates);
+
+        for(Bson[] update : updates) {
+            notNull("update", update);
+            this.update(update);
+        }
+        return this;
+    }
+
     public final MongoWriteQuery updateMany(boolean updateMany) {
         this.updateMany = updateMany;
         return this;
