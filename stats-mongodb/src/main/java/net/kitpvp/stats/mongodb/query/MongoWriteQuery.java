@@ -192,7 +192,7 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
 
         try (AbstractMongoQuery ignored = this) {
             Document document = this.database.getCollection(this.collection)
-                    .findOneAndUpdate(this.filter, this.updates, new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(upsert));
+                    .findOneAndUpdate(this.filter, Updates.combine(this.updates), new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(upsert));
             if(document != null) {
                 return new BsonStatsReader(document);
             }
