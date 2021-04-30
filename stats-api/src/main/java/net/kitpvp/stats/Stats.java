@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 
 public interface Stats<Source> {
 
+    boolean MAIN_THREAD_CHECK = System.getProperty("net.kitpvp.stats.checkmain", "true").equals("true");
+
     UUID getPlayerId();
 
     StatsReader load(Source source);
@@ -23,7 +25,7 @@ public interface Stats<Source> {
     }
 
     static void checkForMainThread() {
-        if(Sync.isMainThread()){
+        if(MAIN_THREAD_CHECK && Sync.isMainThread()){
             throw new IllegalStateException("Synchronous database action via main server thread");
         }
     }
