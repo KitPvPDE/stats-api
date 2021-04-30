@@ -4,6 +4,7 @@ import com.mongodb.client.model.PushOptions;
 import com.mongodb.lang.Nullable;
 import net.kitpvp.stats.Key;
 import net.kitpvp.stats.VoidKey;
+import net.kitpvp.stats.bson.BsonStatsWriter;
 import net.kitpvp.stats.bson.BsonWriter;
 import net.kitpvp.stats.bson.codec.BsonEncoder;
 import net.kitpvp.stats.keys.IterableKey;
@@ -13,6 +14,7 @@ import org.bson.conversions.Bson;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mongodb.assertions.Assertions.notNull;
 
@@ -64,6 +66,11 @@ public final class Updates {
 
     public static <K, TItem> Bson set(Key<K> statKey, K key, @Nullable TItem value, BsonEncoder<TItem> encoder) {
         return com.mongodb.client.model.Updates.set(statKey.key(key), encoder.encode(value).bson());
+    }
+
+    public static <K, TItem> Bson set(Key<K> statKey, K key, List<TItem> value, BsonEncoder<TItem> encoder) {
+        return com.mongodb.client.model.Updates.set(statKey.key(key),
+                value.stream().map(encoder::encode).map(BsonStatsWriter::bson).collect(Collectors.toList()));
     }
 
     public static Bson[] unset(IterableVoidKey iterableVoidKey) {
