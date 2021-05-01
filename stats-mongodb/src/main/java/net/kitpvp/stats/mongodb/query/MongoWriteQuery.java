@@ -205,7 +205,7 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
             Stats.checkForMainThread();
 
         isTrue("Empty update document", this.updates.size() > 0);
-        isTrue("Empty filter document", !updateMany || this.filter == null);
+        isTrue("Empty filter document", !updateMany || this.filter != null);
 
         Log.debug("Executing update {0} for {1}", this.updates, this.filter);
     }
