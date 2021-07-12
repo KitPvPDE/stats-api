@@ -37,7 +37,7 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
     private final Database database;
     private final Collection collection;
     private final List<Bson> updates;
-    private boolean updateMany = QUERY_UPDATE_MANY, upsert = QUERY_UPDATE_MANY;
+    private boolean updateMany = QUERY_UPDATE_MANY, upsert = QUERY_UPSERT;
     private Bson filter = null;
 
     public MongoWriteQuery(Database database, Collection collection) {
