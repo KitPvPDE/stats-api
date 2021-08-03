@@ -21,9 +21,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.mongodb.assertions.Assertions.isTrue;
 import static com.mongodb.assertions.Assertions.notNull;
@@ -107,6 +109,16 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
 
     public final @Nullable StatsReader first() {
         return this.query().first();
+    }
+
+    public final @NotNull StatsReader firstOrElse(StatsReader statsReader) {
+        StatsReader query;
+        return (query = first()) != null ? query : statsReader;
+    }
+
+    public final @NotNull StatsReader firstOrElseGet(Supplier<StatsReader> supplier) {
+        StatsReader query;
+        return (query = first()) != null ? query : supplier.get();
     }
 
     public final void firstAsync(Consumer<StatsReader> callback) {
