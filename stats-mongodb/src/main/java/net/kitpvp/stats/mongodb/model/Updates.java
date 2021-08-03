@@ -30,6 +30,10 @@ public final class Updates {
         return com.mongodb.client.model.Updates.combine(updates);
     }
 
+    public static Bson setAll(Document items) {
+        return new Document("$set", items);
+    }
+
     public static <TItem> Bson set(TItem item, BsonEncoder<TItem> encoder) {
         return new Document("$set", encoder.encode(item).bson());
     }
