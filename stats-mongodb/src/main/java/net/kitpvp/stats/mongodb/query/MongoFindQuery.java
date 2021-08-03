@@ -19,6 +19,8 @@ import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -33,7 +35,7 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
 
     private final Database database;
     private final Collection collection;
-    private Bson filter = EMPTY, sort = EMPTY;
+    private Bson filter = EMPTY, sort = EMPTY, projection;
     private int limit, skip;
 
     public MongoFindQuery(Database database, Collection collection) {
@@ -67,6 +69,13 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
 
     public final MongoFindQuery skip(int skip) {
         this.skip = skip;
+        return this;
+    }
+
+    public final MongoFindQuery projection(Bson projection) {
+        notNull("projection", projection);
+        isTrue("projection already set", this.projection == null);
+        this.projection = projection;
         return this;
     }
 
@@ -121,6 +130,7 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
                     .limit(this.limit)
                     .skip(this.skip)
                     .sort(this.sort)
+                    .projection(this.projection)
                     .map(BsonStatsReader::new);
 
             return new IterableCursor<>(iterable);
