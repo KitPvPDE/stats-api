@@ -3,10 +3,12 @@ package net.kitpvp.stats.keys;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.functions.season.SeasonKeyFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -15,6 +17,7 @@ import java.util.function.UnaryOperator;
 public class SetKeyBuilder<K, X> implements StatsKeyBuilder<K, Set<X>> {
 
     private final KeyBuilder<K> keyBuilder = new KeyBuilder<>();
+    private BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping = SeasonKeyFunction::new;
     private Supplier<Set<X>> def = HashSet::new;
 
     public SetKeyBuilder<K, X> keyBuilder(Consumer<KeyBuilder<K>> consumer) {
@@ -32,6 +35,11 @@ public class SetKeyBuilder<K, X> implements StatsKeyBuilder<K, Set<X>> {
         return this;
     }
 
+    public SetKeyBuilder<K, X> seasonKeyMapping(BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping) {
+        this.seasonKeyMapping = seasonKeyMapping;
+        return this;
+    }
+
     @Override
     public @NotNull SetStatsKey<K, X> build() {
         return new SetStatsKeyImpl<>(this.def, this.keyBuilder.build());
@@ -39,11 +47,11 @@ public class SetKeyBuilder<K, X> implements StatsKeyBuilder<K, Set<X>> {
 
     @Override
     public @NotNull SetSeasonKey<K, X> season() {
-        return new SetSeasonKeyImpl<>(this.def, this.keyBuilder.build());
+        return new SetSeasonKeyImpl<>(this.def, this.keyBuilder.build(), seasonKeyMapping);
     }
 
     @Override
     public @NotNull SetStageKey<K, X> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
-        return new SetStageKeyImpl<>(this.def, this.keyBuilder.build(), remapFunction);
+        return new SetStageKeyImpl<>(this.def, this.keyBuilder.build(), seasonKeyMapping, remapFunction);
     }
 }

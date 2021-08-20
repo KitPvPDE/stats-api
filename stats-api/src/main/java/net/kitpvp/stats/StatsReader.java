@@ -1,7 +1,6 @@
 package net.kitpvp.stats;
 
 import net.kitpvp.stats.api.keys.Entry;
-import net.kitpvp.stats.converter.Converter;
 import net.kitpvp.stats.converter.Decoder;
 import net.kitpvp.stats.keys.*;
 import net.kitpvp.stats.keys.ArrayVoidStatsKey;
@@ -17,23 +16,37 @@ import java.util.stream.Collectors;
 
 import static net.kitpvp.stats.api.keys.Entry.entry;
 
-public interface StatsReader extends IntReader, LongReader, DoubleReader, BooleanReader, ListReader, SetReader, KeysReader, KeyReader {
+public interface StatsReader extends IntReader, LongReader, DoubleReader, BooleanReader, SetReader, Reader {
 
-    <V> V find(String key, V def);
+    <V> V find(String key, V def, Class<V> type);
 
-    <K> Optional<StatsReader> getStatReader(Key<K> statsKey, K key);
+    default Optional<StatsReader> getStatReader(String key) {
+        throw new UnsupportedOperationException();
+    }
 
-    <K> Set<K> getKeys(Key<K> statsKey);
+    default <K> Optional<StatsReader> getStatReader(Key<K> statsKey, K key) {
+        throw new UnsupportedOperationException();
+    }
 
-    <K> Set<StatsReader> getStatReaders(Key<K> statsKey);
+    default <K> Set<K> getKeys(Key<K> statsKey) {
+        throw new UnsupportedOperationException();
+    }
 
-    <K> Set<Entry<K, StatsReader>> getStatEntries(Key<K> statsKey);
+    default <K> Set<StatsReader> getStatReaders(Key<K> statsKey) {
+        throw new UnsupportedOperationException();
+    }
+
+    default <K> Set<Entry<K, StatsReader>> getStatEntries(Key<K> statsKey) {
+        throw new UnsupportedOperationException();
+    }
 
     default <U> U map(Decoder<U> decoder) {
         return decoder.decode(this);
     }
 
-    <K> List<StatsReader> getStatKeys(Key<K> statsKey, K key);
+    default <K> List<StatsReader> getStatKeys(Key<K> statsKey, K key) {
+        throw new UnsupportedOperationException();
+    }
 
     default <K, V> List<V> getStatKeys(StatsKey<K, V> statsKey) {
         return this.getKeys(statsKey).stream().map(key -> this.getStatKey(statsKey, key)).collect(Collectors.toList());
@@ -64,6 +77,14 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
      * Key methods
      *
      */
+
+    default <V> V getStatKey(String key, V def) {
+        return this.find(key, def);
+    }
+
+    default <V, U> U getStatKey(String key, V def, Function<V, U> map) {
+        return map.apply(getStatKey(key, def));
+    }
 
     default <K, V> V readStatKey(StatsKey<K, V> statsKey, K k) {
         return statsKey.extract(this, k);
@@ -120,6 +141,10 @@ public interface StatsReader extends IntReader, LongReader, DoubleReader, Boolea
      * Boolean Methods
      *
      */
+
+    default boolean getBooleanKey(String key, boolean def) {
+        return this.find(key, def, Boolean.class);
+    }
 
     default <K> boolean getBooleanKey(BooleanStatsKey<K> statsKey, K key) {
         return statsKey.applyBoolean(readStatKey(statsKey, key));

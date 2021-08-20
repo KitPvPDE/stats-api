@@ -4,13 +4,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 class ArrayStageKeyImpl<K, X> extends StageKeyImpl<K, List<X>, ArrayStatsKey<K, X>> implements ArrayStageKey<K, X> {
 
-    public ArrayStageKeyImpl(@Nullable Supplier<List<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction) {
-        super(defaultFunction, keyFunction, remapFunction);
+    public ArrayStageKeyImpl(@Nullable Supplier<List<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, UnaryOperator<KeyFunction<K>> remapFunction) {
+        super(defaultFunction, keyFunction, seasonKeyMapping, remapFunction);
     }
 
     @Override

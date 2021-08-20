@@ -4,6 +4,10 @@ import net.kitpvp.stats.keys.*;
 
 public interface LongReader extends Reader {
 
+    default long getLongKey(String key, long def) {
+        return this.find(key, def, Long.class);
+    }
+
     default <K> long getLongKey(LongStatsKey<K> statsKey, K key) {
         return statsKey.applyLong(statsKey.extractLong(this, key));
     }

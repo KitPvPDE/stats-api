@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys;
 
+import java.util.function.BiFunction;
 import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
 import java.util.function.UnaryOperator;
@@ -10,8 +11,8 @@ class IntStageKeyImpl<K> extends StageKeyImpl<K, Integer, IntStatsKey<K>> implem
     private final IntUnaryOperator inverse;
     private final int neutral, def, offset;
 
-    IntStageKeyImpl(KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction, IntBinaryOperator sumFunction, IntUnaryOperator inverse, int neutral, int def, int offset) {
-        super(keyFunction, remapFunction);
+    IntStageKeyImpl(KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, UnaryOperator<KeyFunction<K>> remapFunction, IntBinaryOperator sumFunction, IntUnaryOperator inverse, int neutral, int def, int offset) {
+        super(keyFunction, seasonKeyMapping, remapFunction);
         this.sumFunction = sumFunction;
         this.inverse = inverse;
         this.neutral = neutral;

@@ -1,10 +1,9 @@
 package net.kitpvp.stats.keys;
 
-import com.google.common.base.Preconditions;
-import net.kitpvp.stats.api.builder.StatsKeyBuilder;
 import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -90,8 +89,8 @@ public class MappedVoidBuilder<V, U> implements VoidStatsKeyBuilder<U> {
     }
 
     protected void checkNotNull() {
-        Preconditions.checkNotNull(this.mapping, "mapping");
-        Preconditions.checkNotNull(this.defaultSupplier, "defaultValue");
-        Preconditions.checkNotNull(this.mappingDefaultSupplier, "mappingDefaultSupplier");
+        Objects.requireNonNull(this.mapping, "mapping");
+        Objects.requireNonNull(this.defaultSupplier, "defaultValue");
+        Objects.requireNonNull(this.mappingDefaultSupplier, "mappingDefaultSupplier");
     }
 }

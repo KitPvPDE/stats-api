@@ -8,6 +8,8 @@ public interface StatsWriter {
 
     <T> void write(String key, T value);
 
+    /*void writeNull();*/
+
     default <K, V> void setStatKey(StatsKey<K, V> statKey, K key, V value) {
         this.write(statKey.key(key), value);
     }

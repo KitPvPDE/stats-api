@@ -1,12 +1,10 @@
 package net.kitpvp.stats.mongodb.query;
 
-import net.kitpvp.mongodbapi.async.Executors;
-import net.kitpvp.mongodbapi.database.Collection;
-import net.kitpvp.mongodbapi.database.Database;
-import net.kitpvp.mongodbapi.log.Log;
-import net.kitpvp.stats.Stats;
-import net.kitpvp.stats.mongodb.api.async.AsyncTask;
+import com.mongodb.client.MongoCollection;
+import net.kitpvp.stats.async.AsyncTask;
+import net.kitpvp.stats.mongodb.connection.MongoDBCollection;
 import net.kitpvp.stats.mongodb.model.Filters;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,16 +13,18 @@ import java.util.concurrent.Executor;
 import java.util.function.LongConsumer;
 
 import static com.mongodb.assertions.Assertions.notNull;
+import static net.kitpvp.stats.async.SyncExecutor.DIRECT;
 
-public final class MongoCountQuery extends AbstractMongoQuery implements AsyncTask {
+public final class MongoCountQuery extends AbstractMongoQuery {
 
-    private final Database database;
-    private final Collection collection;
     private @Nullable Bson filter;
 
-    public MongoCountQuery(Database database, Collection collection) {
-        this.database = database;
-        this.collection = collection;
+    public MongoCountQuery(MongoDBCollection collection) {
+        super(collection);
+    }
+
+    public MongoCountQuery(MongoCollection<Document> collection) {
+        super(collection);
     }
 
     public final MongoCountQuery filter(@NotNull Bson bson) {
@@ -39,19 +39,18 @@ public final class MongoCountQuery extends AbstractMongoQuery implements AsyncTa
     }
 
     public final long count() {
-        Stats.checkForMainThread();
+        this.checkForMainThread();
 
-        Log.debug("Executing count for {0}", this.filter);
         try (AbstractMongoQuery ignored = this) {
-            if(this.filter == null) {
-                return this.database.getCollection(this.collection).countDocuments();
+            if (this.filter == null) {
+                return this.getMongoCollection().countDocuments();
             }
-            return this.database.getCollection(this.collection).countDocuments(this.filter);
+            return this.getMongoCollection().countDocuments(this.filter);
         }
     }
 
     public final void countAsync(LongConsumer callback) {
-        this.countAsync(callback, Executors.DIRECT);
+        this.countAsync(callback, DIRECT);
     }
 
     public final void countAsync(LongConsumer callback, Executor executor) {

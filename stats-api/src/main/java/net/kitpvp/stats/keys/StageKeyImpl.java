@@ -4,6 +4,7 @@ import net.kitpvp.stats.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -12,13 +13,13 @@ abstract class StageKeyImpl<K, V, S extends StatsKey<K, V>> extends SeasonKeyImp
     protected final UnaryOperator<KeyFunction<K>> remapFunction;
     private S key;
 
-    StageKeyImpl(@Nullable Supplier<V> defaultFunction, @NotNull KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction) {
-        super(defaultFunction, keyFunction);
+    StageKeyImpl(@Nullable Supplier<V> defaultFunction, @NotNull KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, UnaryOperator<KeyFunction<K>> remapFunction) {
+        super(defaultFunction, keyFunction, seasonKeyMapping);
         this.remapFunction = remapFunction;
     }
 
-    StageKeyImpl(@NotNull KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction) {
-        super(keyFunction);
+    StageKeyImpl(@NotNull KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, UnaryOperator<KeyFunction<K>> remapFunction) {
+        super(keyFunction, seasonKeyMapping);
         this.remapFunction = remapFunction;
     }
 

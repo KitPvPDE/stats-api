@@ -1,12 +1,11 @@
 package net.kitpvp.stats.keys;
 
-import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import net.kitpvp.stats.api.builder.StatsKeyBuilder;
 import net.kitpvp.stats.api.builder.VoidStatsKeyBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -64,6 +63,6 @@ public class VoidBuilder<V> implements VoidStatsKeyBuilder<V> {
     }
 
     protected void checkNotNull() {
-        Preconditions.checkNotNull(this.defaultSupplier, "defaultValue");
+        Objects.requireNonNull(this.defaultSupplier, "defaultValue");
     }
 }

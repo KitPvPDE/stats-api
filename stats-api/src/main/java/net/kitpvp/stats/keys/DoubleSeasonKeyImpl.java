@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys;
 
+import java.util.function.BiFunction;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleUnaryOperator;
 
@@ -9,8 +10,8 @@ class DoubleSeasonKeyImpl<K> extends SeasonKeyImpl<K, Double, DoubleStatsKey<K>>
     private final DoubleUnaryOperator inverse;
     private final double neutral, def, offset;
 
-    DoubleSeasonKeyImpl(KeyFunction<K> keyFunction, DoubleBinaryOperator sumFunction, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
-        super(keyFunction);
+    DoubleSeasonKeyImpl(KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, DoubleBinaryOperator sumFunction, DoubleUnaryOperator inverse, double neutral, double def, double offset) {
+        super(keyFunction, seasonKeyMapping);
         this.sumFunction = sumFunction;
         this.inverse = inverse;
         this.neutral = neutral;

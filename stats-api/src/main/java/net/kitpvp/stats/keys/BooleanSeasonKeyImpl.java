@@ -1,11 +1,13 @@
 package net.kitpvp.stats.keys;
 
+import java.util.function.BiFunction;
+
 class BooleanSeasonKeyImpl<K> extends SeasonKeyImpl<K, Boolean, BooleanStatsKey<K>> implements BooleanSeasonKey<K> {
 
     private final boolean def;
 
-    BooleanSeasonKeyImpl(KeyFunction<K> keyFunction, boolean def) {
-        super(keyFunction);
+    BooleanSeasonKeyImpl(KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, boolean def) {
+        super(keyFunction, seasonKeyMapping);
         this.def = def;
     }
 

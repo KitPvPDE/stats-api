@@ -5,6 +5,10 @@ import net.kitpvp.stats.season.Season;
 
 public interface IntReader extends Reader {
 
+    default int getIntKey(String key, int def) {
+        return this.find(key, def, Integer.class);
+    }
+
     default <K> int getIntKey(IntStatsKey<K> statsKey, K key) {
         return statsKey.applyInt(statsKey.extractInt(this, key));
     }

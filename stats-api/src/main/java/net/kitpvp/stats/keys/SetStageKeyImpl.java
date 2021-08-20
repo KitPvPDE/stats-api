@@ -4,13 +4,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 class SetStageKeyImpl<K, X> extends StageKeyImpl<K, Set<X>, SetStatsKey<K, X>> implements SetStageKey<K, X> {
 
-    SetStageKeyImpl(@Nullable Supplier<Set<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction) {
-        super(defaultFunction, keyFunction, remapFunction);
+    SetStageKeyImpl(@Nullable Supplier<Set<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, UnaryOperator<KeyFunction<K>> remapFunction) {
+        super(defaultFunction, keyFunction, seasonKeyMapping, remapFunction);
     }
 
     @Override

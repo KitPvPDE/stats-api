@@ -15,7 +15,7 @@ public interface BsonReader extends StatsReader {
     Document bson();
 
     @Override
-    default <V> V find(String key, V def) {
+    default <V> V find(String key, V def, Class<V> type) {
         return BsonUtils.getValue(key, this.bson(), def);
     }
 
@@ -25,7 +25,7 @@ public interface BsonReader extends StatsReader {
 
         Document map;
         if(prefix != null && !prefix.isEmpty()) {
-            map = this.find(prefix, new Document());
+            map = this.find(prefix, new Document(), Document.class);
         } else {
             map = this.bson();
         }
@@ -38,7 +38,7 @@ public interface BsonReader extends StatsReader {
 
         Document map;
         if(path != null && !path.isEmpty()) {
-            map = this.find(path, null);
+            map = this.find(path, null, Document.class);
         } else if(path != null){
             map = this.bson();
         } else {
@@ -57,7 +57,7 @@ public interface BsonReader extends StatsReader {
 
         Document map;
         if(prefix != null && !prefix.isEmpty()) {
-            map = this.find(prefix, new Document());
+            map = this.find(prefix, new Document(), Document.class);
         } else {
             map = this.bson();
         }
@@ -72,7 +72,7 @@ public interface BsonReader extends StatsReader {
 
         Document map;
         if(prefix != null && !prefix.isEmpty()) {
-            map = this.find(prefix, new Document());
+            map = this.find(prefix, new Document(), Document.class);
         } else {
             map = this.bson();
         }
@@ -82,6 +82,7 @@ public interface BsonReader extends StatsReader {
 
     @Override
     default <K> List<StatsReader> getStatKeys(Key<K> statsKey, K key) {
-        return this.find(statsKey.key(key), new ArrayList<Document>()).stream().map(BsonStatsReader::new).collect(Collectors.toList());
+        List<Document> documents = this.find(statsKey.key(key), new ArrayList<>(), List.class);
+        return documents.stream().map(BsonStatsReader::new).collect(Collectors.toList());
     }
 }

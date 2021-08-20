@@ -1,13 +1,14 @@
 package net.kitpvp.stats.keys;
 
+import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 
 class BooleanStageKeyImpl<K> extends StageKeyImpl<K, Boolean, BooleanStatsKey<K>> implements BooleanStageKey<K> {
 
     private final boolean def;
 
-    BooleanStageKeyImpl(KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction, boolean def) {
-        super(keyFunction, remapFunction);
+    BooleanStageKeyImpl(KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, UnaryOperator<KeyFunction<K>> remapFunction, boolean def) {
+        super(keyFunction, seasonKeyMapping, remapFunction);
         this.def = def;
     }
 

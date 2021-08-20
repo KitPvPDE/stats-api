@@ -4,16 +4,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 class ArraySeasonKeyImpl<K, X> extends SeasonKeyImpl<K, List<X>, ArrayStatsKey<K, X>> implements ArraySeasonKey<K, X> {
 
-    ArraySeasonKeyImpl(@Nullable Supplier<List<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction) {
-        super(defaultFunction, keyFunction);
-    }
-
-    ArraySeasonKeyImpl(@NotNull KeyFunction<K> keyFunction) {
-        super(keyFunction);
+    ArraySeasonKeyImpl(@Nullable Supplier<List<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping) {
+        super(defaultFunction, keyFunction, seasonKeyMapping);
     }
 
     @Override

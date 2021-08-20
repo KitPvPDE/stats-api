@@ -1,17 +1,13 @@
 package net.kitpvp.stats.mongodb.query;
 
-import com.mongodb.client.FindIterable;
+import com.mongodb.Function;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
-import net.kitpvp.mongodbapi.async.Executors;
-import net.kitpvp.mongodbapi.database.Collection;
-import net.kitpvp.mongodbapi.database.Database;
-import net.kitpvp.mongodbapi.log.Log;
-import net.kitpvp.stats.Stats;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.bson.codec.BsonDecoder;
-import net.kitpvp.stats.mongodb.api.async.AsyncTask;
+import net.kitpvp.stats.mongodb.connection.MongoDBCollection;
 import net.kitpvp.stats.mongodb.cursor.IterableCursor;
 import net.kitpvp.stats.mongodb.model.Filters;
 import org.bson.Document;
@@ -19,30 +15,29 @@ import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.mongodb.assertions.Assertions.isTrue;
 import static com.mongodb.assertions.Assertions.notNull;
+import static net.kitpvp.stats.async.SyncExecutor.DIRECT;
 
 
-public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTask, Iterable<StatsReader> {
+public final class MongoFindQuery extends AbstractMongoQuery implements Iterable<StatsReader> {
 
     private static final Document EMPTY = new Document();
 
-    private final Database database;
-    private final Collection collection;
     private Bson filter = EMPTY, sort = EMPTY, projection;
     private int limit, skip;
 
-    public MongoFindQuery(Database database, Collection collection) {
-        this.database = database;
-        this.collection = collection;
+    public MongoFindQuery(MongoDBCollection collection) {
+        super(collection);
+        this.limit = this.skip = 0;
+    }
+
+    public MongoFindQuery(MongoCollection<Document> collection) {
+        super(collection);
         this.limit = this.skip = 0;
     }
 
@@ -86,7 +81,7 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
     }
 
     public final <T> void findAndMapAsync(BsonDecoder<T> decoder, Consumer<IterableCursor<T>> callback) {
-        this.findAndMapAsync(decoder, callback, Executors.DIRECT);
+        this.findAndMapAsync(decoder, callback, DIRECT);
     }
 
     public final <T> void findAndMapAsync(BsonDecoder<T> decoder, Consumer<IterableCursor<T>> callback, Executor executor) {
@@ -94,13 +89,11 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
     }
 
     public final @NotNull IterableCursor<StatsReader> find() {
-        Log.debug("Executing find query for {0} (Limit: {1}, Skip: {2}, Sort: {3})", this.filter, this.limit, this.skip, this.sort);
-
         return this.query();
     }
 
     public final void findAsync(Consumer<IterableCursor<StatsReader>> callback) {
-        this.findAsync(callback, Executors.DIRECT);
+        this.findAsync(callback, DIRECT);
     }
 
     public final void findAsync(Consumer<IterableCursor<StatsReader>> callback, Executor executor) {
@@ -122,7 +115,7 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
     }
 
     public final void firstAsync(Consumer<StatsReader> callback) {
-        this.firstAsync(callback, Executors.DIRECT);
+        this.firstAsync(callback, DIRECT);
     }
 
     public final void firstAsync(Consumer<StatsReader> callback, Executor executor) {
@@ -134,10 +127,10 @@ public final class MongoFindQuery extends AbstractMongoQuery implements AsyncTas
     }
 
     private IterableCursor<StatsReader> query() {
-        Stats.checkForMainThread();
+        this.checkForMainThread();
 
         try (AbstractMongoQuery ignored = this) {
-            MongoIterable<StatsReader> iterable = this.database.getCollection(this.collection)
+            MongoIterable<StatsReader> iterable = this.getMongoCollection()
                     .find(this.filter)
                     .limit(this.limit)
                     .skip(this.skip)

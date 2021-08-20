@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Projections {
+public final class Projections {
 
     public static <TExpression> Bson computed(VoidKey voidKey, TExpression expression) {
         return com.mongodb.client.model.Projections.computed(voidKey.key(), expression);

@@ -10,6 +10,14 @@ import static com.mongodb.assertions.Assertions.notNull;
 
 public final class Sorts {
 
+    public static Bson ascending(String... fieldNames) {
+        return com.mongodb.client.model.Sorts.ascending(fieldNames);
+    }
+
+    public static Bson ascending(List<String> fieldNames) {
+        return com.mongodb.client.model.Sorts.ascending(fieldNames);
+    }
+
     public static Bson ascending(VoidKey statKey) {
         return com.mongodb.client.model.Sorts.ascending(statKey.key());
     }
@@ -18,12 +26,24 @@ public final class Sorts {
         return com.mongodb.client.model.Sorts.ascending(statKey.key(key));
     }
 
+    public static Bson descending(String... fieldNames) {
+        return com.mongodb.client.model.Sorts.descending(fieldNames);
+    }
+
+    public static Bson descending(List<String> fieldNames) {
+        return com.mongodb.client.model.Sorts.descending(fieldNames);
+    }
+
     public static Bson descending(VoidKey statKey) {
         return com.mongodb.client.model.Sorts.descending(statKey.key());
     }
 
     public static <K> Bson descending(Key<K> statKey, K key) {
         return com.mongodb.client.model.Sorts.descending(statKey.key(key));
+    }
+
+    public static Bson metaTextScore(String fieldName) {
+        return com.mongodb.client.model.Sorts.metaTextScore(fieldName);
     }
 
     public static Bson metaTextScore(VoidKey statKey) {

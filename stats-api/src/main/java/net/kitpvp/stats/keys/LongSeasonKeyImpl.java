@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys;
 
+import java.util.function.BiFunction;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
 
@@ -9,8 +10,8 @@ class LongSeasonKeyImpl<K> extends SeasonKeyImpl<K, Long, LongStatsKey<K>> imple
     private final LongUnaryOperator inverse;
     private final long neutral, def, offset;
 
-    LongSeasonKeyImpl(KeyFunction<K> keyFunction, LongBinaryOperator addition, LongUnaryOperator inverse, long neutral, long def, long offset) {
-        super(keyFunction);
+    LongSeasonKeyImpl(KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, LongBinaryOperator addition, LongUnaryOperator inverse, long neutral, long def, long offset) {
+        super(keyFunction, seasonKeyMapping);
         this.addition = addition;
         this.inverse = inverse;
         this.neutral = neutral;

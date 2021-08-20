@@ -1,17 +1,16 @@
 package net.kitpvp.stats.keys;
 
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.functions.season.SeasonKeyFunction;
 import net.kitpvp.stats.utils.Functions;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-import java.util.function.IntBinaryOperator;
-import java.util.function.IntUnaryOperator;
-import java.util.function.UnaryOperator;
+import java.util.function.*;
 
 public class IntKeyBuilder<K> implements StatsKeyBuilder<K, Integer> {
 
     protected final KeyBuilder<K> keyBuilder;
+    protected BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping = SeasonKeyFunction::new;
     protected IntBinaryOperator function = Integer::sum;
     protected IntUnaryOperator inverse = Functions::inverse;
     protected int neutral = 0, def = 0, offset = 0;
@@ -22,6 +21,11 @@ public class IntKeyBuilder<K> implements StatsKeyBuilder<K, Integer> {
 
     public IntKeyBuilder<K> keyBuilder(Consumer<KeyBuilder<K>> consumer) {
         consumer.accept(this.keyBuilder);
+        return this;
+    }
+
+    public IntKeyBuilder<K> seasonKeyMapping(BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping) {
+        this.seasonKeyMapping = seasonKeyMapping;
         return this;
     }
 
@@ -57,11 +61,11 @@ public class IntKeyBuilder<K> implements StatsKeyBuilder<K, Integer> {
 
     @Override
     public @NotNull IntSeasonKey<K> season() {
-        return new IntSeasonKeyImpl<>(this.keyBuilder.build(), this.function, this.inverse, this.neutral, this.def, this.offset);
+        return new IntSeasonKeyImpl<>(this.keyBuilder.build(), seasonKeyMapping, this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull IntStageKey<K> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
-        return new IntStageKeyImpl<>(this.keyBuilder.build(), remapFunction, this.function, this.inverse, this.neutral, this.def, this.offset);
+        return new IntStageKeyImpl<>(this.keyBuilder.build(), seasonKeyMapping, remapFunction, this.function, this.inverse, this.neutral, this.def, this.offset);
     }
 }

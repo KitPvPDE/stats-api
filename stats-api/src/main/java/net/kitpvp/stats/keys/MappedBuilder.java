@@ -1,17 +1,16 @@
 package net.kitpvp.stats.keys;
 
-import com.google.common.base.Preconditions;
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.functions.season.SeasonKeyFunction;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
+import java.util.Objects;
+import java.util.function.*;
 
 public class MappedBuilder<K, V, U> implements StatsKeyBuilder<K, U> {
     private final KeyBuilder<K> keyBuilder;
     private final Function<V, U> mapping;
+    private BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping = SeasonKeyFunction::new;
     private Supplier<V> mappingDefaultSupplier;
     private Supplier<U> defaultSupplier;
 
@@ -78,19 +77,19 @@ public class MappedBuilder<K, V, U> implements StatsKeyBuilder<K, U> {
     public @NotNull SeasonKey<K, U> season() {
         this.checkNotNull();
 
-        return new MappedSeasonKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier);
+        return new MappedSeasonKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), seasonKeyMapping, this.mapping, this.mappingDefaultSupplier);
     }
 
     @Override
     public @NotNull StageKey<K, U> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
         this.checkNotNull();
 
-        return new MappedStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), this.mapping, this.mappingDefaultSupplier, remapFunction);
+        return new MappedStageKeyImpl<>(this.defaultSupplier, this.keyBuilder.build(), seasonKeyMapping, this.mapping, this.mappingDefaultSupplier, remapFunction);
     }
 
     protected void checkNotNull() {
-        Preconditions.checkNotNull(this.mapping, "mapping");
-        Preconditions.checkNotNull(this.defaultSupplier, "defaultValue");
-        Preconditions.checkNotNull(this.mappingDefaultSupplier, "mappingDefaultSupplier");
+        Objects.requireNonNull(this.mapping, "mapping");
+        Objects.requireNonNull(this.defaultSupplier, "defaultValue");
+        Objects.requireNonNull(this.mappingDefaultSupplier, "mappingDefaultSupplier");
     }
 }

@@ -1,9 +1,9 @@
-package net.kitpvp.stats.mongodb.api.async;
-
-import net.kitpvp.mongodbapi.async.Executors;
+package net.kitpvp.stats.async;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+
+import static net.kitpvp.stats.async.SyncExecutor.DIRECT;
 
 public interface AsyncExecutable extends AsyncTask {
 
@@ -14,7 +14,7 @@ public interface AsyncExecutable extends AsyncTask {
     }
 
     default void executeAsync(Consumer<Void> callback) {
-        this.executeTaskAsync(this::execute, callback, Executors.DIRECT);
+        this.executeTaskAsync(this::execute, callback, DIRECT);
     }
 
     default void executeAsync(Consumer<Void> callback, Executor executor) {
@@ -22,7 +22,7 @@ public interface AsyncExecutable extends AsyncTask {
     }
 
     default void executeAsync(Runnable callback) {
-        this.executeAsync(callback, Executors.DIRECT);
+        this.executeAsync(callback, DIRECT);
     }
 
     default void executeAsync(Runnable callback, Executor executor) {

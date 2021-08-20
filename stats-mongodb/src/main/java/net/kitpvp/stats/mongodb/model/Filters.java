@@ -34,12 +34,20 @@ public final class Filters {
         return com.mongodb.client.model.Filters.eq(value);
     }
 
+    public static <TItem> Bson eq(String fieldName, TItem value) {
+        return com.mongodb.client.model.Filters.eq(fieldName, value);
+    }
+
     public static <TItem> Bson eq(VoidKey statKey, TItem value) {
         return com.mongodb.client.model.Filters.eq(statKey.key(), value);
     }
 
     public static <K, TItem> Bson eq(Key<K> statKey, K key, TItem value) {
         return com.mongodb.client.model.Filters.eq(statKey.key(key), value);
+    }
+
+    public static <TItem> Bson ne(String fieldName, @Nullable TItem value) {
+        return com.mongodb.client.model.Filters.ne(fieldName, value);
     }
 
     public static <TItem> Bson ne(VoidKey statKey, @Nullable TItem value) {
@@ -50,12 +58,20 @@ public final class Filters {
         return com.mongodb.client.model.Filters.ne(statKey.key(key), value);
     }
 
+    public static <TItem> Bson gt(String fieldName, TItem value) {
+        return com.mongodb.client.model.Filters.gt(fieldName, value);
+    }
+
     public static <TItem> Bson gt(VoidKey statKey, TItem value) {
         return com.mongodb.client.model.Filters.gt(statKey.key(), value);
     }
 
     public static <K, TItem> Bson gt(Key<K> statKey, K key, TItem value) {
         return com.mongodb.client.model.Filters.gt(statKey.key(key), value);
+    }
+
+    public static <TItem> Bson lt(String fieldName, TItem value) {
+        return com.mongodb.client.model.Filters.lt(fieldName, value);
     }
 
     public static <TItem> Bson lt(VoidKey statKey, TItem value) {
@@ -66,6 +82,10 @@ public final class Filters {
         return com.mongodb.client.model.Filters.lt(statKey.key(key), value);
     }
 
+    public static <TItem> Bson gte(String fieldName, TItem value) {
+        return com.mongodb.client.model.Filters.gte(fieldName, value);
+    }
+
     public static <TItem> Bson gte(VoidKey statKey, TItem value) {
         return com.mongodb.client.model.Filters.gte(statKey.key(), value);
     }
@@ -74,12 +94,21 @@ public final class Filters {
         return com.mongodb.client.model.Filters.gte(statKey.key(key), value);
     }
 
+    public static <TItem> Bson lte(String fieldName, TItem value) {
+        return com.mongodb.client.model.Filters.lte(fieldName, value);
+    }
+
     public static <TItem> Bson lte(VoidKey statKey, TItem value) {
         return com.mongodb.client.model.Filters.lte(statKey.key(), value);
     }
 
     public static <K, TItem> Bson lte(Key<K> statKey, K key, TItem value) {
         return com.mongodb.client.model.Filters.lte(statKey.key(key), value);
+    }
+
+    @SafeVarargs
+    public static <TItem> Bson in(String fieldName, TItem... values) {
+        return com.mongodb.client.model.Filters.in(fieldName, values);
     }
 
     @SafeVarargs
@@ -94,6 +123,11 @@ public final class Filters {
         return com.mongodb.client.model.Filters.in(statKey.key(key), values);
     }
 
+    public static <TItem> Bson in(String fieldName, Iterable<TItem> values) {
+        notNull("values", values);
+        return com.mongodb.client.model.Filters.in(fieldName, values);
+    }
+
     public static <TItem> Bson in(VoidKey statKey, Iterable<TItem> values) {
         notNull("values", values);
         return com.mongodb.client.model.Filters.in(statKey.key(), values);
@@ -102,6 +136,11 @@ public final class Filters {
     public static <K, TItem> Bson in(Key<K> statKey, K key, Iterable<TItem> values) {
         notNull("values", values);
         return com.mongodb.client.model.Filters.in(statKey.key(key), values);
+    }
+
+    @SafeVarargs
+    public static <TItem> Bson nin(String fieldName, TItem... values) {
+        return com.mongodb.client.model.Filters.nin(fieldName, values);
     }
 
     @SafeVarargs
@@ -114,6 +153,11 @@ public final class Filters {
     public static <K, TItem> Bson nin(@NotNull Key<K> statKey, K key, TItem... values) {
         notNull("values", values);
         return nin(statKey, key, Arrays.asList(values));
+    }
+
+    public static <TItem> Bson nin(String fieldName, Iterable<TItem> values) {
+        notNull("values", values);
+        return com.mongodb.client.model.Filters.nin(fieldName, values);
     }
 
     public static <TItem> Bson nin(VoidKey statKey, Iterable<TItem> values) {
@@ -154,12 +198,20 @@ public final class Filters {
         return com.mongodb.client.model.Filters.nor(filters);
     }
 
+    public static Bson exists(String fieldName) {
+        return com.mongodb.client.model.Filters.exists(fieldName);
+    }
+
     public static Bson exists(VoidKey statKey) {
         return exists(statKey, false);
     }
 
     public static <K> Bson exists(@NotNull Key<K> statKey, K key) {
         return exists(statKey, key, true);
+    }
+
+    public static Bson exists(String fieldName, boolean exists) {
+        return com.mongodb.client.model.Filters.exists(fieldName, exists);
     }
 
     public static Bson exists(VoidKey statKey, boolean exists) {
@@ -170,12 +222,20 @@ public final class Filters {
         return com.mongodb.client.model.Filters.exists(statKey.key(key), exists);
     }
 
+    public static Bson type(String fieldName, BsonType type) {
+        return com.mongodb.client.model.Filters.type(fieldName, type);
+    }
+
     public static Bson type(VoidKey statKey, BsonType type) {
         return com.mongodb.client.model.Filters.type(statKey.key(), type);
     }
 
     public static <K> Bson type(@NotNull Key<K> statKey, K key, BsonType type) {
         return com.mongodb.client.model.Filters.type(statKey.key(key), type);
+    }
+
+    public static Bson type(String fieldName, String type) {
+        return com.mongodb.client.model.Filters.type(fieldName, type);
     }
 
     public static Bson type(VoidKey statKey, String type) {
@@ -186,12 +246,20 @@ public final class Filters {
         return com.mongodb.client.model.Filters.type(statKey.key(key), type);
     }
 
+    public static Bson mod(String fieldName, long divisor, long remainder) {
+        return com.mongodb.client.model.Filters.mod(fieldName, divisor, remainder);
+    }
+
     public static Bson mod(VoidKey statKey, long divisor, long remainder) {
         return com.mongodb.client.model.Filters.mod(statKey.key(), divisor, remainder);
     }
 
     public static <K> Bson mod(@NotNull Key<K> statKey, K key, long divisor, long remainder) {
         return com.mongodb.client.model.Filters.mod(statKey.key(key), divisor, remainder);
+    }
+
+    public static Bson regex(String fieldName, String pattern) {
+        return com.mongodb.client.model.Filters.regex(fieldName, pattern);
     }
 
     public static Bson regex(VoidKey statKey, String pattern) {
@@ -202,6 +270,10 @@ public final class Filters {
         return regex(statKey, key, pattern, null);
     }
 
+    public static Bson regex(String fieldName, String pattern, @Nullable String options) {
+        return com.mongodb.client.model.Filters.regex(fieldName, pattern, options);
+    }
+
     public static Bson regex(VoidKey statKey, String pattern, @Nullable String options) {
         notNull("pattern", pattern);
         return com.mongodb.client.model.Filters.regex(statKey.key(), pattern, options);
@@ -210,6 +282,10 @@ public final class Filters {
     public static <K> Bson regex(@NotNull Key<K> statKey, K key, String pattern, @Nullable String options) {
         Assertions.notNull("pattern", pattern);
         return com.mongodb.client.model.Filters.regex(statKey.key(key), pattern, options);
+    }
+
+    public static Bson regex(String fieldName, Pattern pattern) {
+        return com.mongodb.client.model.Filters.regex(fieldName, pattern);
     }
 
     public static Bson regex(VoidKey statKey, Pattern pattern) {
@@ -243,6 +319,11 @@ public final class Filters {
     }
 
     @SafeVarargs
+    public static <TItem> Bson all(String fieldName, TItem... values) {
+        return com.mongodb.client.model.Filters.all(fieldName, values);
+    }
+
+    @SafeVarargs
     public static <TItem> Bson all(VoidKey statKey, TItem... values) {
         return all(statKey, Arrays.asList(values));
     }
@@ -252,12 +333,20 @@ public final class Filters {
         return all(statKey, key, Arrays.asList(values));
     }
 
+    public static <TItem> Bson all(String fieldName, Iterable<TItem> values) {
+        return com.mongodb.client.model.Filters.all(fieldName, values);
+    }
+
     public static <TItem> Bson all(VoidKey statKey, Iterable<TItem> values) {
         return com.mongodb.client.model.Filters.all(statKey.key(), values);
     }
 
     public static <K, TItem> Bson all(Key<K> statKey, K key, Iterable<TItem> values) {
         return com.mongodb.client.model.Filters.all(statKey.key(key), values);
+    }
+
+    public static Bson elemMatch(final String fieldName, final Bson filter) {
+        return com.mongodb.client.model.Filters.elemMatch(fieldName, filter);
     }
 
     public static Bson elemMatch(final VoidKey statKey, final Bson filter) {
@@ -280,12 +369,20 @@ public final class Filters {
         };
     }
 
+    public static Bson size(String fieldName, int size) {
+        return com.mongodb.client.model.Filters.size(fieldName, size);
+    }
+
     public static Bson size(VoidKey statKey, int size) {
         return com.mongodb.client.model.Filters.size(statKey.key(), size);
     }
 
     public static <K> Bson size(@NotNull Key<K> statKey, K key, int size) {
         return com.mongodb.client.model.Filters.size(statKey.key(key), size);
+    }
+
+    public static Bson bitsAllClear(String fieldName, long bitmask) {
+        return com.mongodb.client.model.Filters.bitsAllClear(fieldName, bitmask);
     }
     
     public static Bson bitsAllClear(VoidKey statKey, long bitmask) {
@@ -295,6 +392,10 @@ public final class Filters {
     public static <K> Bson bitsAllClear(@NotNull Key<K> statKey, K key, long bitmask) {
         return com.mongodb.client.model.Filters.bitsAllClear(statKey.key(key), bitmask);
     }
+
+    public static Bson bitsAllSet(String fieldName, long bitmask) {
+        return com.mongodb.client.model.Filters.bitsAllSet(fieldName, bitmask);
+    }
     
     public static Bson bitsAllSet(VoidKey statKey, long bitmask) {
         return com.mongodb.client.model.Filters.bitsAllSet(statKey.key(), bitmask);
@@ -303,6 +404,10 @@ public final class Filters {
     public static <K> Bson bitsAllSet(@NotNull Key<K> statKey, K key, long bitmask) {
         return com.mongodb.client.model.Filters.bitsAllSet(statKey.key(key), bitmask);
     }
+
+    public static Bson bitsAnyClear(String fieldName, long bitmask) {
+        return com.mongodb.client.model.Filters.bitsAnyClear(fieldName, bitmask);
+    }
     
     public static Bson bitsAnyClear(VoidKey statKey, long bitmask) {
         return com.mongodb.client.model.Filters.bitsAnyClear(statKey.key(), bitmask);
@@ -310,6 +415,10 @@ public final class Filters {
 
     public static <K> Bson bitsAnyClear(@NotNull Key<K> statKey, K key, long bitmask) {
         return com.mongodb.client.model.Filters.bitsAnyClear(statKey.key(key), bitmask);
+    }
+
+    public static Bson bitsAnySet(String fieldName, long bitmask) {
+        return com.mongodb.client.model.Filters.bitsAnySet(fieldName, bitmask);
     }
     
     public static Bson bitsAnySet(VoidKey statKey, long bitmask) {
@@ -435,8 +544,6 @@ public final class Filters {
     public static <K, UItem, TItem> Bson all(Key<K> statKey, K key, Function<TItem, UItem> function, Iterable<TItem> values) {
         return all(statKey, key, new MappedIterable<>(values, function));
     }
-
-    private Filters() {}
 
     @RequiredArgsConstructor
     private static class MappedIterable<UItem, KItem> implements Iterable<UItem> {

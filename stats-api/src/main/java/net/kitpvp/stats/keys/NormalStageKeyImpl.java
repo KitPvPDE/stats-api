@@ -3,14 +3,15 @@ package net.kitpvp.stats.keys;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 class NormalStageKeyImpl<K, V> extends StageKeyImpl<K, V, StatsKey<K, V>> {
 
-    public NormalStageKeyImpl(@Nullable Supplier<V> defaultFunction, @NotNull KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction) {
-        super(defaultFunction, keyFunction, remapFunction);
+    public NormalStageKeyImpl(@Nullable Supplier<V> defaultFunction, @NotNull KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, UnaryOperator<KeyFunction<K>> remapFunction) {
+        super(defaultFunction, keyFunction, seasonKeyMapping, remapFunction);
     }
 
     @Override

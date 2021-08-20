@@ -3,6 +3,7 @@ package net.kitpvp.stats.keys;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -13,8 +14,8 @@ class MappedStageKeyImpl<K, V, U> extends StageKeyImpl<K, U, StatsKey<K, U>> {
     private final Function<V, U> mapping;
     private final Supplier<V> mappingDef;
 
-    public MappedStageKeyImpl(@Nullable Supplier<U> defaultFunction, @NotNull KeyFunction<K> keyFunction, Function<V, U> mapping, Supplier<V> mappingDef, UnaryOperator<KeyFunction<K>> remapFunction) {
-        super(defaultFunction, keyFunction, remapFunction);
+    public MappedStageKeyImpl(@Nullable Supplier<U> defaultFunction, @NotNull KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, Function<V, U> mapping, Supplier<V> mappingDef, UnaryOperator<KeyFunction<K>> remapFunction) {
+        super(defaultFunction, keyFunction, seasonKeyMapping, remapFunction);
         this.mapping = mapping;
         this.mappingDef = mappingDef;
     }

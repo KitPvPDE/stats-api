@@ -1,13 +1,10 @@
 package net.kitpvp.stats.mongodb.query;
 
-import net.kitpvp.mongodbapi.async.Executors;
-import net.kitpvp.mongodbapi.database.Collection;
-import net.kitpvp.mongodbapi.database.Database;
-import net.kitpvp.mongodbapi.log.Log;
-import net.kitpvp.stats.Stats;
+import com.mongodb.client.MongoCollection;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsReader;
-import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
+import net.kitpvp.stats.async.AsyncExecutable;
+import net.kitpvp.stats.mongodb.connection.MongoDBCollection;
 import net.kitpvp.stats.mongodb.model.Filters;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -18,19 +15,21 @@ import java.util.function.Consumer;
 import java.util.function.LongConsumer;
 
 import static com.mongodb.assertions.Assertions.notNull;
+import static net.kitpvp.stats.async.SyncExecutor.DIRECT;
 
 public final class MongoDeleteQuery extends AbstractMongoQuery implements AsyncExecutable {
 
     public static final boolean QUERY_DELETE_MANY = false;
     public static final boolean QUERY_CHECK_MAIN_THREAD = true;
 
-    private final Database database;
-    private final Collection collection;
     private Bson filter;
 
-    public MongoDeleteQuery(Database database, Collection collection) {
-        this.database = database;
-        this.collection = collection;
+    public MongoDeleteQuery(MongoDBCollection collection) {
+        super(collection);
+    }
+
+    public MongoDeleteQuery(MongoCollection<Document> collection) {
+        super(collection);
     }
 
     public final MongoDeleteQuery filter(@NotNull Bson filter) {
@@ -60,18 +59,17 @@ public final class MongoDeleteQuery extends AbstractMongoQuery implements AsyncE
     public final long delete(boolean checkMainThread, boolean deleteMany) {
         this.checkQuery(checkMainThread, deleteMany);
 
-        Log.debug("Executing delete for {0}", this.filter);
         try (AbstractMongoQuery ignored = this) {
             if (deleteMany) {
-                return this.database.getCollection(this.collection).deleteMany(this.filter).getDeletedCount();
+                return this.getMongoCollection().deleteMany(this.filter).getDeletedCount();
             } else {
-                return this.database.getCollection(this.collection).deleteOne(this.filter).getDeletedCount();
+                return this.getMongoCollection().deleteOne(this.filter).getDeletedCount();
             }
         }
     }
 
     public final void deleteAsync(LongConsumer callback) {
-        this.deleteAsync(callback, Executors.DIRECT);
+        this.deleteAsync(callback, DIRECT);
     }
 
     public final void deleteAsync(LongConsumer callback, Executor executor) {
@@ -89,9 +87,8 @@ public final class MongoDeleteQuery extends AbstractMongoQuery implements AsyncE
     public final BsonStatsReader findAndDelete(boolean checkMainThread) {
         this.checkQuery(checkMainThread, false);
 
-        Log.debug("Executing findAndDelete for {0}", this.filter);
         try (AbstractMongoQuery ignored = this) {
-            Document document = this.database.getCollection(this.collection).findOneAndDelete(this.filter);
+            Document document = this.getMongoCollection().findOneAndDelete(this.filter);
             if (document != null) {
                 return new BsonStatsReader(document);
             }
@@ -100,7 +97,7 @@ public final class MongoDeleteQuery extends AbstractMongoQuery implements AsyncE
     }
 
     public final void findAndDeleteAsync(Consumer<StatsReader> callback) {
-        this.findAndDeleteAsync(callback, Executors.DIRECT);
+        this.findAndDeleteAsync(callback, DIRECT);
     }
 
     public final void findAndDeleteAsync(Consumer<StatsReader> callback, Executor executor) {
@@ -109,7 +106,7 @@ public final class MongoDeleteQuery extends AbstractMongoQuery implements AsyncE
 
     private void checkQuery(boolean checkMainThread, boolean deleteMany) {
         if (checkMainThread)
-            Stats.checkForMainThread();
+            this.checkForMainThread();
 
         notNull("filter cannot be null", this.filter);
     }

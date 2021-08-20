@@ -4,12 +4,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 class SetSeasonKeyImpl<K, X> extends SeasonKeyImpl<K, Set<X>, SetStatsKey<K, X>> implements SetSeasonKey<K, X> {
 
-    SetSeasonKeyImpl(@Nullable Supplier<Set<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction) {
-        super(defaultFunction, keyFunction);
+    SetSeasonKeyImpl(@Nullable Supplier<Set<X>> defaultFunction, @NotNull KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping) {
+        super(defaultFunction, keyFunction, seasonKeyMapping);
     }
 
     @Override

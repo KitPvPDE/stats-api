@@ -1,15 +1,12 @@
 package net.kitpvp.stats.mongodb.query;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.*;
-import net.kitpvp.mongodbapi.async.Executors;
-import net.kitpvp.mongodbapi.database.Collection;
-import net.kitpvp.mongodbapi.database.Database;
-import net.kitpvp.mongodbapi.log.Log;
-import net.kitpvp.stats.Stats;
 import net.kitpvp.stats.StatsReader;
 import net.kitpvp.stats.bson.BsonStatsReader;
 import net.kitpvp.stats.function.BooleanConsumer;
-import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
+import net.kitpvp.stats.async.AsyncExecutable;
+import net.kitpvp.stats.mongodb.connection.MongoDBCollection;
 import net.kitpvp.stats.mongodb.model.Filters;
 import net.kitpvp.stats.mongodb.model.Updates;
 import net.kitpvp.stats.mongodb.query.bulk.MongoBulkOperation;
@@ -25,8 +22,9 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-import static com.mongodb.assertions.Assertions.notNull;
 import static com.mongodb.assertions.Assertions.isTrue;
+import static com.mongodb.assertions.Assertions.notNull;
+import static net.kitpvp.stats.async.SyncExecutor.DIRECT;
 
 public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncExecutable, MongoBulkOperation {
 
@@ -34,15 +32,17 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
     public static final boolean QUERY_CHECK_MAIN_THREAD = true;
     public static final boolean QUERY_UPSERT = true;
 
-    private final Database database;
-    private final Collection collection;
     private final List<Bson> updates;
     private boolean updateMany = QUERY_UPDATE_MANY, upsert = QUERY_UPSERT;
     private Bson filter = null;
 
-    public MongoWriteQuery(Database database, Collection collection) {
-        this.database = database;
-        this.collection = collection;
+    public MongoWriteQuery(MongoDBCollection collection) {
+        super(collection);
+        this.updates = new LinkedList<>();
+    }
+
+    public MongoWriteQuery(MongoCollection<Document> collection) {
+        super(collection);
         this.updates = new LinkedList<>();
     }
 
@@ -68,7 +68,7 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
 
     public final MongoWriteQuery update(@NotNull Iterable<Bson> updates) {
         notNull("updates", updates);
-        for(Bson update : updates) {
+        for (Bson update : updates) {
             notNull("update", update);
             this.updates.add(update);
         }
@@ -78,7 +78,7 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
     public final MongoWriteQuery update(@NotNull Bson[]... updates) {
         notNull("updates", updates);
 
-        for(Bson[] update : updates) {
+        for (Bson[] update : updates) {
             notNull("update", update);
             this.update(update);
         }
@@ -119,10 +119,10 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
     public final void execute(boolean updateMany, boolean checkMainThread, boolean upsert) {
         this.checkQuery(updateMany, checkMainThread);
         try (AbstractMongoQuery ignored = this) {
-            if(updateMany) {
-                this.database.getCollection(this.collection).updateMany(this.filter, Updates.combine(this.updates), new UpdateOptions().upsert(upsert));
+            if (updateMany) {
+                this.getMongoCollection().updateMany(this.filter, Updates.combine(this.updates), new UpdateOptions().upsert(upsert));
             } else {
-                this.database.getCollection(this.collection).updateOne(this.filter, Updates.combine(this.updates), new UpdateOptions().upsert(upsert));
+                this.getMongoCollection().updateOne(this.filter, Updates.combine(this.updates), new UpdateOptions().upsert(upsert));
             }
         }
     }
@@ -133,7 +133,7 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
     }
 
     public void executeAsync(Runnable callback) {
-        this.executeAsync(callback, Executors.DIRECT);
+        this.executeAsync(callback, DIRECT);
     }
 
     public void executeAsync(Runnable callback, Executor executor) {
@@ -180,7 +180,7 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
 
     @Override
     public WriteModel<? extends Document> model() {
-        if(this.updateMany) {
+        if (this.updateMany) {
             return new UpdateManyModel<>(this.filter, Updates.combine(this.updates), new UpdateOptions().upsert(upsert));
         } else {
             return new UpdateOneModel<>(this.filter, Updates.combine(this.updates), new UpdateOptions().upsert(upsert));
@@ -191,9 +191,9 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
         this.checkQuery(false, checkMainThread);
 
         try (AbstractMongoQuery ignored = this) {
-            Document document = this.database.getCollection(this.collection)
+            Document document = this.getMongoCollection()
                     .findOneAndUpdate(this.filter, Updates.combine(this.updates), new FindOneAndUpdateOptions().returnDocument(returnDocument).upsert(upsert));
-            if(document != null) {
+            if (document != null) {
                 return new BsonStatsReader(document);
             }
             return null;
@@ -201,12 +201,10 @@ public final class MongoWriteQuery extends AbstractMongoQuery implements AsyncEx
     }
 
     private void checkQuery(boolean updateMany, boolean checkMainThread) {
-        if(checkMainThread)
-            Stats.checkForMainThread();
+        if (checkMainThread)
+            this.checkForMainThread();
 
         isTrue("Empty update document", this.updates.size() > 0);
         isTrue("Empty filter document", !updateMany || this.filter != null);
-
-        Log.debug("Executing update {0} for {1}", this.updates, this.filter);
     }
 }

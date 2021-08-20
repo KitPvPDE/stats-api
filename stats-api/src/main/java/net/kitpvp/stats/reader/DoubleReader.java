@@ -5,6 +5,10 @@ import net.kitpvp.stats.season.Season;
 
 public interface DoubleReader extends Reader {
 
+    default double getDoubleKey(String key, double def) {
+        return this.find(key, def, Double.class);
+    }
+
     default <K> double getDoubleKey(DoubleStatsKey<K> statsKey, K key) {
         return statsKey.applyDouble(statsKey.extractDouble(this, key));
     }

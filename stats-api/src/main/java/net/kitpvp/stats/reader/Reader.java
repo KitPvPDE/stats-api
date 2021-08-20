@@ -10,16 +10,12 @@ public interface Reader {
 
     int ALLTIME = Season.ALLTIME;
 
-    <V> V find(String key, V def);
+    <V> V find(String key, V def, Class<V> type);
 
     <K> Optional<StatsReader> getStatReader(Key<K> statsKey, K key);
 
-    /*
-    default <K, V> V getStatKey(StatsKey<K, V> statsKey, K k) {
-        return statsKey.apply(this.readStatKey(statsKey, k));
+    @SuppressWarnings("unchecked")
+    default <V> V find(String key, V def) {
+        return (V) this.find(key, def, Object.class);
     }
-
-    default <K, V> V readStatKey(StatsKey<K, V> statsKey, K k) {
-        return statsKey.extract(this, k);
-    }*/
 }

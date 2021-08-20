@@ -1,5 +1,6 @@
 package net.kitpvp.stats.keys;
 
+import java.util.function.BiFunction;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
 import java.util.function.UnaryOperator;
@@ -10,8 +11,8 @@ class LongStageKeyImpl<K> extends StageKeyImpl<K, Long, LongStatsKey<K>> impleme
     private final LongUnaryOperator inverse;
     private final long neutral, def, offset;
 
-    LongStageKeyImpl(KeyFunction<K> keyFunction, UnaryOperator<KeyFunction<K>> remapFunction, LongBinaryOperator addition, LongUnaryOperator inverse, long neutral, long def, long offset) {
-        super(keyFunction, remapFunction);
+    LongStageKeyImpl(KeyFunction<K> keyFunction, BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping, UnaryOperator<KeyFunction<K>> remapFunction, LongBinaryOperator addition, LongUnaryOperator inverse, long neutral, long def, long offset) {
+        super(keyFunction, seasonKeyMapping, remapFunction);
         this.addition = addition;
         this.inverse = inverse;
         this.neutral = neutral;

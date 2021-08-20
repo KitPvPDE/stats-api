@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class LocalStats extends BsonStats implements Stats<Void> {
+public class LocalStats extends BsonStats implements Stats {
 
     @Getter
     private final UUID playerId;
@@ -29,7 +29,7 @@ public class LocalStats extends BsonStats implements Stats<Void> {
     }
 
     @Override
-    public LocalStats load(Void unused) {
+    public LocalStats load() {
         return this;
     }
 
@@ -38,7 +38,7 @@ public class LocalStats extends BsonStats implements Stats<Void> {
         return this;
     }
 
-    public LocalWriteQuery write(Void database) {
+    public LocalWriteQuery write() {
         return new LocalWriteQuery(this);
     }
 

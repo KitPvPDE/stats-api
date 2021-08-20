@@ -1,12 +1,10 @@
 package net.kitpvp.stats.mongodb.query;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.InsertOneModel;
 import com.mongodb.client.model.WriteModel;
-import net.kitpvp.mongodbapi.database.Collection;
-import net.kitpvp.mongodbapi.database.Database;
-import net.kitpvp.stats.Stats;
-import net.kitpvp.stats.bson.BsonStatsWriter;
-import net.kitpvp.stats.mongodb.api.async.AsyncExecutable;
+import net.kitpvp.stats.async.AsyncExecutable;
+import net.kitpvp.stats.mongodb.connection.MongoDBCollection;
 import net.kitpvp.stats.mongodb.query.bulk.MongoBulkOperation;
 import org.bson.Document;
 
@@ -16,32 +14,34 @@ import static com.mongodb.assertions.Assertions.notNull;
 
 public final class MongoInsertQuery extends AbstractMongoQuery implements AsyncExecutable, MongoBulkOperation {
 
-    private final Database database;
-    private final Collection collection;
-    private final BsonStatsWriter document;
+    private final Document document;
 
-    public MongoInsertQuery(Database database, Collection collection) {
-        this.database = database;
-        this.collection = collection;
-        this.document = new BsonStatsWriter();
+    public MongoInsertQuery(MongoDBCollection collection) {
+        super(collection);
+        this.document = new Document();
+    }
+
+    public MongoInsertQuery(MongoCollection<Document> collection) {
+        super(collection);
+        this.document = new Document();
     }
 
     public final MongoInsertQuery insert(Document... inserts) {
         notNull("inserts", inserts);
-        Stream.of(inserts).forEach(document -> this.document.bson().putAll(document));
+        Stream.of(inserts).forEach(this.document::putAll);
         return this;
     }
 
     public final void execute() {
-        Stats.checkForMainThread();
+        this.checkForMainThread();
 
         try (AbstractMongoQuery ignored = this) {
-            this.database.getCollection(this.collection).insertOne(this.document.bson());
+            this.getMongoCollection().insertOne(this.document);
         }
     }
 
     @Override
     public final WriteModel<? extends Document> model() {
-        return new InsertOneModel<>(this.document.bson());
+        return new InsertOneModel<>(this.document);
     }
 }

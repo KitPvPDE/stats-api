@@ -1,17 +1,16 @@
 package net.kitpvp.stats.keys;
 
 import net.kitpvp.stats.api.builder.StatsKeyBuilder;
+import net.kitpvp.stats.api.functions.season.SeasonKeyFunction;
 import net.kitpvp.stats.utils.Functions;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-import java.util.function.DoubleBinaryOperator;
-import java.util.function.DoubleUnaryOperator;
-import java.util.function.UnaryOperator;
+import java.util.function.*;
 
 public class DoubleKeyBuilder<K> implements StatsKeyBuilder<K, Double> {
 
     protected final KeyBuilder<K> keyBuilder;
+    protected BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping = SeasonKeyFunction::new;
     protected DoubleBinaryOperator addition = Double::sum;
     protected DoubleUnaryOperator inverse = Functions::inverse;
     protected double neutral = 0, def = 0, offset = 0;
@@ -22,6 +21,11 @@ public class DoubleKeyBuilder<K> implements StatsKeyBuilder<K, Double> {
 
     public DoubleKeyBuilder<K> keyBuilder(Consumer<KeyBuilder<K>> consumer) {
         consumer.accept(this.keyBuilder);
+        return this;
+    }
+
+    public DoubleKeyBuilder<K> seasonKeyMapping(BiFunction<KeyFunction<K>, Integer, KeyFunction<K>> seasonKeyMapping) {
+        this.seasonKeyMapping = seasonKeyMapping;
         return this;
     }
 
@@ -57,11 +61,11 @@ public class DoubleKeyBuilder<K> implements StatsKeyBuilder<K, Double> {
 
     @Override
     public @NotNull DoubleSeasonKey<K> season() {
-        return new DoubleSeasonKeyImpl<>(this.keyBuilder.build(), this.addition, this.inverse, this.neutral, this.def, this.offset);
+        return new DoubleSeasonKeyImpl<>(this.keyBuilder.build(), seasonKeyMapping, this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
 
     @Override
     public @NotNull DoubleStageKey<K> stage(UnaryOperator<KeyFunction<K>> remapFunction) {
-        return new DoubleStageKeyImpl<>(this.keyBuilder.build(), remapFunction, this.addition, this.inverse, this.neutral, this.def, this.offset);
+        return new DoubleStageKeyImpl<>(this.keyBuilder.build(), seasonKeyMapping, remapFunction, this.addition, this.inverse, this.neutral, this.def, this.offset);
     }
 }
